@@ -173,3 +173,5 @@ D:\ITI\WebAPI-Angular project\Exam_System\backend\backend\obj\Debug\net9.0\refin
 D:\ITI\WebAPI-Angular project\Exam_System\backend\backend\obj\Debug\net9.0\backend.pdb
 D:\ITI\WebAPI-Angular project\Exam_System\backend\backend\obj\Debug\net9.0\backend.genruntimeconfig.cache
 D:\ITI\WebAPI-Angular project\Exam_System\backend\backend\obj\Debug\net9.0\ref\backend.dll
+D:\ITI\WebAPI-Angular project\Exam_System\backend\backend\bin\Debug\net9.0\Castle.Core.dll
+D:\ITI\WebAPI-Angular project\Exam_System\backend\backend\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Proxies.dll
