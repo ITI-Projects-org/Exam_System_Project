@@ -2,6 +2,6 @@
 {
     public class Teacher : ApplicationUser
     {
-        public virtual ICollection<Course>? Courses { get; set; }
+        //public virtual ICollection<Course>? Courses { get; set; }
     }
 }

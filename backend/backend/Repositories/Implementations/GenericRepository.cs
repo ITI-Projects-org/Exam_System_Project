@@ -16,26 +16,28 @@ namespace backend.Repositories.Implementations
         {
             return _context.Set<T>().ToList();
         }
-        public T GetById(int Id)
+        public T GetById(string Id)
         {
             return _context.Set<T>().Find(Id);
         }
 
-        public T Add(int Id, T Entity)
+        public T Add(T Entity)
         {
             _context.Set<T>().Add(Entity);
             return Entity;
         }
 
-        public void Delete(int Id)
+        public void Delete(string Id)
         {
             _context.Set<T>().Remove(GetById(Id));
         }
 
-        public T Update(int Id, T Entity)
+        public T Update(string Id, T Entity)
         {
             _context.Set<T>().Update(Entity);
             return Entity;
         }
+
+     
     }
 }

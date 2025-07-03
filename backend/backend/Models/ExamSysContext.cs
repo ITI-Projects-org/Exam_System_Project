@@ -37,11 +37,11 @@ namespace backend.Models
             // Configure foreign key relationships with proper delete behavior
 
             // Course -> Teacher (NO ACTION to prevent cascade conflicts)
-            builder.Entity<Course>()
-                .HasOne(c => c.Teacher)
-                .WithMany(t => t.Courses)
-                .HasForeignKey(c => c.TeacherId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //builder.Entity<Course>()
+            //    .HasOne(c => c.Teacher)
+            //    //.WithMany(t => t.Courses)
+            //    .HasForeignKey(c => c.TeacherId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
             // Exam -> Course (RESTRICT)
             builder.Entity<Exam>()

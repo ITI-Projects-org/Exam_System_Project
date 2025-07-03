@@ -11,5 +11,15 @@ namespace backend.Repositories.Implementations
         {
             _context = context;
         }
+        public async Task<IEnumerable<Exam>> GetAllExamsofTeacher(string Teacher_Id) {
+            return _context.Exams.Where(e => e.TeacherId == Teacher_Id.ToString());
+        }
+        public async Task <IEnumerable<Exam>> GetAllExamsofStudent(string Student_ID) {
+            return _context.Exams.Join(_context.StudExams, e => e.Id, se => se.ExamId, (e, se) => e);
+        }
+
+
+
+
     }
 }

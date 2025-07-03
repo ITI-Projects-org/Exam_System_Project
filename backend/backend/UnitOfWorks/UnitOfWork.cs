@@ -11,7 +11,7 @@ namespace ELearning.UnitOfWorks
             _context = context;
         }
         private StudentRepository studentRepository;
-        private TeacherRepository instructorRepository;
+        private TeacherRepository teacherRepository;
         private ExamRepository examRepository;
         private QuestionRepository questionRepository;
         private OptionRepository optionRepository;
@@ -49,12 +49,12 @@ namespace ELearning.UnitOfWorks
                 return examRepository;
             }
         }
-        public TeacherRepository InstructorRepository
+        public TeacherRepository TeacherRepositoryRepository
         {
             get
             {
-                if (instructorRepository == null) instructorRepository = new TeacherRepository(_context);
-                return instructorRepository;
+                if (teacherRepository == null) teacherRepository = new TeacherRepository(_context);
+                return teacherRepository;
             }
         }
         public StudentRepository StudentRepository

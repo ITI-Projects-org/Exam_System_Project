@@ -352,3 +352,4 @@ E:\Work\ITI\Angular\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0
 E:\Work\ITI\Angular\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\backend.pdb
 E:\Work\ITI\Angular\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\backend.genruntimeconfig.cache
 E:\Work\ITI\Angular\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\ref\backend.dll
+E:\Work\ITI\Angular\Project Angular\Exam_System\backend\backend\bin\Debug\net9.0\Microsoft.AspNet.Identity.Core.dll

@@ -1,5 +1,6 @@
 
 using backend.Models;
+using ELearning.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Proxies;
@@ -32,7 +33,11 @@ namespace backend
                 .AddEntityFrameworkStores<ExamSysContext>()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddOpenApi();
+
+
+            builder.Services.AddOpenApi();  
+            builder.Services.AddScoped<UnitOfWork, UnitOfWork>();
+
 
             var app = builder.Build();
 
