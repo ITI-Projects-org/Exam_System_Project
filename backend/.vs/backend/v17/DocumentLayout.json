@@ -3,36 +3,8 @@
   "WorkspaceRootPath": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\controllers\\examcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\controllers\\examcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\repositories\\implementations\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\repositories\\implementations\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\repositories\\interfaces\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\repositories\\interfaces\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\repositories\\interfaces\\istudentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\repositories\\interfaces\\istudentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\repositories\\implementations\\examrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\repositories\\implementations\\examrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\repositories\\implementations\\studentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\repositories\\implementations\\studentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|e:\\learning\\iti - fullstack webdev using dot net\\full-stack project\\exam_system\\backend\\backend\\unitofworks\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\unitofworks\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,110 +14,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ExamRepository.cs",
-              "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Implementations\\ExamRepository.cs",
-              "RelativeDocumentMoniker": "backend\\Repositories\\Implementations\\ExamRepository.cs",
-              "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Implementations\\ExamRepository.cs",
-              "RelativeToolTip": "backend\\Repositories\\Implementations\\ExamRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:40:33.766Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IStudentRepository.cs",
-              "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Interfaces\\IStudentRepository.cs",
-              "RelativeDocumentMoniker": "backend\\Repositories\\Interfaces\\IStudentRepository.cs",
-              "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Interfaces\\IStudentRepository.cs",
-              "RelativeToolTip": "backend\\Repositories\\Interfaces\\IStudentRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:31:11.368Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "GenericRepository.cs",
-              "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Implementations\\GenericRepository.cs",
-              "RelativeDocumentMoniker": "backend\\Repositories\\Implementations\\GenericRepository.cs",
-              "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Implementations\\GenericRepository.cs",
-              "RelativeToolTip": "backend\\Repositories\\Implementations\\GenericRepository.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAgwCMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:27:30.468Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IGenericRepository.cs",
-              "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Interfaces\\IGenericRepository.cs",
-              "RelativeDocumentMoniker": "backend\\Repositories\\Interfaces\\IGenericRepository.cs",
-              "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Interfaces\\IGenericRepository.cs",
-              "RelativeToolTip": "backend\\Repositories\\Interfaces\\IGenericRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:26:59.198Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "IUnitOfWork.cs",
-              "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\UnitOfWorks\\IUnitOfWork.cs",
-              "RelativeDocumentMoniker": "backend\\UnitOfWorks\\IUnitOfWork.cs",
-              "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\UnitOfWorks\\IUnitOfWork.cs",
-              "RelativeToolTip": "backend\\UnitOfWorks\\IUnitOfWork.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:26:55.416Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ExamController.cs",
-              "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Controllers\\ExamController.cs",
-              "RelativeDocumentMoniker": "backend\\Controllers\\ExamController.cs",
-              "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Controllers\\ExamController.cs",
-              "RelativeToolTip": "backend\\Controllers\\ExamController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:26:07.31Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "StudentController.cs",
               "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Controllers\\StudentController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\StudentController.cs",
               "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Controllers\\StudentController.cs",
               "RelativeToolTip": "backend\\Controllers\\StudentController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAA1wCAAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-04T16:24:19.022Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "StudentRepository.cs",
-              "DocumentMoniker": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Implementations\\StudentRepository.cs",
-              "RelativeDocumentMoniker": "backend\\Repositories\\Implementations\\StudentRepository.cs",
-              "ToolTip": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\Repositories\\Implementations\\StudentRepository.cs",
-              "RelativeToolTip": "backend\\Repositories\\Implementations\\StudentRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:18:54.408Z",
               "EditorCaption": ""
             },
             {
