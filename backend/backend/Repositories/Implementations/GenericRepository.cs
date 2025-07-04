@@ -5,17 +5,17 @@ namespace backend.Repositories.Implementations
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        ExamSysContext _context;
+        readonly ExamSysContext _context;
         public GenericRepository(ExamSysContext context)
         {
             _context = context;
         }
 
-
         public IEnumerable<T> GetAll()
         {
             return _context.Set<T>().ToList();
         }
+
         public T GetById(string Id)
         {
             return _context.Set<T>().Find(Id);
@@ -37,7 +37,5 @@ namespace backend.Repositories.Implementations
             _context.Set<T>().Update(Entity);
             return Entity;
         }
-
-     
     }
 }

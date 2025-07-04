@@ -16,10 +16,12 @@ namespace backend.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Column(TypeName = "datetime2")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        public UserRole Role{ get; set; }
 
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public UserRole Role { get; set; }
     }
+
     public enum UserRole
     {
         Teacher, Student

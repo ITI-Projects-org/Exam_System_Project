@@ -1,5 +1,4 @@
-﻿using backend.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace backend.DTOs
@@ -8,13 +7,17 @@ namespace backend.DTOs
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Title { get; set; }
+
         [Required]
         public DateTime StartDate { get; set; }
+
         [Required]
         public TimeSpan Duration { get; set; }
+
         [NotMapped]
         public DateTime EndDate
         {
@@ -23,11 +26,11 @@ namespace backend.DTOs
                 return StartDate + Duration;
             }
         }
+
         [Required]
         public int MaxDegree { get; set; }
+
         [Required]
         public int MinDegree { get; set; }
-       
-       
     }
 }

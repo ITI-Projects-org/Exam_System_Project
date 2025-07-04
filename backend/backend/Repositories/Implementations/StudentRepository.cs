@@ -5,7 +5,7 @@ namespace backend.Repositories.Implementations
 {
     public class StudentRepository : GenericRepository<Student>, IStudentRepository
     {
-        private readonly ExamSysContext _context;
+        readonly ExamSysContext _context;
         public StudentRepository(ExamSysContext context) : base(context)
         {
             _context = context;

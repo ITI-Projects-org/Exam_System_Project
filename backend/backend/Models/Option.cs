@@ -7,14 +7,18 @@ namespace backend.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [MaxLength(200)]
         public string Title { get; set; }
+
         [Required]
         public bool IsCorrect { get; set; }
+
         [Required]
         public int QuestionId { get; set; }
+
         [ForeignKey(nameof(QuestionId))]
-        public virtual Question Question { get; set; }
+        public virtual Question? Question { get; set; }
     }
 }

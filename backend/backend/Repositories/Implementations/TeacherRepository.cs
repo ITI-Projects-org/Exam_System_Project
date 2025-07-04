@@ -5,12 +5,10 @@ namespace backend.Repositories.Implementations
 {
     public class TeacherRepository : GenericRepository<Teacher>, ITeacherRepository
     {
-        private readonly ExamSysContext _context;
+        readonly ExamSysContext _context;
         public TeacherRepository(ExamSysContext context) : base(context)
         {
             _context = context;
         }
-
-    
     }
 }

@@ -1,7 +1,7 @@
 ﻿using backend.Models;
 using backend.Repositories.Implementations;
 
-namespace ELearning.UnitOfWorks
+namespace backend.UnitOfWorks
 {
     public class UnitOfWork
     {

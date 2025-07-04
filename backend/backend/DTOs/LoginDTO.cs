@@ -8,9 +8,11 @@ namespace backend.DTOs
     {
         [Required]
         public string UserName { get; set; }
+
         [MaxLength(20)]
         [Required]
         public string Role { get; set; }
+
         [Required]
         public string Password { get; set; }
     
