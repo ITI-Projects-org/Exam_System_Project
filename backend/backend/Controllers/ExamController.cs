@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using backend.DTOs;
+﻿using backend.DTOs;
 using backend.Models;
 using ELearning.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+using System.Security.Claims;
 
 namespace backend.Controllers
 {
