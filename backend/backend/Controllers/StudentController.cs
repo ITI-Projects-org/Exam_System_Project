@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using backend.DTOs;
-using backend.Models;
 using backend.UnitOfWorks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers

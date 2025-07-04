@@ -1,6 +1,8 @@
-using backend.Models;
-using backend.UnitOfWorks;
 using backend.MapperConfig;
+using backend.Models;
+using backend.Repositories.Implementations;
+using backend.Repositories.Interfaces;
+using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +35,16 @@ namespace backend
             .AddDefaultTokenProviders();
 
             builder.Services.AddOpenApi();
-            builder.Services.AddScoped<UnitOfWork, UnitOfWork>();
+
+            // Register Repositories and Unit of Work
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
+            builder.Services.AddScoped<IExamRepository, ExamRepository>();
+            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+            builder.Services.AddScoped<IOptionRepository, OptionRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
             // Configure AutoMapper
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingConfigurations>());
