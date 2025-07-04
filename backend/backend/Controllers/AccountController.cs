@@ -1,8 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Azure.Core;
-using backend.DTOs;
+﻿using backend.DTOs;
 using backend.Models;
-using Castle.Components.DictionaryAdapter;
 using ELearning.UnitOfWorks;
 //using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;

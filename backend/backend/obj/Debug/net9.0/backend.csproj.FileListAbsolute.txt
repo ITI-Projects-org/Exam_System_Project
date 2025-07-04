@@ -544,7 +544,6 @@ E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\Azure.Identity.dll
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\Castle.Core.dll
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\Humanizer.dll
-E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\Microsoft.AspNet.Identity.Core.dll
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
