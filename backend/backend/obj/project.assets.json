@@ -2,18 +2,20 @@
   "version": 3,
   "targets": {
     "net9.0": {
-      "AutoMapper/14.0.0": {
+      "AutoMapper/15.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Options": "8.0.0"
+          "Microsoft.Extensions.Logging": "8.0.0",
+          "Microsoft.Extensions.Options": "8.0.0",
+          "Microsoft.IdentityModel.JsonWebTokens": "8.0.1"
         },
         "compile": {
-          "lib/net8.0/AutoMapper.dll": {
+          "lib/net9.0/AutoMapper.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/AutoMapper.dll": {
+          "lib/net9.0/AutoMapper.dll": {
             "related": ".xml"
           }
         }
@@ -170,7 +172,7 @@
           }
         }
       },
-      "Microsoft.AspNetCore.OpenApi/9.0.2": {
+      "Microsoft.AspNetCore.OpenApi/9.0.6": {
         "type": "package",
         "dependencies": {
           "Microsoft.OpenApi": "1.6.17"
@@ -1784,19 +1786,24 @@
     }
   },
   "libraries": {
-    "AutoMapper/14.0.0": {
-      "sha512": "OC+1neAPM4oCCqQj3g2GJ2shziNNhOkxmNB9cVS8jtx4JbgmRzLcUOxB9Tsz6cVPHugdkHgCaCrTjjSI0Z5sCQ==",
+    "AutoMapper/15.0.0": {
+      "sha512": "pIOxis0VM4WGV48heK5Y93wysT2gD+hPQd7xFM23wUKsXJ77otM0ugg/wSeUDGJApvJgS3x6kggfLWhK16+E2g==",
       "type": "package",
-      "path": "automapper/14.0.0",
+      "path": "automapper/15.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "LICENSE.md",
         "README.md",
-        "automapper.14.0.0.nupkg.sha512",
+        "automapper.15.0.0.nupkg.sha512",
         "automapper.nuspec",
         "icon.png",
         "lib/net8.0/AutoMapper.dll",
-        "lib/net8.0/AutoMapper.xml"
+        "lib/net8.0/AutoMapper.xml",
+        "lib/net9.0/AutoMapper.dll",
+        "lib/net9.0/AutoMapper.xml",
+        "lib/netstandard2.0/AutoMapper.dll",
+        "lib/netstandard2.0/AutoMapper.xml"
       ]
     },
     "Azure.Core/1.38.0": {
@@ -1961,10 +1968,10 @@
         "microsoft.aspnetcore.identity.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.OpenApi/9.0.2": {
-      "sha512": "JUndpjRNdG8GvzBLH/J4hen4ehWaPcshtiQ6+sUs1Bcj3a7dOsmWpDloDlpPeMOVSlhHwUJ3Xld0ClZjsFLgFQ==",
+    "Microsoft.AspNetCore.OpenApi/9.0.6": {
+      "sha512": "MOJ4DG1xd3NlWMYh+JdGNT9uvBtEk1XQU/FQlpNZFlAzM8t0oB5IimvnGlnK7jmyY4vQagLPB1xw1HjJ8CHrZg==",
       "type": "package",
-      "path": "microsoft.aspnetcore.openapi/9.0.2",
+      "path": "microsoft.aspnetcore.openapi/9.0.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1973,7 +1980,7 @@
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net9.0/Microsoft.AspNetCore.OpenApi.dll",
         "lib/net9.0/Microsoft.AspNetCore.OpenApi.xml",
-        "microsoft.aspnetcore.openapi.9.0.2.nupkg.sha512",
+        "microsoft.aspnetcore.openapi.9.0.6.nupkg.sha512",
         "microsoft.aspnetcore.openapi.nuspec"
       ]
     },
@@ -4888,11 +4895,11 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "AutoMapper >= 14.0.0",
+      "AutoMapper >= 15.0.0",
       "Microsoft.AspNet.Identity.Core >= 2.2.4",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.6",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 9.0.6",
-      "Microsoft.AspNetCore.OpenApi >= 9.0.2",
+      "Microsoft.AspNetCore.OpenApi >= 9.0.6",
       "Microsoft.EntityFrameworkCore.Proxies >= 9.0.6",
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.6",
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.6",
@@ -4901,23 +4908,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Mark Magdy\\.nuget\\packages\\": {},
+    "C:\\Users\\melsa\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
+      "projectUniqueName": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
-      "packagesPath": "C:\\Users\\Mark Magdy\\.nuget\\packages\\",
-      "outputPath": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\obj\\",
+      "projectPath": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\melsa\\.nuget\\packages\\",
+      "outputPath": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Mark Magdy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\melsa\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4944,7 +4951,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -4952,7 +4959,7 @@
         "dependencies": {
           "AutoMapper": {
             "target": "Package",
-            "version": "[14.0.0, )"
+            "version": "[15.0.0, )"
           },
           "Microsoft.AspNet.Identity.Core": {
             "target": "Package",
@@ -4968,7 +4975,7 @@
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
-            "version": "[9.0.2, )"
+            "version": "[9.0.6, )"
           },
           "Microsoft.EntityFrameworkCore.Proxies": {
             "target": "Package",
@@ -5012,7 +5019,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
