@@ -1,5 +1,6 @@
 ﻿using backend.Models;
 using backend.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories.Implementations
 {
@@ -11,31 +12,41 @@ namespace backend.Repositories.Implementations
             _context = context;
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().ToListAsync();
         }
 
-        public T GetById(string Id)
+        public async Task<T> GetById(string Id)
         {
-            return _context.Set<T>().Find(Id);
+            return await _context.Set<T>().FindAsync(Id);
         }
 
-        public T Add(T Entity)
+        // For int primary keys
+        public async Task<T> GetById(int Id)
         {
-            _context.Set<T>().Add(Entity);
+            return await _context.Set<T>().FindAsync(Id);
+        }
+
+        public async Task<T> Add(T Entity)
+        {
+            await _context.Set<T>().AddAsync(Entity);
             return Entity;
-        }
-
-        public void Delete(string Id)
-        {
-            _context.Set<T>().Remove(GetById(Id));
         }
 
         public T Update(string Id, T Entity)
         {
             _context.Set<T>().Update(Entity);
             return Entity;
+        }
+
+        public async void Delete(string Id)
+        {
+            var entity = await GetById(Id);
+            if (entity != null)
+            {
+                _context.Set<T>().Remove(entity);
+            }
         }
     }
 }

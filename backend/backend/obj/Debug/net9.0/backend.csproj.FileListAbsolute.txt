@@ -533,6 +533,7 @@ E:\Work\ITI\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\backend
 E:\Work\ITI\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\ref\backend.dll
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\appsettings.Development.json
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\appsettings.json
+E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\libman.json
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\backend.staticwebassets.endpoints.json
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\backend.exe
 E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\bin\Debug\net9.0\backend.deps.json

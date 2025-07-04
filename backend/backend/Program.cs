@@ -1,5 +1,6 @@
 using backend.Models;
 using backend.UnitOfWorks;
+using backend.MapperConfig;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,14 +29,14 @@ namespace backend
                 options.Password.RequireUppercase = false;
                 options.Password.RequireDigit = false;
             })
-                .AddEntityFrameworkStores<ExamSysContext>()
-                .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ExamSysContext>()
+            .AddDefaultTokenProviders();
 
-
-
-            builder.Services.AddOpenApi();  
+            builder.Services.AddOpenApi();
             builder.Services.AddScoped<UnitOfWork, UnitOfWork>();
 
+            // Configure AutoMapper
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingConfigurations>());
 
             var app = builder.Build();
 
@@ -63,6 +64,7 @@ namespace backend
 
             app.UseHttpsRedirection();
 
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.MapControllers();

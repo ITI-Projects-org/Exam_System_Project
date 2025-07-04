@@ -72,7 +72,7 @@ namespace backend.Controllers
         [ValidateAntiForgeryToken] 
         public async Task<Exam> GetExamById(int Id)
         {
-            return _unit.ExamRepository.GetById(Id.ToString());
+            return await _unit.ExamRepository.GetById(Id);
         }
         [HttpPost]
         [Authorize(Roles ="Teacher")]

@@ -1,73 +1,81 @@
 ﻿using backend.Models;
 using backend.Repositories.Implementations;
+using backend.Repositories.Interfaces;
 
 namespace backend.UnitOfWorks
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        private ExamSysContext _context;
+        readonly ExamSysContext _context;
         public UnitOfWork(ExamSysContext context)
         {
             _context = context;
         }
-        private StudentRepository studentRepository;
-        private TeacherRepository teacherRepository;
-        private ExamRepository examRepository;
-        private QuestionRepository questionRepository;
-        private OptionRepository optionRepository;
-        private CourseRepository courseRepository;
 
-        public CourseRepository CourseRepository
+        IStudentRepository _studentRepository;
+        ITeacherRepository _teacherRepository;
+        IExamRepository _examRepository;
+        IQuestionRepository _questionRepository;
+        IOptionRepository _optionRepository;
+        ICourseRepository _courseRepository;
+
+        public IStudentRepository StudentRepository
         {
             get
             {
-                if (courseRepository == null) courseRepository = new CourseRepository(_context);
-                return courseRepository;
+                if (_studentRepository == null) _studentRepository = new StudentRepository(_context);
+                return _studentRepository;
             }
         }
-        public OptionRepository OptionRepository
+        public ITeacherRepository TeacherRepository
         {
             get
             {
-                if (optionRepository == null) optionRepository = new OptionRepository(_context);
-                return optionRepository;
+                if (_teacherRepository == null) _teacherRepository = new TeacherRepository(_context);
+                return _teacherRepository;
             }
         }
-        public QuestionRepository QuestionRepository
+        public IExamRepository ExamRepository
         {
             get
             {
-                if (questionRepository == null) questionRepository = new QuestionRepository(_context);
-                return questionRepository;
+                if (_examRepository == null) _examRepository = new ExamRepository(_context);
+                return _examRepository;
             }
         }
-        public ExamRepository ExamRepository
+        public IQuestionRepository QuestionRepository
         {
             get
             {
-                if (examRepository == null) examRepository = new ExamRepository(_context);
-                return examRepository;
+                if (_questionRepository == null) _questionRepository = new QuestionRepository(_context);
+                return _questionRepository;
             }
         }
-        public TeacherRepository TeacherRepositoryRepository
+        public IOptionRepository OptionRepository
         {
             get
             {
-                if (teacherRepository == null) teacherRepository = new TeacherRepository(_context);
-                return teacherRepository;
+                if (_optionRepository == null) _optionRepository = new OptionRepository(_context);
+                return _optionRepository;
             }
         }
-        public StudentRepository StudentRepository
+        public ICourseRepository CourseRepository
         {
             get
             {
-                if (studentRepository == null) studentRepository = new StudentRepository(_context);
-                return studentRepository;
+                if (_courseRepository == null) _courseRepository = new CourseRepository(_context);
+                return _courseRepository;
             }
         }
-        public void Save()
+
+        public async Task SaveAsync() // Changed to async
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
