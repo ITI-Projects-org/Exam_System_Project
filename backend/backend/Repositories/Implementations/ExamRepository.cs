@@ -19,10 +19,11 @@ namespace backend.Repositories.Implementations
         {
             return _context.Exams.Join(_context.StudExams, e => e.Id, se => se.ExamId, (e, se) => e);
         }
-        //public async Task<Exam> TakeExam(string Student_ID,string ExamID)
-        //{
-        //    _context.StudExams.Where();
-        //}
+        public async Task<Exam> TakeExam(string Student_ID, string ExamID)
+        {
+            var stud_exam = _context.StudExams.Where(se=>se.StudentId == Student_ID);
+            stud_exam.
+        }
 
 
 
