@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace backend.Models
 {
@@ -22,5 +23,6 @@ namespace backend.Models
         public DateTime StudEndDate { get; set; }
         [Required]
         public int StudDegree { get; set; }
+        public bool IsAbsent { get; set; } = true;
     }
 }

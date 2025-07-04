@@ -65,7 +65,12 @@ namespace backend.Controllers
             }
             return ExamsDTO.ToList();
         }
-        
+
+        // 3 cases (
+        //  Before start exam DTO,
+        //  During exam DTO (solve exam),
+        //  After End Date DTO
+        // )
         [HttpGet("{id}")]
         [ValidateAntiForgeryToken] 
         public async Task<Exam> GetExamById(int Id)
@@ -84,9 +89,13 @@ namespace backend.Controllers
             _unit.ExamRepository.Update(exam.Id.ToString(),exam);
         }
         [HttpDelete("{id}")]
-        public void RmoveExam(string Id)
+        public void RemoveExam(string Id)
         {
             _unit.ExamRepository.Delete(Id);
+        }
+        public void TakeExam()
+        {
+
         }
     }
 }

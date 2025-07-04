@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VIrJwWsvKB0=",
+  "dgSpecHash": "PAOc4vFGzjM=",
   "success": true,
-  "projectFilePath": "E:\\Work\\ITI\\Angular\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
+  "projectFilePath": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Mark Magdy\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\Mark Magdy\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
