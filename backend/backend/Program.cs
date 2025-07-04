@@ -1,9 +1,7 @@
-
 using backend.Models;
 using ELearning.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace backend
 {
@@ -41,20 +39,20 @@ namespace backend
 
             var app = builder.Build();
 
-            // Seed the database
-            // comment out after finishing
-            using (var scope = app.Services.CreateScope())
-            {
-                try
-                {
-                    await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
-                }
-                catch (Exception ex)
-                {
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while seeding the database.");
-                }
-            }
+            //// Seed the database
+            //// comment out after finishing
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    try
+            //    {
+            //        await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            //        logger.LogError(ex, "An error occurred while seeding the database.");
+            //    }
+            //}
 
             // Configure the HTTP request pipeline.  
             if (app.Environment.IsDevelopment())
