@@ -398,6 +398,9 @@ namespace backend.Migrations
                     b.Property<int>("ExamId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsAbsent")
+                        .HasColumnType("bit");
+
                     b.Property<int>("StudDegree")
                         .HasColumnType("int");
 
@@ -497,9 +500,9 @@ namespace backend.Migrations
             modelBuilder.Entity("backend.Models.Course", b =>
                 {
                     b.HasOne("backend.Models.Teacher", "Teacher")
-                        .WithMany("Courses")
+                        .WithMany()
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Teacher");
@@ -625,11 +628,6 @@ namespace backend.Migrations
                     b.Navigation("StudExams");
 
                     b.Navigation("StudOptions");
-                });
-
-            modelBuilder.Entity("backend.Models.Teacher", b =>
-                {
-                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }
