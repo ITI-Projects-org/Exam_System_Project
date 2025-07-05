@@ -72,7 +72,7 @@ namespace backend.Controllers
         //  After End Date DTO
         // )
         [HttpGet("{id}")]
-        [ValidateAntiForgeryToken] 
+        //[ValidateAntiForgeryToken] 
         public async Task<Exam> GetExamById(int Id)
         {
             return _unit.ExamRepository.GetById(Id.ToString());
@@ -84,18 +84,23 @@ namespace backend.Controllers
             _unit.ExamRepository.Add(exam);
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "Teacher")]
+
         public void EditExam([FromBody] Exam exam)
         {
+
             _unit.ExamRepository.Update(exam.Id.ToString(),exam);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Teacher")]
+        
         public void RemoveExam(string Id)
         {
             _unit.ExamRepository.Delete(Id);
         }
-        public void TakeExam(string ExamId)
-        {
+        //public void TakeExam(string ExamId)
+        //{
             
-        }
+        //}
     }
 }

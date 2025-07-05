@@ -34,6 +34,8 @@ namespace backend.Repositories.Implementations
 
         public T Update(string Id, T Entity)
         {
+           Exam oldone = GetById(Id) as Exam;
+           
             _context.Set<T>().Update(Entity);
             return Entity;
         }

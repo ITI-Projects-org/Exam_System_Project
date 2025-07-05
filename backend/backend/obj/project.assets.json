@@ -2,6 +2,41 @@
   "version": 3,
   "targets": {
     "net9.0": {
+      "Asp.Versioning.Abstractions/8.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        },
+        "compile": {
+          "lib/net8.0/Asp.Versioning.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Asp.Versioning.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Asp.Versioning.Http/8.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Asp.Versioning.Abstractions": "8.1.0"
+        },
+        "compile": {
+          "lib/net8.0/Asp.Versioning.Http.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Asp.Versioning.Http.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "AutoMapper/14.0.0": {
         "type": "package",
         "dependencies": {
@@ -1784,6 +1819,42 @@
     }
   },
   "libraries": {
+    "Asp.Versioning.Abstractions/8.1.0": {
+      "sha512": "mpeNZyMdvrHztJwR1sXIUQ+3iioEU97YMBnFA9WLbsPOYhGwDJnqJMmEd8ny7kcmS9OjTHoEuX/bSXXY3brIFA==",
+      "type": "package",
+      "path": "asp.versioning.abstractions/8.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "asp.versioning.abstractions.8.1.0.nupkg.sha512",
+        "asp.versioning.abstractions.nuspec",
+        "icon.png",
+        "lib/net8.0/Asp.Versioning.Abstractions.dll",
+        "lib/net8.0/Asp.Versioning.Abstractions.xml",
+        "lib/netstandard1.0/Asp.Versioning.Abstractions.dll",
+        "lib/netstandard1.0/Asp.Versioning.Abstractions.xml",
+        "lib/netstandard2.0/Asp.Versioning.Abstractions.dll",
+        "lib/netstandard2.0/Asp.Versioning.Abstractions.xml"
+      ]
+    },
+    "Asp.Versioning.Http/8.1.0": {
+      "sha512": "Xu4xF62Cu9JqYi/CTa2TiK5kyHoa4EluPynj/bPFWDmlTIPzuJQbBI5RgFYVRFHjFVvWMoA77acRaFu7i7Wzqg==",
+      "type": "package",
+      "path": "asp.versioning.http/8.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "asp.versioning.http.8.1.0.nupkg.sha512",
+        "asp.versioning.http.nuspec",
+        "icon.png",
+        "lib/net8.0/Asp.Versioning.Http.dll",
+        "lib/net8.0/Asp.Versioning.Http.xml"
+      ]
+    },
     "AutoMapper/14.0.0": {
       "sha512": "OC+1neAPM4oCCqQj3g2GJ2shziNNhOkxmNB9cVS8jtx4JbgmRzLcUOxB9Tsz6cVPHugdkHgCaCrTjjSI0Z5sCQ==",
       "type": "package",
@@ -4888,6 +4959,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "Asp.Versioning.Http >= 8.1.0",
       "AutoMapper >= 14.0.0",
       "Microsoft.AspNet.Identity.Core >= 2.2.4",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.6",
@@ -4901,23 +4973,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Mark Magdy\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
+      "projectUniqueName": "D:\\Projects\\WebApi_Exam Project\\Exam_System\\backend\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
-      "packagesPath": "C:\\Users\\Mark Magdy\\.nuget\\packages\\",
-      "outputPath": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\obj\\",
+      "projectPath": "D:\\Projects\\WebApi_Exam Project\\Exam_System\\backend\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "D:\\Projects\\WebApi_Exam Project\\Exam_System\\backend\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Mark Magdy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4950,6 +5022,10 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "Asp.Versioning.Http": {
+            "target": "Package",
+            "version": "[8.1.0, )"
+          },
           "AutoMapper": {
             "target": "Package",
             "version": "[14.0.0, )"
@@ -5012,7 +5088,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   },

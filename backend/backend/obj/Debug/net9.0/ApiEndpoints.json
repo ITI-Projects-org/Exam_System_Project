@@ -65,28 +65,6 @@
   },
   {
     "ContainingType": "backend.Controllers.ExamController",
-    "Method": "TakeExam",
-    "RelativePath": "api/Exam",
-    "HttpMethod": "",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ExamId",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "backend.Controllers.ExamController",
     "Method": "GetExamById",
     "RelativePath": "api/Exam/{id}",
     "HttpMethod": "GET",
@@ -199,6 +177,80 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "getCourses",
+    "RelativePath": "api/Teacher",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "getStudentsforCourse",
+    "RelativePath": "api/Teacher/{courseid}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "courseid",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "getStudentsBySearch",
+    "RelativePath": "api/Teacher/byName/{name}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "name",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "getCoursesforStudent",
+    "RelativePath": "api/Teacher/byStudent/{studentid}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentid",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.TeacherController",
+    "Method": "getCoursesBySearch",
+    "RelativePath": "api/Teacher/findCourse/{search}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "backend.Controllers.WeatherForecastController",

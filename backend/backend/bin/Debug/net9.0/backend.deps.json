@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v9.0": {
       "backend/1.0.0": {
         "dependencies": {
+          "Asp.Versioning.Http": "8.1.0",
           "AutoMapper": "14.0.0",
           "Microsoft.AspNet.Identity.Core": "2.2.4",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.6",
@@ -21,6 +22,28 @@
         },
         "runtime": {
           "backend.dll": {}
+        }
+      },
+      "Asp.Versioning.Abstractions/8.1.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "9.0.6"
+        },
+        "runtime": {
+          "lib/net8.0/Asp.Versioning.Abstractions.dll": {
+            "assemblyVersion": "8.1.0.0",
+            "fileVersion": "8.1.8851.31619"
+          }
+        }
+      },
+      "Asp.Versioning.Http/8.1.0": {
+        "dependencies": {
+          "Asp.Versioning.Abstractions": "8.1.0"
+        },
+        "runtime": {
+          "lib/net8.0/Asp.Versioning.Http.dll": {
+            "assemblyVersion": "8.1.0.0",
+            "fileVersion": "8.1.8851.31627"
+          }
         }
       },
       "AutoMapper/14.0.0": {
@@ -1141,6 +1164,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Asp.Versioning.Abstractions/8.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-mpeNZyMdvrHztJwR1sXIUQ+3iioEU97YMBnFA9WLbsPOYhGwDJnqJMmEd8ny7kcmS9OjTHoEuX/bSXXY3brIFA==",
+      "path": "asp.versioning.abstractions/8.1.0",
+      "hashPath": "asp.versioning.abstractions.8.1.0.nupkg.sha512"
+    },
+    "Asp.Versioning.Http/8.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Xu4xF62Cu9JqYi/CTa2TiK5kyHoa4EluPynj/bPFWDmlTIPzuJQbBI5RgFYVRFHjFVvWMoA77acRaFu7i7Wzqg==",
+      "path": "asp.versioning.http/8.1.0",
+      "hashPath": "asp.versioning.http.8.1.0.nupkg.sha512"
     },
     "AutoMapper/14.0.0": {
       "type": "package",

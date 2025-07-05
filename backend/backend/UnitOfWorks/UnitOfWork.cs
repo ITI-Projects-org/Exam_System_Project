@@ -49,7 +49,7 @@ namespace ELearning.UnitOfWorks
                 return examRepository;
             }
         }
-        public TeacherRepository TeacherRepositoryRepository
+        public TeacherRepository TeacherRepository
         {
             get
             {
