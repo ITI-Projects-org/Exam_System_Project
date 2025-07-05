@@ -10,26 +10,25 @@ namespace backend.Repositories.Implementations
         {
             _context = context;
         }
-
-
-        public IEnumerable<T> GetAll()
+        public async Task<IQueryable<T>> GetAll()
         {
-            return _context.Set<T>().ToList();
+            return _context.Set<T>().AsQueryable();
         }
-        public T GetById(string Id)
+       
+        public async Task<T> GetById(string Id)
         {
             return _context.Set<T>().Find(Id);
         }
 
-        public T Add(T Entity)
+        public async Task<T> Add(T Entity)
         {
             _context.Set<T>().Add(Entity);
             return Entity;
         }
 
-        public void Delete(string Id)
+        public async void Delete(string Id)
         {
-            _context.Set<T>().Remove(GetById(Id));
+            _context.Set<T>().Remove(await GetById(Id));
         }
 
         public T Update(string Id, T Entity)
@@ -38,6 +37,6 @@ namespace backend.Repositories.Implementations
             return Entity;
         }
 
-     
+      
     }
 }

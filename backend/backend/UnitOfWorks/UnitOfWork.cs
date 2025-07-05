@@ -1,5 +1,6 @@
 ﻿using backend.Models;
 using backend.Repositories.Implementations;
+using backend.Repositories.Interfaces;
 
 namespace ELearning.UnitOfWorks
 {
@@ -16,7 +17,24 @@ namespace ELearning.UnitOfWorks
         private QuestionRepository questionRepository;
         private OptionRepository optionRepository;
         private CourseRepository courseRepository;
-
+        StudentExamRepository _studExamRepository;
+        StudentOptionRepository _studOptionRepository;
+        public StudentOptionRepository StudentOptionRepository
+        {
+            get
+            {
+                if (_studOptionRepository == null) _studOptionRepository = new StudentOptionRepository(_context);
+                return _studOptionRepository;
+            }
+        }
+        public StudentExamRepository StudentExamRepository
+        {
+            get
+            {
+                if (_studExamRepository == null) _studExamRepository = new StudentExamRepository(_context);
+                return _studExamRepository;
+            }
+        }
         public CourseRepository CourseRepository
         {
             get

@@ -1,6 +1,8 @@
-﻿namespace backend.Repositories.Interfaces
+﻿using backend.Models;
+
+namespace backend.Repositories.Interfaces
 {
-    public interface IQuestionRepository
+    public interface IQuestionRepository : IGenericRepository<Question>
     {
     }
 }

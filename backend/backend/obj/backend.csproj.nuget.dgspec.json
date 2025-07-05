@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\backend.csproj": {}
+    "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\backend.csproj": {}
   },
   "projects": {
-    "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\backend.csproj": {
+    "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\backend.csproj",
+        "projectUniqueName": "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\melsa\\.nuget\\packages\\",
-        "outputPath": "E:\\Learning\\ITI - FullStack WebDev Using dot NET\\Full-Stack Project\\Exam_System\\backend\\backend\\obj\\",
+        "projectPath": "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\Mark Magdy\\.nuget\\packages\\",
+        "outputPath": "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\melsa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mark Magdy\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -112,7 +112,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
