@@ -1,9 +1,14 @@
-﻿using backend.DTOs;
+﻿using AutoMapper;
+using backend.DTOs;
 using backend.Models;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace backend.Controllers
 {
@@ -11,55 +16,32 @@ namespace backend.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        public UnitOfWork _unit { get; }
+        public IUnitOfWork _unit { get; }
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signIn;
-        public AccountController(UnitOfWork unit, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signIn)
+        IMapper _map;
+        public AccountController(IUnitOfWork unit, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signIn, IMapper map)
         {
             _unit = unit;
             this.userManager = userManager;
             this.signIn = signIn;
+            _map = map;
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO userDTO) {
+        public async Task<IActionResult> Register([FromBody] RegisterDTO userDTO)
+        {
             // Teacher or Student
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            if (userDTO.Role == "Teacher")
-            {
-                Teacher teacher = new Teacher()
-                {
-                    UserName = userDTO.UserName,
-                    FirstName = userDTO.UserName,
-                    LastName = userDTO.UserName,
-                    //LastName = userDTO.LastNamez
-                };
-                var result = await userManager.CreateAsync(teacher, userDTO.Password);
-                if (!result.Succeeded)
-                    return BadRequest(result);
-
-                await userManager.AddToRoleAsync(teacher, "Teacher");
-
-                return Ok("Welcome teacher");
-            }
-            else if (userDTO.Role == "Student")
-            {
-                Student student = new Student()
-                {
-                    UserName = userDTO.UserName,
-                    FirstName = userDTO.UserName,
-                    LastName = userDTO.UserName,
-                };
-                var result = await userManager.CreateAsync(student, userDTO.Password);
-                if (!result.Succeeded)
-                    return Ok("Welcome student");
-                //_unit.StudentRepository.Add(student);
-                await userManager.AddToRoleAsync(student, "Student");
-                return Ok("Done");
-            }
-            return BadRequest("no path selected");
+            Student student = _map.Map<Student>(userDTO);
+            student.Role = UserRole.Student;
+            var result = await userManager.CreateAsync(student, userDTO.Password);
+            if (!result.Succeeded)
+                return BadRequest(result);
+            await userManager.AddToRoleAsync(student, "Student");
+            return Ok("Done");
         }
 
         [HttpPost("login")]
@@ -69,23 +51,41 @@ namespace backend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Not Valid Data");
 
-            ApplicationUser user = await userManager.FindByNameAsync(userDTO.UserName);
+            ApplicationUser user = await userManager.FindByEmailAsync(userDTO.Email);
             if (user == null)
-                return Unauthorized("Invalid UserName or Password");
+                return Unauthorized("Invalid Email or Password");
 
-            var result = await signIn.PasswordSignInAsync(user, userDTO.Password, userDTO.SavePassword, lockoutOnFailure: false);
-            if (result.Succeeded)
+            var found = await userManager.CheckPasswordAsync(user, userDTO.Password);
+            if (found)
             {
-                return Ok("Login Succeded");
+                var roles = await userManager.GetRolesAsync(user);
+                var claims = new List<Claim>
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                };
+
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                var key = "this is my secrect key for the WebAPI/Angular project";
+                var secrectKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+                var siginingCred = new SigningCredentials(secrectKey, SecurityAlgorithms.HmacSha256);
+
+
+                var tokenObject = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(1),
+                    signingCredentials: siginingCred
+                    );
+
+                var token = new JwtSecurityTokenHandler().WriteToken(tokenObject);
+                return Ok(new { token = token });
             }
-            else 
-                return BadRequest("Not Succedd to login");
-        }
-        [HttpGet("logout")]
-        public IActionResult Logout()
-        {
-            signIn.SignOutAsync();
-            return Ok("Logged out");
+            else
+                return Unauthorized("Invalid Email or Password");
         }
     }
 }

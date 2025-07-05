@@ -1,10 +1,12 @@
-using backend.Models;
-using backend.UnitOfWorks;
 using backend.MapperConfig;
-using backend.Repositories.Interfaces;
+using backend.Models;
 using backend.Repositories.Implementations;
+using backend.Repositories.Interfaces;
+using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace backend
 {
@@ -64,6 +66,22 @@ namespace backend
                 });
             });
 
+            // Register Token Validation
+            builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
+           .AddJwtBearer("auth_schema", options =>
+           {
+               var key = "this is my secrect key for the WebAPI/Angular project";
+               var secrectKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+
+               options.TokenValidationParameters = new TokenValidationParameters()
+               {
+                   IssuerSigningKey = secrectKey,
+                   ValidateIssuer = false,
+                   ValidateAudience = false
+               };
+           });
+
+
             var app = builder.Build();
 
             //// Seed the database
@@ -90,7 +108,7 @@ namespace backend
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
