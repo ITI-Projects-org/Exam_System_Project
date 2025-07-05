@@ -4907,11 +4907,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
+      "projectUniqueName": "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\backend.csproj",
+      "projectPath": "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\backend.csproj",
       "packagesPath": "C:\\Users\\Mark Magdy\\.nuget\\packages\\",
-      "outputPath": "E:\\Work\\ITI\\Project Angular\\Exam_System\\backend\\backend\\obj\\",
+      "outputPath": "E:\\Work\\ITI\\Project Angular\\v3\\Exam_System\\backend\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
