@@ -70,7 +70,6 @@ namespace backend
                 });
             });
 
-            // Register Token Validation
             builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
            .AddJwtBearer("auth_schema", options =>
            {
@@ -88,22 +87,6 @@ namespace backend
 
             var app = builder.Build();
 
-            //// Seed the database
-            //// comment out after finishing
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    try
-            //    {
-            //        await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            //        logger.LogError(ex, "An error occurred while seeding the database.");
-            //    }
-            //}
-
-            // Configure the HTTP request pipeline.  
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
@@ -111,13 +94,13 @@ namespace backend
             }
 
             app.UseHttpsRedirection();
-
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
 
-            await app.RunAsync(); // Changed to RunAsync to match the async Main method
+            await app.RunAsync(); 
         }
     }
 }

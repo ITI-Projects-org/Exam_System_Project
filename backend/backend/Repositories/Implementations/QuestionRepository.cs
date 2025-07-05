@@ -9,10 +9,12 @@ namespace backend.Repositories.Implementations
         public QuestionRepository(ExamSysContext context) : base(context)
         {
         }
-
-        public async Task<ICollection<Question>> GetQuestionsWithOptions(int ExamId)
+        public async Task<Exam> GetExamWithQuestionsWithOptions(int ExamId)
         {
-            return await _context.Questions.Where(e => e.Id == ExamId).Include(e => e.Options).ToListAsync();
+            return await _context.Exams
+                        .Include(e => e.Questions)
+                            .ThenInclude(q => q.Options)
+                        .FirstOrDefaultAsync(e => e.Id == ExamId);
         }
     }
 }

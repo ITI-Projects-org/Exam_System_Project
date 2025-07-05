@@ -69,7 +69,9 @@ namespace backend.DTOs
         public int MinDegree { get; set; }
         public bool IsAbsent { get; set; }
         public List<Stud_Option> stud_Options { get; set; }
-        public List<Option> Options { get; set; }
+        //public List<Option> Options { get; set; }
+        public ICollection<QuestionForExamDTO> Questions { get; set; }
+
         public int StudDegree { get; set; }
     }
 }

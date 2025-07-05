@@ -1,5 +1,6 @@
 ﻿using backend.Models;
 using backend.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories.Implementations
 {
@@ -16,7 +17,8 @@ namespace backend.Repositories.Implementations
 
         public async Task<IEnumerable<Exam>> GetAllExamsofStudent(string Student_ID)
         {
-            return _context.Exams.Join(_context.StudExams, e => e.Id, se => se.ExamId, (e, se) => e);
+         
+            return _context.StudExams.Where(se => se.StudentId == Student_ID).Include(se=>se.Exam).Select(se=>se.Exam);
         }
 
         public async Task<Exam> TakeExam(string Student_ID, string ExamID)

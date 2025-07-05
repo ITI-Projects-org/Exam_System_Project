@@ -1,5 +1,6 @@
 ﻿using backend.DTOs;
 using backend.Models;
+using backend.Repositories.Implementations;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -68,7 +69,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Student")]
+        //[Authorize(Roles = "Student")]
         public async Task<IActionResult> GetStudentExamDetails(int id)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -87,7 +88,7 @@ namespace backend.Controllers
             DateTime egyptCurrentTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, egyptTimeZone);
 
             DateTime examEndDate = exam.StartDate + exam.Duration;
-
+            var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
             if (egyptCurrentTime < exam.StartDate)
             {
                 var examDto = new ExamDTO
@@ -101,27 +102,35 @@ namespace backend.Controllers
                 };
                 return Ok(examDto);
             }
+
             else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
             {
-                var questionsForExam = await _unit.QuestionRepository.GetQuestionsWithOptions(id);
+                ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
+
                 var duringExamDto = new DuringExamDTO
                 {
                     Id = exam.Id,
                     Title = exam.Title,
                     StartDate = exam.StartDate,
                     Duration = exam.Duration,
-                    Questions = questionsForExam.Select(q => new QuestionForExamDTO
-                    {
-                        Id = q.Id,
-                        Title = q.Title,
-                        Degree = q.Degree,
-                        Options = q.Options.Select(o => new OptionForExamDTO
-                        {
-                            Id = o.Id,
-                            Title = o.Title,
-                        }).ToList()
-                    }).ToList()
                 };
+                duringExamDto.Questions = new List<QuestionForExamDTO>();
+                foreach (var question in ExamWithQuestionsWithOptions.Questions)
+                {
+                    QuestionForExamDTO qDTO = new QuestionForExamDTO();
+                    qDTO.Id = question.Id;
+                    qDTO.Title= question.Title;
+                    qDTO.Degree= question.Degree;
+                    qDTO.Options = new List<OptionForExamDTO>();
+                    foreach (var option in question.Options)
+                    {
+                        OptionForExamDTO oDTO = new OptionForExamDTO();
+                        oDTO.Id = option.Id;
+                        oDTO.Title= option.Title;
+                        qDTO.Options.Add(oDTO);
+                    }
+                    duringExamDto.Questions.Add(qDTO);
+                }
                 return Ok(duringExamDto);
             }
             else
@@ -140,36 +149,42 @@ namespace backend.Controllers
                         MinDegree = exam.MinDegree,
                         IsAbsent = true,
                         stud_Options = new List<Stud_Option>(),
-                        Options = new List<Option>()
+                        //Options = new List<Option>()
                     });
                 }
 
-                var questionsWithAllOptions = await _unit.QuestionRepository.GetQuestionsWithOptions(id);
+                var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
+                //var stud_Options = await _unit.StudentOptionRepository.
 
-                var optionIdsForExam = questionsWithAllOptions
-                    .SelectMany(q => q.Options)
-                    .Select(o => o.Id)
-                    .ToHashSet();
+                //var optionIdsForExam = questionsWithAllOptions
+                //    .SelectMany(q => q.Options)
+                //    .Select(o => o.Id)
+                //    .ToHashSet();
 
-                var allStudentOptions = await _unit.StudentOptionRepository.GetAll();
-                var studentSubmittedOptions = allStudentOptions
-                    .Where(so => so.StudentId == currentUserId && optionIdsForExam.Contains(so.OptionId))
-                    .ToList();
+                //var allStudentOptions = await _unit.StudentOptionRepository.GetAll();
+                //var studentSubmittedOptions = allStudentOptions
+                //    .Where(so => so.StudentId == currentUserId && optionIdsForExam.Contains(so.OptionId))
+                //    .ToList();
 
-                var afterExamEndDto = new AfterExamEndDTO
-                {
-                    Id = exam.Id,
-                    Title = exam.Title,
-                    StartDate = exam.StartDate,
-                    Duration = exam.Duration,
-                    MaxDegree = exam.MaxDegree,
-                    MinDegree = exam.MinDegree,
-                    StudDegree = studentExamRecord.StudDegree,
-                    IsAbsent = false,
-                    stud_Options = studentSubmittedOptions,
-                    Options = questionsWithAllOptions.SelectMany(q => q.Options).ToList()
-                };
-                return Ok(afterExamEndDto);
+
+                //var afterExamEndDto = new AfterExamEndDTO
+                //{
+                //    Id = exam.Id,
+                //    Title = exam.Title,
+                //    StartDate = exam.StartDate,
+                //    Duration = exam.Duration,
+                //    MaxDegree = exam.MaxDegree,
+                //    MinDegree = exam.MinDegree,
+                //    StudDegree = studentExamRecord.StudDegree,
+                //    IsAbsent = false,
+                //    stud_Options = studentSubmittedOptions,
+                //    Options = questionsWithAllOptions.SelectMany(q => q.Options).ToList()
+                //};
+
+                
+
+                // get all student options
+                return Ok();
             }
         }
 
