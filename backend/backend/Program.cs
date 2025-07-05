@@ -1,8 +1,8 @@
-using backend.MapperConfig;
 using backend.Models;
-using backend.Repositories.Implementations;
-using backend.Repositories.Interfaces;
 using backend.UnitOfWorks;
+using backend.MapperConfig;
+using backend.Repositories.Interfaces;
+using backend.Repositories.Implementations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +13,7 @@ namespace backend
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            string _policy = "";
 
             // Add services to the container.  
 
@@ -48,6 +49,20 @@ namespace backend
 
             // Configure AutoMapper
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingConfigurations>());
+
+            // Register Cors
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(_policy,
+                builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.WithOrigins("https://localhost:7088");
+                    builder.WithMethods("Post", "get");
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                });
+            });
 
             var app = builder.Build();
 
