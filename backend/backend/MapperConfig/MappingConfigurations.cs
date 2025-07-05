@@ -8,7 +8,9 @@ namespace backend.MapperConfig
     {
         public MappingConfigurations()
         {
-            CreateMap<Student, StudentDTO>()
+            CreateMap<Student, StudentDTO>();
+
+            CreateMap<Student, StudentDetailsDTO>()
                 .ForMember(dest => dest.StudCourses, opt => opt.MapFrom(src => src.StudCourses))
                 .ForMember(dest => dest.StudExams, opt => opt.MapFrom(src => src.StudExams))
                 .ForMember(dest => dest.StudOptions, opt => opt.MapFrom(src => src.StudOptions));

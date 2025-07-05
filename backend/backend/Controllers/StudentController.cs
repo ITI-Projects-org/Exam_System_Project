@@ -19,15 +19,15 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<StudentDetailsDTO>>> GetStudents()
         {
             var students = await _unitOfWork.StudentRepository.GetAllStudentsWithDetails();
-            var studentDtos = _mapper.Map<List<StudentDTO>>(students);
+            var studentDtos = _mapper.Map<List<StudentDetailsDTO>>(students);
             return Ok(studentDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<StudentDTO>> GetStudent(string id)
+        public async Task<ActionResult<StudentDetailsDTO>> GetStudent(string id)
         {
             var student = await _unitOfWork.StudentRepository.GetStudentWithDetails(id);
 
@@ -36,12 +36,12 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            var studentDto = _mapper.Map<StudentDTO>(student);
+            var studentDto = _mapper.Map<StudentDetailsDTO>(student);
             return Ok(studentDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<StudentDTO>> UpdateStudent(string id, StudentDTO studentDto)
+        public async Task<ActionResult<StudentDetailsDTO>> UpdateStudent(string id, StudentDetailsDTO studentDto)
         {
             if (id != studentDto.Id)
             {
@@ -58,7 +58,7 @@ namespace backend.Controllers
             _unitOfWork.StudentRepository.Update(id, existingStudent);
             await _unitOfWork.SaveAsync();
 
-            var updatedStudentDto = _mapper.Map<StudentDTO>(existingStudent);
+            var updatedStudentDto = _mapper.Map<StudentDetailsDTO>(existingStudent);
             return Ok(updatedStudentDto);
         }
 
