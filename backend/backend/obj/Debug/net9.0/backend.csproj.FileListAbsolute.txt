@@ -531,3 +531,4 @@ E:\Work\ITI\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\staticw
 E:\Work\ITI\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\backend.csproj.Up2Date
 E:\Work\ITI\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\backend.genruntimeconfig.cache
 E:\Work\ITI\Project Angular\Exam_System\backend\backend\obj\Debug\net9.0\ref\backend.dll
+D:\ITI\WebAPI-Angular project\Exam_System\backend\backend\bin\Debug\net9.0\Microsoft.AspNet.Identity.Core.dll

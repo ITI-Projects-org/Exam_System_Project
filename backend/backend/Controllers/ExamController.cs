@@ -93,9 +93,9 @@ namespace backend.Controllers
         {
             _unit.ExamRepository.Delete(Id);
         }
-        public void TakeExam(string ExamId)
-        {
+        //public void TakeExam(string ExamId)
+        //{
             
-        }
+        //}
     }
 }

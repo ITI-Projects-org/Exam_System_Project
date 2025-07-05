@@ -1,6 +1,36 @@
 [
   {
     "ContainingType": "backend.Controllers.AccountController",
+    "Method": "Check",
+    "RelativePath": "api/Account/check",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AccountController",
+    "Method": "CheckStudent",
+    "RelativePath": "api/Account/checkStudent",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AccountController",
+    "Method": "CheckTeacher",
+    "RelativePath": "api/Account/checkTeacher",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.AccountController",
     "Method": "Login",
     "RelativePath": "api/Account/login",
     "HttpMethod": "POST",
@@ -13,16 +43,6 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "backend.Controllers.AccountController",
-    "Method": "Logout",
-    "RelativePath": "api/Account/logout",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -53,28 +73,6 @@
         "Name": "exam",
         "Type": "backend.Models.Exam",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "backend.Controllers.ExamController",
-    "Method": "TakeExam",
-    "RelativePath": "api/Exam",
-    "HttpMethod": "",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "ExamId",
-        "Type": "System.String",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": [

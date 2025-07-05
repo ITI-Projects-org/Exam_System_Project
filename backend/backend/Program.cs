@@ -1,9 +1,12 @@
 
+using backend.MapperConfig;
 using backend.Models;
 using ELearning.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Proxies;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace backend
 {
@@ -37,6 +40,22 @@ namespace backend
 
             builder.Services.AddOpenApi();  
             builder.Services.AddScoped<UnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingConfigurations>());
+
+            builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
+            .AddJwtBearer("auth_schema", options =>
+            {
+                var key = "this is my secrect key for the WebAPI/Angular project";
+                var secrectKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = secrectKey,
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+
+            });
 
 
             var app = builder.Build();
@@ -64,7 +83,7 @@ namespace backend
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
