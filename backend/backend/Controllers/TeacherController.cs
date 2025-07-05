@@ -21,9 +21,9 @@ namespace backend.Controllers
 
         [HttpGet]
         [Route("/api/Courses")]
-        public IActionResult GetCourses()
+        public async Task<IActionResult> GetCourses()
         {
-            var courses = Unit.CourseRepository.GetAll();
+            var courses = await Unit.CourseRepository.GetAll();
 
             return Ok(courses);
         }

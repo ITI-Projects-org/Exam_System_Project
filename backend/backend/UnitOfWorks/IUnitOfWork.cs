@@ -10,6 +10,8 @@ namespace backend.UnitOfWorks
         IQuestionRepository QuestionRepository { get; }
         IOptionRepository OptionRepository { get; }
         ICourseRepository CourseRepository { get; }
+        IStudentExamRepository StudentExamRepository { get; }
+        IStudentOptionRepository StudentOptionRepository { get; }
 
         Task SaveAsync(); // Changed to async
     }

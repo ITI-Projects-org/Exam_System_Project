@@ -47,6 +47,8 @@ namespace backend
             //builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
             //builder.Services.AddScoped<IOptionRepository, OptionRepository>();
             //builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            //builder.Services.AddScoped<IStudentExamRepository, StudentExamRepository>();
+            //builder.Services.AddScoped<IStudentOptionRepository, StudentOptionRepository>();
             
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

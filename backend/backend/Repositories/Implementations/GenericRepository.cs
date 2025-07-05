@@ -17,6 +17,11 @@ namespace backend.Repositories.Implementations
             return await _context.Set<T>().ToListAsync();
         }
 
+        public async Task<IQueryable<T>> GetAllQueryable()
+        {
+            return _context.Set<T>().AsQueryable();
+        }
+
         public async Task<T> GetById(string Id)
         {
             return await _context.Set<T>().FindAsync(Id);

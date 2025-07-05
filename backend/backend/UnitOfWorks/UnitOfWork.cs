@@ -18,6 +18,8 @@ namespace backend.UnitOfWorks
         IQuestionRepository? _questionRepository;
         IOptionRepository? _optionRepository;
         ICourseRepository? _courseRepository;
+        IStudentExamRepository? _studentExamRepository;
+        IStudentOptionRepository? _studentOptionRepository;
 
         public IStudentRepository StudentRepository
         {
@@ -69,6 +71,24 @@ namespace backend.UnitOfWorks
             {
                 if (_courseRepository == null) _courseRepository = new CourseRepository(_context);
                 return _courseRepository;
+            }
+        }
+
+        public IStudentOptionRepository StudentOptionRepository
+        {
+            get
+            {
+                if (_studentOptionRepository == null) _studentOptionRepository = new StudentOptionRepository(_context);
+                return _studentOptionRepository;
+            }
+        }
+
+        public IStudentExamRepository StudentExamRepository
+        {
+            get
+            {
+                if (_studentExamRepository == null) _studentExamRepository = new StudentExamRepository(_context);
+                return _studentExamRepository;
             }
         }
 
