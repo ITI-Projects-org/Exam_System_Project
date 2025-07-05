@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using backend.Models;
 using backend.DTOs;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +10,8 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class TeacherController : Controller
     {
-        public IUnitOfWork Unit { get; }
-        public IMapper Map { get; }
+        readonly IUnitOfWork Unit;
+        readonly IMapper Map;
 
         public TeacherController(IUnitOfWork unit, IMapper map)
         {
@@ -20,9 +21,9 @@ namespace backend.Controllers
 
         [HttpGet]
         [Route("/api/Courses")]
-        public IActionResult getCourses()
+        public IActionResult GetCourses()
         {
-            var courses = Unit.TeacherRepository.getCourses();
+            var courses = Unit.CourseRepository.GetAll();
 
             return Ok(courses);
         }
@@ -56,6 +57,46 @@ namespace backend.Controllers
         {
             var Crs = await Unit.TeacherRepository.getCoursesforStudent(studentid.ToString());
             return Ok(Crs);
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllTeachers()
+        {
+            var teachers = await Unit.TeacherRepository.GetAll();
+            var teachersDto = Map.Map<List<TeacherDTO>>(teachers);
+            
+            return Ok(teachersDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTeacher(TeacherDTO teacherDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+                
+            var teacher = Map.Map<Teacher>(teacherDto);
+            await Unit.TeacherRepository.Add(teacher);
+            await Unit.SaveAsync();
+
+            return CreatedAtAction(nameof(AddTeacher), new { id = teacher.Id }, teacherDto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTeacher(string id, TeacherDTO teacherDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingTeacher = await Unit.TeacherRepository.GetById(id);
+            if (existingTeacher == null)
+                return NotFound();
+
+            Map.Map(teacherDto, existingTeacher);
+
+            Unit.TeacherRepository.Update(id, existingTeacher);
+            await Unit.SaveAsync();
+
+            return NoContent();
         }
     }
 }

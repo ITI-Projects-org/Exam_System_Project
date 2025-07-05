@@ -6,22 +6,14 @@ namespace backend.Repositories.Implementations
 {
     public class TeacherRepository : GenericRepository<Teacher>, ITeacherRepository
     {
-        readonly ExamSysContext _context;
         public TeacherRepository(ExamSysContext context) : base(context)
         {
-            _context = context;
-        }
-
-        public List<Course> getCourses()
-        {
-            return _context.Courses.ToList();
         }
 
         public List<Course> getCoursesBySearch(string crs)
         {
             return _context.Courses.Where(c => c.Name.Contains(crs)).ToList();
         }
-
 
         public async Task<List<Course>> getCoursesforStudent(string studentId)
         {

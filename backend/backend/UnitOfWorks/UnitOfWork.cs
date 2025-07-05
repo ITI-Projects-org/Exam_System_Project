@@ -12,12 +12,12 @@ namespace backend.UnitOfWorks
             _context = context;
         }
 
-        IStudentRepository _studentRepository;
-        ITeacherRepository _teacherRepository;
-        IExamRepository _examRepository;
-        IQuestionRepository _questionRepository;
-        IOptionRepository _optionRepository;
-        ICourseRepository _courseRepository;
+        IStudentRepository? _studentRepository;
+        ITeacherRepository? _teacherRepository;
+        IExamRepository? _examRepository;
+        IQuestionRepository? _questionRepository;
+        IOptionRepository? _optionRepository;
+        ICourseRepository? _courseRepository;
 
         public IStudentRepository StudentRepository
         {
@@ -27,6 +27,7 @@ namespace backend.UnitOfWorks
                 return _studentRepository;
             }
         }
+
         public ITeacherRepository TeacherRepository
         {
             get
@@ -35,6 +36,9 @@ namespace backend.UnitOfWorks
                 return _teacherRepository;
             }
         }
+
+        //public TeacherRepository TeacherRepository => _teacherRepository ??= new TeacherRepository(_context);
+
         public IExamRepository ExamRepository
         {
             get

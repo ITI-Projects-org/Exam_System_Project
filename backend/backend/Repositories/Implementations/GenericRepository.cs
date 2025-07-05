@@ -6,7 +6,7 @@ namespace backend.Repositories.Implementations
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        readonly ExamSysContext _context;
+        protected readonly ExamSysContext _context;
         public GenericRepository(ExamSysContext context)
         {
             _context = context;

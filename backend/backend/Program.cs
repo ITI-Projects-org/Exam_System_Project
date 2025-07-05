@@ -39,15 +39,17 @@ namespace backend
 
             builder.Services.AddOpenApi();
 
-            // Register Repositories and Unit of Work
+            // Register Repositories
+            //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            //builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            //builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
+            //builder.Services.AddScoped<IExamRepository, ExamRepository>();
+            //builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+            //builder.Services.AddScoped<IOptionRepository, OptionRepository>();
+            //builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            
+            // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-            builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-            builder.Services.AddScoped<IExamRepository, ExamRepository>();
-            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-            builder.Services.AddScoped<IOptionRepository, OptionRepository>();
-            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
             // Configure AutoMapper
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingConfigurations>());

@@ -28,6 +28,7 @@ namespace backend.MapperConfig
                 .ForMember(dest => dest.QuestionTitle, opt => opt.MapFrom(src => src.Option.Question.Title));
 
             CreateMap<Student, RegisterDTO>().ReverseMap();
+            CreateMap<Teacher, TeacherDTO>().ReverseMap();
         }
     }
 }
