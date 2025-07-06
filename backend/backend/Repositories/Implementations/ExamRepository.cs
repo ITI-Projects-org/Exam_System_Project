@@ -21,12 +21,18 @@ namespace backend.Repositories.Implementations
             return _context.StudExams.Where(se => se.StudentId == Student_ID).Include(se=>se.Exam).Select(se=>se.Exam);
         }
 
-        public async Task<Exam> TakeExam(string Student_ID, string ExamID)
+        public async Task<Exam> TakeExam(string Student_ID, int ExamID)
         {
-            var stud_exam = _context.StudExams.Where(se => se.StudentId == Student_ID).FirstOrDefault();
+            var stud_exam = await  _context.StudExams.Where(se => se.StudentId == Student_ID && se.ExamId == ExamID).FirstOrDefaultAsync();
             stud_exam.IsAbsent = false;
             stud_exam.StudStartDate = DateTime.Now;
-            Exam exam = _context.Exams.Where(e => e.Id.ToString() == ExamID).FirstOrDefault();
+            Exam? exam = await _context.Exams
+                .Where(e => e.Id == ExamID)
+                .Include(e => e.Questions)
+                .ThenInclude(q => q.Options)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+                
             return exam;
         }
         public void CloseExam(string Student_ID, int ExamID)

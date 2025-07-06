@@ -215,12 +215,49 @@ namespace backend.Controllers
         }
 
         [HttpGet("TakeExam")]
-        public void TakeExam(string ExamId)
+        public async Task<IActionResult> TakeExam(int ExamId)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            try
+            {
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (currentUserId == null)
+                    return Unauthorized("User not authenticated");
 
-            if (currentUserId == null) return;
-            _unit.ExamRepository.TakeExam(currentUserId, ExamId);
+                var exam = await _unit.ExamRepository.TakeExam(currentUserId, ExamId);
+
+                if (exam == null)
+                    return NotFound("Exam not found or you are not enrolled in this exam");
+
+                // Save changes to database
+                await _unit.SaveAsync();
+
+                // Return a DTO instead of the entity to avoid serialization issues
+                var examDto = new DuringExamDTO
+                {
+                    Id = exam.Id,
+                    Title = exam.Title,
+                    StartDate = exam.StartDate,
+                    Duration = exam.Duration,
+                    Questions = exam.Questions?.Select(q => new QuestionForExamDTO
+                    {
+                        Id = q.Id,
+                        Title = q.Title,
+                        Degree = q.Degree,
+                        Options = q.Options?.Select(o => new OptionForExamDTO
+                        {
+                            Id = o.Id,
+                            Title = o.Title
+                        }).ToList() ?? new List<OptionForExamDTO>()
+                    }).ToList() ?? new List<QuestionForExamDTO>()
+                };
+
+                return Ok(examDto);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "An error occurred while taking the exam");
+            }
         }
 
         [HttpGet("CloseExam")]
@@ -244,11 +281,19 @@ namespace backend.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [Authorize("Teacher")]
-        public void AssignStudentsToExam(int ExamId, ICollection<string> studs_Id)
+        [HttpPost("Assign")]
+        [Authorize(Roles= "Teacher")]
+        public async Task<IActionResult> AssignStudentsToExam([FromQuery]  int ExamId,[FromQuery] string[] studs_Id)
         {
+
             _unit.ExamRepository.AssignStudsToExam(ExamId, studs_Id);
+            await _unit.SaveAsync();
+            return Ok(new
+            {
+                Message="Students assigned to exam successfully",
+                ExamId = ExamId,
+                StudentIds = studs_Id
+            });
         }
     }
 }
