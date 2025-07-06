@@ -21,12 +21,4 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EditorConfigFiles Remove="E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\Repositories\Interfaces\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="E:\Learning\ITI - FullStack WebDev Using dot NET\Full-Stack Project\Exam_System\backend\backend\Repositories\Interfaces\.editorconfig" />
-  </ItemGroup>
-
 </Project>
