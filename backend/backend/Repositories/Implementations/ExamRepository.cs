@@ -90,6 +90,11 @@ namespace backend.Repositories.Implementations
 
             return examDTO;
         }
-      
+        public void Remove(Exam exam)
+        {
+            _context.Exams.Remove(exam);
+        }
+
+
     }
 }

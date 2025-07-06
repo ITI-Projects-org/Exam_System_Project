@@ -135,11 +135,11 @@ namespace backend.Controllers
             _unit.ExamRepository.Update(exam.Id.ToString(), exam);
         }
 
-        [HttpDelete("{id}")]
-        public void RemoveExam(string Id)
-        {
-            _unit.ExamRepository.Delete(Id);
-        }
+        //[HttpDelete("{id}")]
+        //public void RemoveExam(string Id)
+        //{
+        //    _unit.ExamRepository.Delete(Id);
+        //}
 
         [HttpGet("TakeExam")]
         public async Task<IActionResult> TakeExam(int ExamId)
@@ -282,54 +282,54 @@ namespace backend.Controllers
 
 
 
-        //[HttpDelete("DeleteExam/{id}")]
-        //[Authorize(Roles = "Teacher")]
-        //public async Task<IActionResult> DeleteExam(int id)
-        //{
-        //    try
-        //    {
-        //        //var existingExam = await _unit.ExamRepository.GetById(id);
-        //        var existingExam = await _unit.ExamRepository.GetExamByIdWithWithQuestionsWithOptions(id);
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> DeleteExam(int id)
+        {
+            try
+            {
+                //var existingExam = await _unit.ExamRepository.GetById(id);
+                var existingExam = await _unit.ExamRepository.GetExamByIdWithWithQuestionsWithOptions(id);
 
 
-        //        if (existingExam == null)
-        //            return NotFound($"Exam with ID {id} not found");
+                if (existingExam == null)
+                    return NotFound($"Exam with ID {id} not found");
 
-        //        // Check if the teacher owns this exam
-        //        if (existingExam.TeacherId != User.FindFirstValue(ClaimTypes.NameIdentifier))
-        //            return Forbid("You can only delete your own exams");
+                // Check if the teacher owns this exam
+                if (existingExam.TeacherId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    return Forbid("You can only delete your own exams");
 
-        //        // Check if exam has been taken by students (optional business rule)
-        //        var hasStudentResults = await _unit.StudentExamRepository.AnyAsync(se => se.ExamId == id);
-        //        if (hasStudentResults)
-        //        {
-        //            return BadRequest("Cannot delete exam that has been taken by students");
-        //        }
+                // Check if exam has been taken by students (optional business rule)
+                //var hasStudentResults = await _unit.StudentExamRepository.AnyAsync(se => se.ExamId == id);
+                //if (hasStudentResults)
+                //{
+                //    return BadRequest("Cannot delete exam that has been taken by students");
+                //}
 
-        //        // Remove related entities first (if cascade delete is not configured)
-        //        if (existingExam.Questions?.Any() == true)
-        //        {
-        //            foreach (var question in existingExam.Questions)
-        //            {
-        //                if (question.Options?.Any() == true)
-        //                {
-        //                    _unit.OptionRepository.RemoveRange(question.Options);
-        //                }
-        //            }
-        //            _unit.QuestionRepository.RemoveRange(existingExam.Questions);
-        //        }
+                // Remove related entities first (if cascade delete is not configured)
+                if (existingExam.Questions?.Any() == true)
+                {
+                    foreach (var question in existingExam.Questions)
+                    {
+                        if (question.Options?.Any() == true)
+                        {
+                            _unit.OptionRepository.RemoveRange(question.Options);
+                        }
+                    }
+                    _unit.QuestionRepository.RemoveRange(existingExam.Questions);
+                }
 
-        //        // Remove the exam
-        //        _unit.ExamRepository.Remove(existingExam);
-        //        await _unit.SaveAsync();
+                // Remove the exam
+                _unit.ExamRepository.Remove(existingExam);
+                await _unit.SaveAsync();
 
-        //        return Ok(new { message = "Exam deleted successfully" });
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        return BadRequest(new { error = err.Message });
-        //    }
-        //}
+                return Ok(new { message = "Exam deleted successfully" });
+            }
+            catch (Exception err)
+            {
+                return BadRequest(new { error = err.Message });
+            }
+        }
 
 
     }

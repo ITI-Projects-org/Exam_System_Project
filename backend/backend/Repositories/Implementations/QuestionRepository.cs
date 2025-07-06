@@ -16,5 +16,10 @@ namespace backend.Repositories.Implementations
                             .ThenInclude(q => q.Options)
                         .FirstOrDefaultAsync(e => e.Id == ExamId);
         }
+
+        public void RemoveRange(ICollection<Question> questions)
+        {
+            _context.Questions.RemoveRange(questions);
+        }
     }
 }

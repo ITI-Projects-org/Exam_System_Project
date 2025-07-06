@@ -1,5 +1,7 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
+using Microsoft.Identity.Client;
 
 namespace backend.Repositories.Implementations
 
@@ -8,6 +10,16 @@ namespace backend.Repositories.Implementations
     {
         public OptionRepository(ExamSysContext context) : base(context)
         {
+            
         }
+        public async void RemoveRange(ICollection<Question> questions)
+        {
+            _context.Questions.RemoveRange(questions);
+        }
+        public void RemoveRange(ICollection<Option> options)
+        {
+            _context.Options.RemoveRange(options);
+        }
+        
     }
 }
