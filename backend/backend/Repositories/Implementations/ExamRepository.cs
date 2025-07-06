@@ -29,9 +29,9 @@ namespace backend.Repositories.Implementations
             Exam exam = _context.Exams.Where(e => e.Id.ToString() == ExamID).FirstOrDefault();
             return exam;
         }
-        public void CloseExam(string Student_ID, string ExamID)
+        public void CloseExam(string Student_ID, int ExamID)
         {
-            var stud_exam = _context.StudExams.Where(se => se.StudentId == Student_ID).FirstOrDefault();
+            var stud_exam = _context.StudExams.Where(se => se.StudentId == Student_ID&& se.ExamId== ExamID).FirstOrDefault();
             stud_exam.StudEndDate = DateTime.Now;
         }
 
@@ -56,6 +56,16 @@ namespace backend.Repositories.Implementations
                 StudentId = StudentId
             };
             _context.StudExams.Add(st_exam);
+        }
+        public async Task<Exam> GetStudentExamById(string UserId, int examId)
+        {
+            //List<Stud_Exam> Studet_Exams = await _context.StudExams.Where(se => se.StudentId == UserId).ToListAsync();
+            //return await _context.Exams.Join(Studet_Exams, e => e.Id, se => se.ExamId, (e, se) => e)
+            //    .FirstOrDefaultAsync();
+            return await _context.StudExams.
+                Where(se => se.StudentId == UserId && se.ExamId == examId)
+                .Include(se => se.Exam)
+                .Select(se => se.Exam).FirstOrDefaultAsync();
         }
     }
 }

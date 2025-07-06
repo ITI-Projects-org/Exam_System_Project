@@ -56,7 +56,9 @@ namespace backend.DTOs
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        // IsCorrect is intentionally omitted
+        public bool? IsCorrect { get; set; }
+        public bool IsChoosedByStudent { get; set; } = false;
+        
     }
 
     public class AfterExamEndDTO

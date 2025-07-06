@@ -5,6 +5,7 @@ using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.AccessControl;
 using System.Security.Claims;
 
 namespace backend.Controllers
@@ -14,7 +15,7 @@ namespace backend.Controllers
     public class ExamController : ControllerBase
     {
         IUnitOfWork _unit { get; }
-        string UserId { get; set; }
+        //string UserId { get; set; }
 
         public ExamController(IUnitOfWork unit)
         {
@@ -105,7 +106,7 @@ namespace backend.Controllers
 
             else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
             {
-                ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
+                //ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
 
                 var duringExamDto = new DuringExamDTO
                 {
@@ -135,11 +136,12 @@ namespace backend.Controllers
             }
             else
             {
+                var afterExam = new AfterExamEndDTO();
                 var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, id).FirstOrDefaultAsync();
 
                 if (studentExamRecord == null)
                 {
-                    return Ok(new AfterExamEndDTO
+                    afterExam = new AfterExamEndDTO()
                     {
                         Id = exam.Id,
                         Title = exam.Title,
@@ -149,43 +151,48 @@ namespace backend.Controllers
                         MinDegree = exam.MinDegree,
                         IsAbsent = true,
                         stud_Options = new List<Stud_Option>(),
-                        //Options = new List<Option>()
-                    });
+                        Questions = new List<QuestionForExamDTO>()
+                    };
+                }
+                else {
+                    // mapping questions with options
+                    List<Stud_Option> stdOptions = await _unit.StudentOptionRepository.GetAllStudentOptions(currentUserId);
+                    afterExam.Questions = new List<QuestionForExamDTO>();
+                    foreach (var question in ExamWithQuestionsWithOptions.Questions)
+                    {
+
+                        QuestionForExamDTO qDTO = new QuestionForExamDTO();
+
+                        qDTO.Id = question.Id;
+                        qDTO.Title = question.Title;
+                        qDTO.Degree = question.Degree;
+                        qDTO.Options = new List<OptionForExamDTO>();
+
+                        foreach (var option in question.Options)
+                        {
+                            OptionForExamDTO oDTO = new OptionForExamDTO();
+                            oDTO.Id = option.Id;
+                            oDTO.Title = option.Title;
+                            oDTO.IsCorrect = option.IsCorrect;
+                            foreach (Stud_Option Std_Option in stdOptions)
+                            {
+                                if(Std_Option.OptionId == option.Id)
+                                    oDTO.IsChoosedByStudent = true;
+                            }
+                            qDTO.Options.Add(oDTO);
+                        }
+                        afterExam.Questions.Add(qDTO);
+                    }
+                    return Ok(afterExam);
+
+
+                }
+
+                    
                 }
 
                 var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
-                //var stud_Options = await _unit.StudentOptionRepository.
-
-                //var optionIdsForExam = questionsWithAllOptions
-                //    .SelectMany(q => q.Options)
-                //    .Select(o => o.Id)
-                //    .ToHashSet();
-
-                //var allStudentOptions = await _unit.StudentOptionRepository.GetAll();
-                //var studentSubmittedOptions = allStudentOptions
-                //    .Where(so => so.StudentId == currentUserId && optionIdsForExam.Contains(so.OptionId))
-                //    .ToList();
-
-
-                //var afterExamEndDto = new AfterExamEndDTO
-                //{
-                //    Id = exam.Id,
-                //    Title = exam.Title,
-                //    StartDate = exam.StartDate,
-                //    Duration = exam.Duration,
-                //    MaxDegree = exam.MaxDegree,
-                //    MinDegree = exam.MinDegree,
-                //    StudDegree = studentExamRecord.StudDegree,
-                //    IsAbsent = false,
-                //    stud_Options = studentSubmittedOptions,
-                //    Options = questionsWithAllOptions.SelectMany(q => q.Options).ToList()
-                //};
-
-                
-
-                // get all student options
                 return Ok();
-            }
         }
 
         [HttpPost]
@@ -210,15 +217,31 @@ namespace backend.Controllers
         [HttpGet("TakeExam")]
         public void TakeExam(string ExamId)
         {
-            if (UserId == null) return;
-            _unit.ExamRepository.TakeExam(UserId, ExamId);
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (currentUserId == null) return;
+            _unit.ExamRepository.TakeExam(currentUserId, ExamId);
         }
 
         [HttpGet("CloseExam")]
-        public void CloseExam(string ExamId)
+        [Authorize(Roles = "Student")]
+
+        public async Task<IActionResult >CloseExam(int ExamId)
         {
-            if (UserId == null) return;
-            _unit.ExamRepository.CloseExam(UserId, ExamId);
+            try{
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            Exam exam = await _unit.ExamRepository.GetStudentExamById(currentUserId, ExamId);
+            if (currentUserId == null) return Unauthorized();
+            
+            _unit.ExamRepository.CloseExam(currentUserId, ExamId);
+            await _unit.SaveAsync();
+            return Ok();
+            }
+            catch (Exception err) {
+                return StatusCode(500, "error while closing exam");
+            }
+            return Ok();
         }
 
         [HttpPost]
