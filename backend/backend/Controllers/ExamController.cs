@@ -1,10 +1,13 @@
-﻿using backend.DTOs;
+﻿using AutoMapper;
+using backend.DTOs;
 using backend.Models;
 using backend.Repositories.Implementations;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Claims;
 
@@ -15,11 +18,11 @@ namespace backend.Controllers
     public class ExamController : ControllerBase
     {
         IUnitOfWork _unit { get; }
-        //string UserId { get; set; }
-
-        public ExamController(IUnitOfWork unit)
+        IMapper _mapper;
+        public ExamController(IUnitOfWork unit,IMapper mapper)
         {
             _unit = unit;
+            _mapper = mapper;
         }
 
         [HttpGet("teacher")]
@@ -51,26 +54,12 @@ namespace backend.Controllers
         {
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var Exams = await _unit.ExamRepository.GetAllExamsofStudent(UserId);
-
-            List<ExamDTO> ExamsDTO = new List<ExamDTO>();
-            foreach (var item in Exams)
-            {
-                ExamDTO ExamDTO = new ExamDTO()
-                {
-                    Id = item.Id,
-                    StartDate = item.StartDate,
-                    Duration = item.Duration,
-                    Title = item.Title,
-                    MaxDegree = item.MaxDegree,
-                    MinDegree = item.MinDegree
-                };
-                ExamsDTO.Add(ExamDTO);
-            }
-            return ExamsDTO.ToList();
+            List<ExamDTO> examDTO =  _mapper.Map<List<ExamDTO>>(Exams);
+            return examDTO;
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Student")]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> GetStudentExamDetails(int id)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -80,112 +69,49 @@ namespace backend.Controllers
             var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == id);
 
             if (exam == null)
-            {
                 return NotFound($"Exam with ID {id} not found.");
-            }
 
             DateTime currentTime = DateTime.Now;
             TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
             DateTime egyptCurrentTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, egyptTimeZone);
-
             DateTime examEndDate = exam.StartDate + exam.Duration;
+
             var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
             if (egyptCurrentTime < exam.StartDate)
-            {
-                var examDto = new ExamDTO
-                {
-                    Id = exam.Id,
-                    Title = exam.Title,
-                    StartDate = exam.StartDate,
-                    Duration = exam.Duration,
-                    MaxDegree = exam.MaxDegree,
-                    MinDegree = exam.MinDegree
-                };
-                return Ok(examDto);
-            }
+                return Ok(_mapper.Map<ExamDTO>(exam));
+            
 
             else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
             {
-                //ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
-
-                var duringExamDto = new DuringExamDTO
-                {
-                    Id = exam.Id,
-                    Title = exam.Title,
-                    StartDate = exam.StartDate,
-                    Duration = exam.Duration,
-                };
-                duringExamDto.Questions = new List<QuestionForExamDTO>();
-                foreach (var question in ExamWithQuestionsWithOptions.Questions)
-                {
-                    QuestionForExamDTO qDTO = new QuestionForExamDTO();
-                    qDTO.Id = question.Id;
-                    qDTO.Title= question.Title;
-                    qDTO.Degree= question.Degree;
-                    qDTO.Options = new List<OptionForExamDTO>();
-                    foreach (var option in question.Options)
-                    {
-                        OptionForExamDTO oDTO = new OptionForExamDTO();
-                        oDTO.Id = option.Id;
-                        oDTO.Title= option.Title;
-                        qDTO.Options.Add(oDTO);
-                    }
-                    duringExamDto.Questions.Add(qDTO);
-                }
-                return Ok(duringExamDto);
+                ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
+                var duringExamDTO = _mapper.Map<DuringExamDTO>(ExamWithQuestionsWithOptions);
+                return Ok(duringExamDTO);
             }
             else
             {
-                var afterExam = new AfterExamEndDTO();
+                //var afterExam = new AfterExamEndDTO();
                 var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, id).FirstOrDefaultAsync();
 
                 if (studentExamRecord == null)
                 {
-                    afterExam = new AfterExamEndDTO()
-                    {
-                        Id = exam.Id,
-                        Title = exam.Title,
-                        StartDate = exam.StartDate,
-                        Duration = exam.Duration,
-                        MaxDegree = exam.MaxDegree,
-                        MinDegree = exam.MinDegree,
-                        IsAbsent = true,
-                        stud_Options = new List<Stud_Option>(),
-                        Questions = new List<QuestionForExamDTO>()
-                    };
+                    var afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
+                    afterExamDTO.IsAbsent = true;
+                    return Ok(afterExamDTO);
                 }
                 else {
-                    // mapping questions with options
-                    List<Stud_Option> stdOptions = await _unit.StudentOptionRepository.GetAllStudentOptions(currentUserId);
-                    afterExam.Questions = new List<QuestionForExamDTO>();
-                    foreach (var question in ExamWithQuestionsWithOptions.Questions)
+                    AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
+                    List<Stud_Option> stud_Options = await _unit.StudentOptionRepository.GetAllStudentOptions(currentUserId);
+                    foreach (var question in afterExamDTO.Questions)
                     {
-
-                        QuestionForExamDTO qDTO = new QuestionForExamDTO();
-
-                        qDTO.Id = question.Id;
-                        qDTO.Title = question.Title;
-                        qDTO.Degree = question.Degree;
-                        qDTO.Options = new List<OptionForExamDTO>();
-
                         foreach (var option in question.Options)
                         {
-                            OptionForExamDTO oDTO = new OptionForExamDTO();
-                            oDTO.Id = option.Id;
-                            oDTO.Title = option.Title;
-                            oDTO.IsCorrect = option.IsCorrect;
-                            foreach (Stud_Option Std_Option in stdOptions)
+                            if (stud_Options.Select(so => so.OptionId).ToList().Contains(option.Id))
                             {
-                                if(Std_Option.OptionId == option.Id)
-                                    oDTO.IsChoosedByStudent = true;
+                                option.IsChoosedByStudent = true;
                             }
-                            qDTO.Options.Add(oDTO);
                         }
-                        afterExam.Questions.Add(qDTO);
                     }
-                    return Ok(afterExam);
-
-
+                    return Ok(afterExamDTO);
                 }
 
                     
@@ -228,34 +154,13 @@ namespace backend.Controllers
                 if (exam == null)
                     return NotFound("Exam not found or you are not enrolled in this exam");
 
-                // Save changes to database
+                
                 await _unit.SaveAsync();
-
-                // Return a DTO instead of the entity to avoid serialization issues
-                var examDto = new DuringExamDTO
-                {
-                    Id = exam.Id,
-                    Title = exam.Title,
-                    StartDate = exam.StartDate,
-                    Duration = exam.Duration,
-                    Questions = exam.Questions?.Select(q => new QuestionForExamDTO
-                    {
-                        Id = q.Id,
-                        Title = q.Title,
-                        Degree = q.Degree,
-                        Options = q.Options?.Select(o => new OptionForExamDTO
-                        {
-                            Id = o.Id,
-                            Title = o.Title
-                        }).ToList() ?? new List<OptionForExamDTO>()
-                    }).ToList() ?? new List<QuestionForExamDTO>()
-                };
-
-                return Ok(examDto);
+                var examDTO = _mapper.Map<DuringExamDTO>(exam);
+                return Ok(examDTO);
             }
             catch (Exception ex)
             {
-                // Log the exception
                 return StatusCode(500, "An error occurred while taking the exam");
             }
         }

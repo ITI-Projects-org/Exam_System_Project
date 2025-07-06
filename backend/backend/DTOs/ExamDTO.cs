@@ -41,9 +41,23 @@ namespace backend.DTOs
         public DateTime StartDate { get; set; }
         [Required]
         public TimeSpan Duration { get; set; }
-        public ICollection<QuestionForExamDTO> Questions { get; set; }
+        public ICollection<DuringQuestionForExamDTO> Questions { get; set; }
     }
 
+    public class DuringOptionForExamDTO
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        //public bool? IsCorrect { get; set; }
+        //public bool IsChoosedByStudent { get; set; } = false;
+    }
+
+    public class DuringQuestionForExamDTO {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public int Degree { get; set; }
+        public ICollection<DuringOptionForExamDTO> Options { get; set; }
+    }
     public class QuestionForExamDTO
     {
         public int Id { get; set; }
@@ -58,7 +72,6 @@ namespace backend.DTOs
         public string Title { get; set; }
         public bool? IsCorrect { get; set; }
         public bool IsChoosedByStudent { get; set; } = false;
-        
     }
 
     public class AfterExamEndDTO

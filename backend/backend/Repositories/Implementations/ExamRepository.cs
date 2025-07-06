@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.DTOs;
+using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,13 +66,25 @@ namespace backend.Repositories.Implementations
         }
         public async Task<Exam> GetStudentExamById(string UserId, int examId)
         {
-            //List<Stud_Exam> Studet_Exams = await _context.StudExams.Where(se => se.StudentId == UserId).ToListAsync();
-            //return await _context.Exams.Join(Studet_Exams, e => e.Id, se => se.ExamId, (e, se) => e)
-            //    .FirstOrDefaultAsync();
             return await _context.StudExams.
                 Where(se => se.StudentId == UserId && se.ExamId == examId)
                 .Include(se => se.Exam)
                 .Select(se => se.Exam).FirstOrDefaultAsync();
         }
+        public AfterExamEndDTO FillExamWithQuestionsWithOptionsDTO(AfterExamEndDTO AfterExam)
+        {
+            AfterExamEndDTO examDTO = new AfterExamEndDTO();
+            examDTO.Id = AfterExam.Id;
+            examDTO.StartDate = AfterExam.StartDate;
+            examDTO.Duration = AfterExam.Duration;
+            examDTO.Questions = new List<QuestionForExamDTO>();
+
+            return examDTO;
+        }
+        //public async Task<ExamDTO> FillExamWithQuestionsWithOptionsWithAnswerDTO(Exam exam)
+        //{
+
+        //}
+
     }
 }

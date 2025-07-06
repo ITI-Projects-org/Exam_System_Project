@@ -29,6 +29,14 @@ namespace backend.MapperConfig
 
             CreateMap<Student, RegisterDTO>().ReverseMap();
             CreateMap<Teacher, TeacherDTO>().ReverseMap();
+            CreateMap<Exam,ExamDTO>().ReverseMap();
+            CreateMap<Exam,DuringExamDTO>().ReverseMap();
+            CreateMap<Exam, AfterExamEndDTO>().ReverseMap();
+            //CreateMap<ExamDTO, AfterExamEndDTO>().ReverseMap();
+            CreateMap<Question,QuestionForExamDTO>().ReverseMap();
+            CreateMap<Option, OptionForExamDTO>().ReverseMap();
+            CreateMap<Option, DuringOptionForExamDTO>().ReverseMap();
+            CreateMap<Question, DuringQuestionForExamDTO>().ReverseMap();
         }
     }
 }
