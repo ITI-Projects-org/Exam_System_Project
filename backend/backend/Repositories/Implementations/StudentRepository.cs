@@ -21,7 +21,7 @@ namespace backend.Repositories.Implementations
                                     .ThenInclude(se => se.Exam)
                                 .Include(s => s.StudOptions)
                                     .ThenInclude(so => so.Option)
-                                        .ThenInclude(o => o.Question)
+                                        //.ThenInclude(o => o.Question)
                                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
@@ -34,7 +34,7 @@ namespace backend.Repositories.Implementations
                                         .ThenInclude(se => se.Exam)
                                     .Include(s => s.StudOptions)
                                         .ThenInclude(so => so.Option)
-                                            .ThenInclude(o => o.Question)
+                                            //.ThenInclude(o => o.Question)
                                     .ToListAsync();
         }
     }
