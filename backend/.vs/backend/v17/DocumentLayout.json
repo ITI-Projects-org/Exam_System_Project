@@ -3,8 +3,24 @@
   "WorkspaceRootPath": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\models\\stud_exam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\models\\stud_exam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\models\\stud_option.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\models\\stud_option.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\models\\databaseseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\models\\databaseseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -17,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\controllers\\examcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -59,20 +71,8 @@
       "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\repositories\\implementations\\examrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\models\\databaseseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\models\\databaseseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Migrations\\20250630170607_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Migrations\\20250630170607_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\models\\stud_option.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\models\\stud_option.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\models\\stud_exam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|solutionrelative:backend\\models\\stud_exam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1C45D9AB-BCF2-4B90-8D1F-45562FDF9D12}|backend\\backend.csproj|d:\\iti\\webapi-angular project\\exam_system\\backend\\backend\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -90,11 +90,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "ExamController.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Controllers\\ExamController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\ExamController.cs",
@@ -107,20 +107,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Program.cs",
               "RelativeDocumentMoniker": "backend\\Program.cs",
               "ToolTip": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Program.cs",
               "RelativeToolTip": "backend\\Program.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAQwFcAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAQwFcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-05T13:46:40.455Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "20250703161102_v3.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Migrations\\20250703161102_v3.cs",
               "RelativeDocumentMoniker": "backend\\Migrations\\20250703161102_v3.cs",
@@ -133,7 +133,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "LoginDTO.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\DTOs\\LoginDTO.cs",
               "RelativeDocumentMoniker": "backend\\DTOs\\LoginDTO.cs",
@@ -146,7 +146,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "RegisterDTO.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\DTOs\\RegisterDTO.cs",
               "RelativeDocumentMoniker": "backend\\DTOs\\RegisterDTO.cs",
@@ -159,20 +159,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "AccountController.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\AccountController.cs",
               "ToolTip": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Controllers\\AccountController.cs",
               "RelativeToolTip": "backend\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAAFwAAAAAAAAAAAAgwGgAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-05T12:15:05.85Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "MappingConfigurations.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\MapperConfig\\MappingConfigurations.cs",
               "RelativeDocumentMoniker": "backend\\MapperConfig\\MappingConfigurations.cs",
@@ -185,7 +185,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "backend",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\backend.csproj",
               "RelativeDocumentMoniker": "backend\\backend.csproj",
@@ -198,7 +198,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 16,
               "Title": "ExamRepository.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Repositories\\Implementations\\ExamRepository.cs",
               "RelativeDocumentMoniker": "backend\\Repositories\\Implementations\\ExamRepository.cs",
@@ -211,19 +211,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 4,
               "Title": "DatabaseSeeder.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Models\\DatabaseSeeder.cs",
               "RelativeDocumentMoniker": "backend\\Models\\DatabaseSeeder.cs",
               "ToolTip": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Models\\DatabaseSeeder.cs",
               "RelativeToolTip": "backend\\Models\\DatabaseSeeder.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAYwCgAAABmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T17:16:42.632Z"
+              "WhenOpened": "2025-06-30T17:16:42.632Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "20250630171252_InitialCreate.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Migrations\\20250630171252_InitialCreate.cs",
               "RelativeDocumentMoniker": "backend\\Migrations\\20250630171252_InitialCreate.cs",
@@ -236,7 +237,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "20250630170607_init.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Migrations\\20250630170607_init.cs",
               "RelativeDocumentMoniker": "backend\\Migrations\\20250630170607_init.cs",
@@ -248,7 +249,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\appsettings.json",
               "RelativeDocumentMoniker": "backend\\appsettings.json",
@@ -261,7 +262,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "ApplicationUser.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Models\\ApplicationUser.cs",
               "RelativeDocumentMoniker": "backend\\Models\\ApplicationUser.cs",
@@ -274,7 +275,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "ExamSysContext.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Models\\ExamSysContext.cs",
               "RelativeDocumentMoniker": "backend\\Models\\ExamSysContext.cs",
@@ -287,7 +288,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 1,
               "Title": "Stud_Exam.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Models\\Stud_Exam.cs",
               "RelativeDocumentMoniker": "backend\\Models\\Stud_Exam.cs",
@@ -295,11 +296,12 @@
               "RelativeToolTip": "backend\\Models\\Stud_Exam.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAiwBoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T15:07:03.075Z"
+              "WhenOpened": "2025-06-30T15:07:03.075Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 2,
               "Title": "Stud_Option.cs",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Models\\Stud_Option.cs",
               "RelativeDocumentMoniker": "backend\\Models\\Stud_Option.cs",
@@ -307,7 +309,8 @@
               "RelativeToolTip": "backend\\Models\\Stud_Option.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T15:07:01.824Z"
+              "WhenOpened": "2025-06-30T15:07:01.824Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -335,7 +338,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "launchSettings.json",
               "DocumentMoniker": "D:\\ITI\\WebAPI-Angular project\\Exam_System\\backend\\backend\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "backend\\Properties\\launchSettings.json",
