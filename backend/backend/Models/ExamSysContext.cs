@@ -57,12 +57,12 @@ namespace backend.Models
                 .HasForeignKey(e => e.TeacherId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Question -> Exam (RESTRICT)
-            //builder.Entity<Question>()
-            //    .HasOne(q => q.Exam)
-            //    .WithMany(e => e.Questions)
-            //    .HasForeignKey(q => q.ExamId)
-            //    .OnDelete(DeleteBehavior.Restrict);
+            //Question -> Exam(RESTRICT)
+            builder.Entity<Question>()
+                .HasOne(q => q.Exam)
+                .WithMany(e => e.Questions)
+                .HasForeignKey(q => q.ExamId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Option -> Question (CASCADE is fine here)
             builder.Entity<Option>()
