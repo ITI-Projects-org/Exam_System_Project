@@ -4,6 +4,7 @@ using backend.Models;
 using backend.Repositories.Implementations;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -187,18 +188,149 @@ namespace backend.Controllers
         }
 
         [HttpPost("Assign")]
-        [Authorize(Roles= "Teacher")]
-        public async Task<IActionResult> AssignStudentsToExam([FromQuery]  int ExamId,[FromQuery] string[] studs_Id)
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> AssignStudentsToExam([FromQuery] int ExamId, [FromQuery] string[] studs_Id)
         {
 
             _unit.ExamRepository.AssignStudsToExam(ExamId, studs_Id);
             await _unit.SaveAsync();
             return Ok(new
             {
-                Message="Students assigned to exam successfully",
+                Message = "Students assigned to exam successfully",
                 ExamId = ExamId,
                 StudentIds = studs_Id
             });
         }
+        //[HttpPost("AddExam")]
+        //[Authorize(Roles = "Teacher")]
+        //public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
+        //{
+        //    if (!ModelState.IsValid) 
+        //        return BadRequest(ModelState);
+        //    try{
+        //    Exam exam = _mapper.Map<Exam>(examDTO);
+        //    await _unit.SaveAsync();
+        //        var exaId = exam.Id;
+        //    exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    List<Question> questions = _mapper.Map<List<Question>>(examDTO.Questions);
+
+
+        //    if (questions != null && questions.Count > 0)
+        //        foreach (var question in questions)
+        //        {
+        //            await _unit.QuestionRepository.Add(question);
+        //            List<Option> options = _mapper.Map<List<Option>>(question.Options);
+        //            foreach (var option  in options)
+        //                await _unit.OptionRepository.Add(option);
+        //        }
+
+        //    var result = _unit.ExamRepository.Add(exam);
+        //    await _unit.SaveAsync();
+        //        return Ok(exam); }
+        //    catch(Exception err){
+        //        return BadRequest(err);
+        //    }
+        //}
+        [HttpPost("AddExam")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                // Map and configure the exam
+                Exam exam = _mapper.Map<Exam>(examDTO);
+                exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                // Process questions and their options
+                if (examDTO.Questions != null && examDTO.Questions.Count > 0)
+                {
+                    exam.Questions = new List<Question>();
+
+                    foreach (var questionDTO in examDTO.Questions)
+                    {
+                        Question question = _mapper.Map<Question>(questionDTO);
+                        if (questionDTO.Options != null && questionDTO.Options.Count > 0)
+                        {
+                            question.Options = new List<Option>();
+
+                            foreach (var optionDTO in questionDTO.Options)
+                            {
+                                Option option = _mapper.Map<Option>(optionDTO);
+                                // Don't set QuestionId manually - EF will handle it through the relationship
+                                question.Options.Add(option);
+                            }
+                        }
+
+                        exam.Questions.Add(question);
+                    }
+                }
+
+                // Add the exam with all its related data
+                await _unit.ExamRepository.Add(exam);
+                await _unit.SaveAsync(); // This will save everything in one transaction
+
+                return Ok(exam);
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err);
+            }
+        }
+
+
+
+        //[HttpDelete("DeleteExam/{id}")]
+        //[Authorize(Roles = "Teacher")]
+        //public async Task<IActionResult> DeleteExam(int id)
+        //{
+        //    try
+        //    {
+        //        //var existingExam = await _unit.ExamRepository.GetById(id);
+        //        var existingExam = await _unit.ExamRepository.GetExamByIdWithWithQuestionsWithOptions(id);
+
+
+        //        if (existingExam == null)
+        //            return NotFound($"Exam with ID {id} not found");
+
+        //        // Check if the teacher owns this exam
+        //        if (existingExam.TeacherId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+        //            return Forbid("You can only delete your own exams");
+
+        //        // Check if exam has been taken by students (optional business rule)
+        //        var hasStudentResults = await _unit.StudentExamRepository.AnyAsync(se => se.ExamId == id);
+        //        if (hasStudentResults)
+        //        {
+        //            return BadRequest("Cannot delete exam that has been taken by students");
+        //        }
+
+        //        // Remove related entities first (if cascade delete is not configured)
+        //        if (existingExam.Questions?.Any() == true)
+        //        {
+        //            foreach (var question in existingExam.Questions)
+        //            {
+        //                if (question.Options?.Any() == true)
+        //                {
+        //                    _unit.OptionRepository.RemoveRange(question.Options);
+        //                }
+        //            }
+        //            _unit.QuestionRepository.RemoveRange(existingExam.Questions);
+        //        }
+
+        //        // Remove the exam
+        //        _unit.ExamRepository.Remove(existingExam);
+        //        await _unit.SaveAsync();
+
+        //        return Ok(new { message = "Exam deleted successfully" });
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        return BadRequest(new { error = err.Message });
+        //    }
+        //}
+
+
     }
 }

@@ -16,9 +16,9 @@ namespace backend.Models
         public bool IsCorrect { get; set; }
 
         [Required]
+        [ForeignKey(nameof(QuestionId))]
         public int QuestionId { get; set; }
 
-        [ForeignKey(nameof(QuestionId))]
         public virtual Question? Question { get; set; }
     }
 }

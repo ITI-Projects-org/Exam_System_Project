@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -44,7 +45,7 @@ namespace backend.Models
 
         [ForeignKey(nameof(TeacherId))]
         public virtual Teacher? Teacher { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
     }
 }

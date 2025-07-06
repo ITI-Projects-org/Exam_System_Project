@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -19,6 +20,7 @@ namespace backend.Models
         public int ExamId { get; set; }
 
         [ForeignKey(nameof(ExamId))]
+        [JsonIgnore]
         public virtual Exam? Exam { get; set; }
 
         public virtual ICollection<Option> Options { get; set; } = new List<Option>();

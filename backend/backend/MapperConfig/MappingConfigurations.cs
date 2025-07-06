@@ -32,11 +32,11 @@ namespace backend.MapperConfig
             CreateMap<Exam,ExamDTO>().ReverseMap();
             CreateMap<Exam,DuringExamDTO>().ReverseMap();
             CreateMap<Exam, AfterExamEndDTO>().ReverseMap();
-            //CreateMap<ExamDTO, AfterExamEndDTO>().ReverseMap();
             CreateMap<Question,QuestionForExamDTO>().ReverseMap();
             CreateMap<Option, OptionForExamDTO>().ReverseMap();
             CreateMap<Option, DuringOptionForExamDTO>().ReverseMap();
             CreateMap<Question, DuringQuestionForExamDTO>().ReverseMap();
+            CreateMap<Exam,ExamInputDTO>().ReverseMap();
         }
     }
 }

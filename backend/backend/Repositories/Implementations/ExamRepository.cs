@@ -55,6 +55,7 @@ namespace backend.Repositories.Implementations
             }
         }
 
+       
         public void AssignStudToExam(int ExamId, string StudentId)
         {
             Stud_Exam st_exam = new Stud_Exam()
@@ -63,6 +64,14 @@ namespace backend.Repositories.Implementations
                 StudentId = StudentId
             };
             _context.StudExams.Add(st_exam);
+        }
+        public async Task<Exam> GetExamByIdWithWithQuestionsWithOptions(int ExamId)
+        {
+            return await _context.Exams
+                .Where(e=>e.Id == ExamId)
+                .Include(e=>e.Questions)
+                .ThenInclude(q=>q.Options)
+                .FirstOrDefaultAsync();
         }
         public async Task<Exam> GetStudentExamById(string UserId, int examId)
         {
@@ -81,10 +90,6 @@ namespace backend.Repositories.Implementations
 
             return examDTO;
         }
-        //public async Task<ExamDTO> FillExamWithQuestionsWithOptionsWithAnswerDTO(Exam exam)
-        //{
-
-        //}
-
+      
     }
 }
