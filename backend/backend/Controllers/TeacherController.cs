@@ -28,6 +28,10 @@ namespace backend.Controllers
             return Ok(courses);
         }
 
+        // CRUD ON Course
+        // Assign Course to teaacher
+        // Assign Course to student
+
         [HttpGet("findCourse/{search:alpha}")]
         public IActionResult getCoursesBySearch(string search)
         {
