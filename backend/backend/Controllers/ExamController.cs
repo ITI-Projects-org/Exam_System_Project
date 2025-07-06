@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using backend.DTOs;
 using backend.Models;
-using backend.Repositories.Implementations;
 using backend.UnitOfWorks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
