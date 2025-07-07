@@ -2,25 +2,10 @@
 using backend.DTOs;
 using backend.Models;
 using backend.UnitOfWorks;
-<<<<<<< HEAD
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Identity;
-=======
 using System.Security.Claims;
->>>>>>> df4f6b6aa3829e2bb755059cbd6b24a8b3f491dc
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-<<<<<<< HEAD
-using Microsoft.Extensions.Options;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.AccessControl;
-using System.Security.Claims;
-=======
 using Microsoft.AspNetCore.Authorization;
->>>>>>> df4f6b6aa3829e2bb755059cbd6b24a8b3f491dc
 
 namespace backend.Controllers
 {
