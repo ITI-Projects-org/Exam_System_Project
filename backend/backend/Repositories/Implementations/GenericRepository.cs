@@ -38,6 +38,11 @@ namespace backend.Repositories.Implementations
             await _context.Set<T>().AddAsync(Entity);
             return Entity;
         }
+        public async Task<List<T>> AddRange(List<T> entities)
+        {
+            await _context.Set<T>().AddRangeAsync(entities);
+            return (entities);
+        }
 
         public T Update(string Id, T Entity)
         {

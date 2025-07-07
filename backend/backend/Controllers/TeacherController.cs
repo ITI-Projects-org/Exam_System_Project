@@ -3,11 +3,14 @@ using backend.Models;
 using backend.DTOs;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles ="Teacher")]
     public class TeacherController : Controller
     {
         readonly IUnitOfWork Unit;
@@ -27,7 +30,66 @@ namespace backend.Controllers
 
             return Ok(courses);
         }
+        [HttpPost("AddCourse{courseName}")]
 
+        public async Task<IActionResult> AddCourse(string courseName)
+        {
+            var TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            Course cr = new Course()
+            {
+
+                Name = courseName,
+                TeacherId = TeacherId
+            };
+            Unit.CourseRepository.Add(cr);
+            await Unit.SaveAsync();
+            return Ok(cr);
+        }
+        [HttpPut("UpdateCourse")]
+
+        public async Task<IActionResult> UpdateCourse([FromBody] UpdateCourseDto crDTO)
+        {
+            var TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            Course cr = await Unit.CourseRepository.GetById(crDTO.CourseId);
+            if (cr == null) return NotFound();
+            cr.Name = crDTO.CourseName;
+
+
+            Unit.CourseRepository.Update(cr.Id.ToString(), cr);
+            await Unit.SaveAsync();
+            return Ok(cr);
+        }
+        [HttpPost("AssignCourses")]
+        public async Task< IActionResult> AssignCourses([FromBody]CoursesAssignedToStudsDTO crsstudDTO) {
+            List<Stud_Course> stud_Course = new List<Stud_Course>();
+            
+            foreach (var studID in crsstudDTO.StudentsIds)
+            {
+                foreach (var crsID in crsstudDTO.CourseIds)
+                {
+
+                    stud_Course.Add(new Stud_Course() { 
+                    
+                    StudentId = studID,
+                    CourseId = crsID
+                    
+                    });
+                }
+            }
+           await Unit.CourseRepository.AddRange(stud_Course);
+            await Unit.SaveAsync();
+            return Ok(stud_Course);
+            
+            
+           
+        
+        }
         [HttpGet("findCourse/{search:alpha}")]
         public IActionResult getCoursesBySearch(string search)
         {
@@ -98,5 +160,6 @@ namespace backend.Controllers
 
             return NoContent();
         }
+       
     }
 }
