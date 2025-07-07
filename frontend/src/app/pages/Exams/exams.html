@@ -1,0 +1,17 @@
+<p>exams works!</p>
+
+<a class="btn btn-dark" [routerLink]="[0,'edit']">Add Exam (Teacher Only)</a>
+@for (exam of Exams; track exam.Id) {
+<div>
+    <div> Id: {{exam.Id}}</div>
+    <div> Course: {{exam.CourseId}}</div>
+    <div> TeacherId: {{exam.TeacherId}}</div>
+    <div> MaxDegree: {{exam.MaxDegree}}</div>
+    <div> MinDegree: {{exam.MinDegree}}</div>
+    <div> StartDate: {{exam.StartDate}}</div>
+    <a class="btn btn-primary" [routerLink]="[exam.Id]">View Exam Details</a>
+    <a class="btn btn-dark" [routerLink]="[exam.Id,'edit']">Edit Exam (Teacher only)</a>
+    <a class="btn btn-success" [routerLink]="[exam.Id,'take']">Take Exam (Student Only)</a>
+</div>
+
+}

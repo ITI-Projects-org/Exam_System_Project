@@ -1,0 +1,48 @@
+<p>edit-exam works!</p>
+<h1>Add Exam</h1>
+<form [formGroup]="examForm" (submit)="AddNewExam()">
+    <div class="mb-3">
+        <label for="exampleInputTitle" class="form-label">Title</label>
+        <input formControlName="Title" class="form-control" id="exampleInputTitle" aria-describedby="TitleHelp">
+
+        @if(getTitle.touched)
+        {@if(getTitle.hasError('required')){
+        <div class="text-danger form-text">Required</div>
+        }
+        @else if(getTitle.hasError('minlength')){
+        <div class="text-danger form-text">Min Length is 3</div>
+        }}
+
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputMaxDegree" class="form-label">Max Degree</label>
+        <input formControlName="MaxDegree" type="number" class="form-control" id="exampleInputMaxDegree">
+        @if(getMaxDegree.touched)
+        {
+        @if(getMaxDegree.hasError('required')){
+        <div class="text-danger form-text">Required</div>
+        }
+        @else if(getMaxDegree.hasError('min')){
+        <div class="text-danger form-text">Min is 1</div>
+        }}
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputMinDegree" class="form-label">Min Degree</label>
+        <input formControlName="MinDegree" type="number" class="form-control" id="exampleInputMinDegree">
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputStartDate" class="form-label">Start Date: </label>
+        <input formControlName="StartDate" type="number" class="form-control" id="exampleInputStartDate">
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputDuration" class="form-label">Duration: </label>
+        <input formControlName="Duration" type="number" class="form-control" id="exampleInputDuration">
+    </div>
+    <!-- teacher Id get thesigned in teacher -->
+
+    <!-- for students you can leave it empty !! do not assign student now for exam , there is component for it -->
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<p>{{examForm.value | json}}</p>
