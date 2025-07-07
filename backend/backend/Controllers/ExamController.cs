@@ -2,10 +2,25 @@
 using backend.DTOs;
 using backend.Models;
 using backend.UnitOfWorks;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
+=======
+using System.Security.Claims;
+>>>>>>> df4f6b6aa3829e2bb755059cbd6b24a8b3f491dc
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
+using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.AccessControl;
+using System.Security.Claims;
+=======
+using Microsoft.AspNetCore.Authorization;
+>>>>>>> df4f6b6aa3829e2bb755059cbd6b24a8b3f491dc
 
 namespace backend.Controllers
 {
@@ -15,7 +30,7 @@ namespace backend.Controllers
     {
         IUnitOfWork _unit { get; }
         IMapper _mapper;
-        public ExamController(IUnitOfWork unit,IMapper mapper)
+        public ExamController(IUnitOfWork unit, IMapper mapper)
         {
             _unit = unit;
             _mapper = mapper;
@@ -50,7 +65,7 @@ namespace backend.Controllers
         {
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var Exams = await _unit.ExamRepository.GetAllExamsofStudent(UserId);
-            List<ExamDTO> examDTO =  _mapper.Map<List<ExamDTO>>(Exams);
+            List<ExamDTO> examDTO = _mapper.Map<List<ExamDTO>>(Exams);
             return examDTO;
         }
 
@@ -75,7 +90,7 @@ namespace backend.Controllers
             var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
             if (egyptCurrentTime < exam.StartDate)
                 return Ok(_mapper.Map<ExamDTO>(exam));
-            
+
 
             else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
             {
@@ -110,11 +125,11 @@ namespace backend.Controllers
                     return Ok(afterExamDTO);
                 }
 
-                    
-                }
 
-                var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
-                return Ok();
+            }
+
+            var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
+            return Ok();
         }
 
         [HttpPost]
@@ -124,12 +139,7 @@ namespace backend.Controllers
             _unit.ExamRepository.Add(exam);
         }
 
-        [HttpPut("{id}")]
-        public void EditExam([FromBody] Exam exam)
-        {
-            _unit.ExamRepository.Update(exam.Id.ToString(), exam);
-        }
-
+        
         //[HttpDelete("{id}")]
         //public void RemoveExam(string Id)
         //{
@@ -150,7 +160,7 @@ namespace backend.Controllers
                 if (exam == null)
                     return NotFound("Exam not found or you are not enrolled in this exam");
 
-                
+
                 await _unit.SaveAsync();
                 var examDTO = _mapper.Map<DuringExamDTO>(exam);
                 return Ok(examDTO);
@@ -164,17 +174,17 @@ namespace backend.Controllers
         [HttpGet("CloseExam")]
         [Authorize(Roles = "Student")]
 
-        public async Task<IActionResult >CloseExam(int ExamId)
+        public async Task<IActionResult> CloseExam(int ExamId)
         {
-            try{
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            try {
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Exam exam = await _unit.ExamRepository.GetStudentExamById(currentUserId, ExamId);
-            if (currentUserId == null) return Unauthorized();
-            
-            _unit.ExamRepository.CloseExam(currentUserId, ExamId);
-            await _unit.SaveAsync();
-            return Ok();
+                Exam exam = await _unit.ExamRepository.GetStudentExamById(currentUserId, ExamId);
+                if (currentUserId == null) return Unauthorized();
+
+                _unit.ExamRepository.CloseExam(currentUserId, ExamId);
+                await _unit.SaveAsync();
+                return Ok();
             }
             catch (Exception err) {
                 return StatusCode(500, "error while closing exam");
@@ -196,85 +206,197 @@ namespace backend.Controllers
                 StudentIds = studs_Id
             });
         }
-        //[HttpPost("AddExam")]
-        //[Authorize(Roles = "Teacher")]
-        //public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
-        //{
-        //    if (!ModelState.IsValid) 
-        //        return BadRequest(ModelState);
-        //    try{
-        //    Exam exam = _mapper.Map<Exam>(examDTO);
-        //    await _unit.SaveAsync();
-        //        var exaId = exam.Id;
-        //    exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    List<Question> questions = _mapper.Map<List<Question>>(examDTO.Questions);
 
-
-        //    if (questions != null && questions.Count > 0)
-        //        foreach (var question in questions)
-        //        {
-        //            await _unit.QuestionRepository.Add(question);
-        //            List<Option> options = _mapper.Map<List<Option>>(question.Options);
-        //            foreach (var option  in options)
-        //                await _unit.OptionRepository.Add(option);
-        //        }
-
-        //    var result = _unit.ExamRepository.Add(exam);
-        //    await _unit.SaveAsync();
-        //        return Ok(exam); }
-        //    catch(Exception err){
-        //        return BadRequest(err);
-        //    }
-        //}
+      
         [HttpPost("AddExam")]
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            try
-            {
-                // Map and configure the exam
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            try {
                 Exam exam = _mapper.Map<Exam>(examDTO);
                 exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                // Process questions and their options
+                if (examDTO.Questions == null || exam.Questions.Count <= 0)
+                    return Ok(exam);
+                exam.Questions = new List<Question>();
+                foreach (var questionDTO in examDTO.Questions)
+                {
+                    Question question = _mapper.Map<Question>(questionDTO);
+                    if (questionDTO.Options == null || questionDTO.Options.Count <= 0)
+                        continue;
+                    foreach (var optionDTO in questionDTO.Options)
+                    {
+                        Option option = _mapper.Map<Option>(optionDTO);
+                        question.Options.Add(option);
+
+                    }
+                    exam.Questions.Add(question);
+                }
+                await _unit.ExamRepository.Add(exam);
+                await _unit.SaveAsync();
+                return Ok(exam);
+            }
+
+            catch (Exception err) { return BadRequest(err); }
+        }
+        #region Update
+
+        //[HttpPut("{ExamId}")]
+        //[Authorize(Roles = "Teacher")]
+        //public async Task<IActionResult> EditExam(int ExamId, [FromBody] ExamInputDTO examDTO)
+        //{
+        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+        //    try
+        //    {
+        //        Exam exam = await _unit.ExamRepository.GetExamByIdWithWithQuestionsWithOptions(ExamId);
+
+        //        exam.Duration = examDTO.Duration;
+        //        exam.MaxDegree =examDTO.MaxDegree;
+        //        exam.MinDegree =examDTO.MinDegree;
+        //        exam.StartDate= examDTO.StartDate;
+        //        exam.CourseId= examDTO.CourseId;
+        //        exam.Title = examDTO.Title;
+        //        exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //        if (exam.Questions?.Any() == true)
+        //        {
+        //            foreach (var question in exam.Questions)
+        //                if (question.Options?.Any() == true)
+        //                    _unit.OptionRepository.RemoveRange(question.Options);
+        //            _unit.QuestionRepository.RemoveRange(exam.Questions);
+        //        }
+
+        //        if (examDTO.Questions == null || examDTO.Questions.Count <= 0)
+        //            return Ok(new { Message="..."});
+
+        //        exam.Questions = new List<Question>();
+        //        foreach (var questionDTO in examDTO.Questions)
+        //        {
+        //            Question question = _mapper.Map<Question>(questionDTO);
+        //            if (questionDTO.Options == null || questionDTO.Options.Count <= 0)
+        //                continue;
+        //            foreach (var optionDTO in questionDTO.Options)
+        //            {
+        //                Option option = _mapper.Map<Option>(optionDTO);
+        //                question.Options.Add(option);
+        //            }
+        //            exam.Questions.Add(question);
+        //        }
+        //        _unit.ExamRepository.Add(exam);
+        //        await _unit.SaveAsync();
+        //        return Ok(new { 
+
+        //        Message="Exam UPdated Succesully",
+        //        ExamId = ExamId,
+        //        Title = exam.Title
+        //        });
+        //    }
+
+        //    catch (Exception err) { return BadRequest(err); }
+        //}
+
+        [HttpPut]
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> EditExam(ExamInputDTO examDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+                
+            try
+            {
+                // 1. Get the existing exam with all related data
+                var existingExam = await _unit.ExamRepository.GetExamByIdWithWithQuestionsWithOptions(examDTO.Id ?? 0);
+
+                if (existingExam == null)
+                    return NotFound($"Exam with ID {examDTO.Id} not found");
+
+                // 2. Check ownership
+                //var currentTeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //if (existingExam.TeacherId != currentTeacherId)
+                //    return Forbid("You can only edit your own exams");
+
+                // 3. Update the existing entity's properties (keep the same tracked entity)
+                existingExam.Title = examDTO.Title;
+                existingExam.StartDate = examDTO.StartDate;
+                existingExam.Duration = examDTO.Duration;
+                existingExam.CourseId = examDTO.CourseId;
+                existingExam.MaxDegree = examDTO.MaxDegree;
+                existingExam.MinDegree = examDTO.MinDegree;
+                //existingExam.IsAbsent = examDTO.IsAbsent;
+                // Keep the same TeacherId - don't change it
+
+                // 4. Handle Questions and Options
                 if (examDTO.Questions != null && examDTO.Questions.Count > 0)
                 {
-                    exam.Questions = new List<Question>();
+                    // Remove existing questions and options
+                    if (existingExam.Questions?.Any() == true)
+                    {
+                        // Remove options first
+                        foreach (var question in existingExam.Questions)
+                        {
+                            if (question.Options?.Any() == true)
+                            {
+                                _unit.OptionRepository.RemoveRange(question.Options);
+                            }
+                        }
+                        // Then remove questions
+                        _unit.QuestionRepository.RemoveRange(existingExam.Questions);
+                    }
 
+                    // Add new questions
+                    existingExam.Questions = new List<Question>();
                     foreach (var questionDTO in examDTO.Questions)
                     {
                         Question question = _mapper.Map<Question>(questionDTO);
+                        question.ExamId = existingExam.Id; // Set the foreign key
+
                         if (questionDTO.Options != null && questionDTO.Options.Count > 0)
                         {
                             question.Options = new List<Option>();
-
                             foreach (var optionDTO in questionDTO.Options)
                             {
                                 Option option = _mapper.Map<Option>(optionDTO);
-                                // Don't set QuestionId manually - EF will handle it through the relationship
+                                // Don't set QuestionId manually - EF will handle it
                                 question.Options.Add(option);
                             }
                         }
-
-                        exam.Questions.Add(question);
+                        existingExam.Questions.Add(question);
+                    }
+                }
+                else
+                {
+                    // If no questions provided, remove existing ones
+                    if (existingExam.Questions?.Any() == true)
+                    {
+                        foreach (var question in existingExam.Questions)
+                        {
+                            if (question.Options?.Any() == true)
+                            {
+                                _unit.OptionRepository.RemoveRange(question.Options);
+                            }
+                        }
+                        _unit.QuestionRepository.RemoveRange(existingExam.Questions);
+                        existingExam.Questions.Clear();
                     }
                 }
 
-                // Add the exam with all its related data
-                await _unit.ExamRepository.Add(exam);
-                await _unit.SaveAsync(); // This will save everything in one transaction
+                _unit.ExamRepository.Update(existingExam);
+                await _unit.SaveAsync();
 
-                return Ok(exam);
+                // 6. Return success response (avoid circular reference)
+                return Ok(new
+                {
+                    message = "Exam updated successfully",
+                    examId = existingExam.Id,
+                    title = existingExam.Title
+                });
             }
             catch (Exception err)
             {
-                return BadRequest(err);
+                return BadRequest(new { error = err.Message });
             }
         }
-
+        #endregion
 
 
         [HttpDelete("{id}")]

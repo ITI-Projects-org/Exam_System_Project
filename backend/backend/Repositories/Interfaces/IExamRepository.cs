@@ -12,5 +12,6 @@ namespace backend.Repositories.Interfaces
         Task<Exam> GetStudentExamById(string UserId, int examId);
         Task<Exam> GetExamByIdWithWithQuestionsWithOptions(int ExamId);
         void Remove(Exam exam);
+        void Update(Exam exam);
     }
 }

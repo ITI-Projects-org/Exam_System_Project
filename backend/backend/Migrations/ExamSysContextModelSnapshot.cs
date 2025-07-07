@@ -274,7 +274,7 @@ namespace backend.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("backend.Models.Exam", b =>
@@ -317,7 +317,7 @@ namespace backend.Migrations
 
                     b.HasIndex("Title");
 
-                    b.ToTable("Exams");
+                    b.ToTable("Exams", (string)null);
                 });
 
             modelBuilder.Entity("backend.Models.Option", b =>
@@ -343,7 +343,7 @@ namespace backend.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options");
+                    b.ToTable("Options", (string)null);
                 });
 
             modelBuilder.Entity("backend.Models.Question", b =>
@@ -369,7 +369,7 @@ namespace backend.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("backend.Models.Stud_Course", b =>
@@ -387,7 +387,7 @@ namespace backend.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("StudCourses");
+                    b.ToTable("StudCourses", (string)null);
                 });
 
             modelBuilder.Entity("backend.Models.Stud_Exam", b =>
@@ -414,7 +414,7 @@ namespace backend.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("StudExams");
+                    b.ToTable("StudExams", (string)null);
                 });
 
             modelBuilder.Entity("backend.Models.Stud_Option", b =>
@@ -429,7 +429,7 @@ namespace backend.Migrations
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("StudOptions");
+                    b.ToTable("StudOptions", (string)null);
                 });
 
             modelBuilder.Entity("backend.Models.Student", b =>
