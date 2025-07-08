@@ -1,5 +1,5 @@
 export interface IExam {
-    Id:string,
+    id:string,
     Title:string,
     MaxDegree:number,
     MinDegree:number,

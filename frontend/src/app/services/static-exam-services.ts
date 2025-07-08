@@ -13,7 +13,7 @@ export class  StaticExamServices{
   constructor(){
     this.Exams = [
       {
-        Id: "1",
+        id: "1",
         Title: "exam-1",
         MaxDegree: 100,
         MinDegree: 50,
@@ -23,7 +23,7 @@ export class  StaticExamServices{
         TeacherId: 1
       },
       {
-        Id: "2",
+        id: "2",
         Title: "exam-2",
         MaxDegree: 120,
         MinDegree: 60,
@@ -32,7 +32,6 @@ export class  StaticExamServices{
         CourseId: 1,
         TeacherId: 2
       }
-
     ];
   }
   getAllProducts():IExam[]{
@@ -40,7 +39,7 @@ export class  StaticExamServices{
   }
 
   getExamById(ExamId:string):IExam|undefined{
-    return this.Exams.find(e=>e.Id == ExamId) ;
+    return this.Exams.find(e=>e.id == ExamId) ;
   }
   addExam(ExamForm:FormData):FormData{
     // this.Exam.CourseId = ExamForm;

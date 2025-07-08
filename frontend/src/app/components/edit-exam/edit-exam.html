@@ -1,9 +1,16 @@
 <p>edit-exam works!</p>
-<h1>Add Exam</h1>
-<form [formGroup]="examForm" (submit)="AddNewExam()">
+<h1>
+    @if(examId=='0'){
+    Add Exam
+    }@else {
+    Edit Exam
+    }
+</h1>
+<form [formGroup]="examForm" (submit)="handel_Edit_Add_Exam(examForm)">
     <div class="mb-3">
         <label for="exampleInputTitle" class="form-label">Title</label>
-        <input formControlName="Title" class="form-control" id="exampleInputTitle" aria-describedby="TitleHelp">
+        <input formControlName="Title" type="text" class="form-control" id="exampleInputTitle"
+            aria-describedby="TitleHelp">
 
         @if(getTitle.touched)
         {@if(getTitle.hasError('required')){

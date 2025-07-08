@@ -1,12 +1,12 @@
 <p>exam-details works!</p>
 <div>
-    <div> Id: {{Exam?.Id}}</div>
-    <div> Course: {{Exam?.CourseId}}</div>
-    <div> TeacherId: {{Exam?.TeacherId}}</div>
-    <div> MaxDegree: {{Exam?.MaxDegree}}</div>
-    <div> MinDegree: {{Exam?.MinDegree}}</div>
-    <div> StartDate: {{Exam?.StartDate}}</div>
-    <!-- <a class="btn btn-dark" [routerLink]="[Exam?.Id,'edit']">Edit Exam (Teacher only)</a> -->
+    <div> Id: {{Exam.id}}</div>
+    <div> Course: {{Exam.CourseId}}</div>
+    <div> TeacherId: {{Exam.TeacherId}}</div>
+    <div> MaxDegree: {{Exam.MaxDegree}}</div>
+    <div> MinDegree: {{Exam.MinDegree}}</div>
+    <div> StartDate: {{Exam.StartDate}}</div>
+    <a class="btn btn-dark" [routerLink]="[Exam.id,'edit']">Edit Exam (Teacher only)</a>
     <!-- <a class="btn btn-success" [routerLink]="[exam.Id,'take']">Take Exam (Student Only)</a> -->
     <a class="btn btn-primary" [routerLink]="['/exams']">Return to exams</a>
 </div>

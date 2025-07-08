@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { IpcNetConnectOpts } from 'net';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IExam } from '../../models/iexam';
 import { StaticExamServices } from '../../services/static-exam-services';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ExamServices } from '../../services/exam-services';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-exam-details',
@@ -10,15 +13,24 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
   styleUrl: './exam-details.css'
 })
 export class ExamDetails implements OnInit{
-  Exam !: IExam | undefined;
+  Exam !: IExam ;
+  mySub!:Subscription;
   Id! : string | null;
-    constructor(private ExamService: StaticExamServices, private activatedRoute:ActivatedRoute){
+    constructor(private ExamService: StaticExamServices,private ExamTest:ExamServices, private activatedRoute:ActivatedRoute, private cdr:ChangeDetectorRef){
     
   }
 
   ngOnInit(): void {
     this.Id = this.activatedRoute.snapshot.paramMap.get('id')??'';
-    this.Exam = this.ExamService.getExamById(this.Id??'');
+    this.mySub = this.ExamTest.getExamById(this.Id).subscribe({
+      next: (exams) => {
+        if (Array.isArray(exams)) 
+          this.Exam = exams[0];
+         else 
+          this.Exam = exams;
+        this.cdr.detectChanges();
+      }
+    });
   }
   
 }
