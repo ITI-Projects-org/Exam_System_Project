@@ -57,18 +57,31 @@ namespace backend
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingConfigurations>());
 
             // Register Cors
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy(_policy,
+            //    builder =>
+            //    {
+            //        builder.AllowAnyOrigin();
+            //        builder.WithOrigins("https://localhost:7088");
+            //        //builder.WithOrigins("http://localhost:7088");
+            //        builder.WithMethods("Post", "get");
+            //        builder.AllowAnyMethod();
+            //        builder.AllowAnyHeader();
+            //    });
+            //});
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(_policy,
-                builder =>
+                options.AddPolicy("AllowAll", policy =>
                 {
-                    builder.AllowAnyOrigin();
-                    builder.WithOrigins("https://localhost:7088");
-                    builder.WithMethods("Post", "get");
-                    builder.AllowAnyMethod();
-                    builder.AllowAnyHeader();
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                 });
             });
+
+            // Add this before app.UseAuthorization();
+            
 
             builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
            .AddJwtBearer("auth_schema", options =>
@@ -93,11 +106,11 @@ namespace backend
                 app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
             }
 
+            app.UseCors("AllowAll");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
 
             await app.RunAsync(); 

@@ -11,11 +11,16 @@ namespace backend.Repositories.Implementations
         {
         }
 
+        //public async Task<IEnumerable<Exam>> GetAllUserExams(string UserId)
+        //{
+        //    return _context.Exams.Where(e => e.TeacherId == Teacher_Id.ToString());
+
+        //}
         public async Task<IEnumerable<Exam>> GetAllExamsofTeacher(string Teacher_Id)
         {
             return _context.Exams.Where(e => e.TeacherId == Teacher_Id.ToString());
         }
-
+        
         public async Task<IEnumerable<Exam>> GetAllExamsofStudent(string Student_ID)
         {
          

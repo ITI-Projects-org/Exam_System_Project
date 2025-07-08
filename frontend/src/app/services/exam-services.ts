@@ -3,89 +3,40 @@ import { nextTick } from 'process';
 import { Observable } from 'rxjs';
 import { IExam } from '../models/iexam';
 import { observeNotification } from 'rxjs/internal/Notification';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExamServices {
-
-  // constructor() { }
-  // ads:string[]=[
-  //   'str-1',
-  //   'str-2',
-  //   'str-3',
-  // ];
-  // getAds(): Observable<string>{
-    
-  //   let myObservable = new Observable<string>((observable)=>{
-  //     {
-  //       let count = 0;
-  //       setInterval(()=>{
-  //         observable.next(this.ads[count++])
-  //         if(this.ads.length == count){
-  //           observable.complete();
-  //         }
-  //       },1000);
-  //     }
-  //   });
-  //   return myObservable;
-  // }
   Exam!:IExam;
     Exams : IExam[] = [];
-  baseURL:string="http://localhost:3000/exams";
+  // baseURL:string="http://localhost:3000/exams";
+  baseURL:string="http://localhost:7251/api/Exam/";
+  token: string | null;
+  headers!: HttpHeaders;
     constructor(private http:HttpClient){
-      // this.Exams = [
-      //   {
-      //     Id: "1",
-      //     Title: "exam-1",
-      //     MaxDegree: 100,
-      //     MinDegree: 50,
-      //     StartDate: new Date('1-1-2025'),
-      //     Duration: 1,
-      //     CourseId: 1,
-      //     TeacherId: 1
-      //   },
-      //   {
-      //     Id: "2",
-      //     Title: "exam-2",
-      //     MaxDegree: 120,
-      //     MinDegree: 60,
-      //     StartDate: new Date('2-2-2025'),
-      //     Duration: 2,
-      //     CourseId: 1,
-      //     TeacherId: 2
-      //   }
-      // ];
+      // this.token = localStorage.getItem('token');
+      this.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZDkyYzBmNi0zZGQyLTQ4NDUtYTYwNi1jOWU0NGQ0ZmQ5ZWEiLCJlbWFpbCI6InRlYWNoZXIxQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVGVhY2hlciIsImV4cCI6MTc1MjA4MTU2MX0.F0aTSMEzvetO2WGykqcgGqzWvAY35Dzy03uUCJOBdhQ";
+      this.headers=new HttpHeaders({Authorization:'Bearer '+this.token});
     }
-    // getExams(){
-    //   let ExamObservable = new Observable<IExam>((Observable)=>{
-    //   let count = 0;
-    //   setInterval(()=>{
-    //     Observable.next(this.Exams[count++]);
-    //     if(count == this.Exams.length)
-    //       Observable.complete();
-
-    //   },1000)
-    //   })
-    //   return ExamObservable;
-    // }
-    getExams():Observable<IExam[]>{
-      return this.http.get<IExam[]>(this.baseURL);
-    }
-    getExamById(examId:string){
-      let url = `${this.baseURL}/${examId}`
-      console.log(url);
-      return this.http.get<IExam[]>(`${this.baseURL}/${examId}`);
+   
+  getExams():Observable<IExam[]>{
+    return this.http.get<any>(this.baseURL,{headers:this.headers});
+  }
+  getExamById(examId:string){
+    let url = `${this.baseURL}/${examId}`
+    console.log(url);
+    return this.http.get<any>(`${this.baseURL}${examId}`,{headers:this.headers});
   }
   addExam(exam:any):Observable<IExam>{
-    return this.http.post<IExam>(this.baseURL,exam);
+    return this.http.post<IExam>(this.baseURL,exam,{headers:this.headers});
   }
   updateExam(examId:any, exam:any){
-    return this.http.put(`${this.baseURL}/${examId}`,exam);
+    return this.http.put(`${this.baseURL}/${examId}`,exam,{headers:this.headers});
 
   }
   deleteExam(examId:any):Observable<IExam> {
-    return this.http.delete<IExam>(`${this.baseURL}/${examId}`);
+    return this.http.delete<IExam>(`${this.baseURL}/${examId}`,{headers:this.headers});
   }
 }

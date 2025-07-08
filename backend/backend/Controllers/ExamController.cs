@@ -15,6 +15,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Security.AccessControl;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace backend.Controllers
 {
@@ -30,12 +31,17 @@ namespace backend.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("teacher")]
-        [Authorize(Roles = "Teacher")]
-        public async Task<IEnumerable<ExamDTO>> GetTeacherExams()
+        [HttpGet]
+        [Authorize]
+        public async Task<IEnumerable<ExamDTO>> GetExams()
         {
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var Exams = await _unit.ExamRepository.GetAllExamsofTeacher(UserId);
+            string Role = User.FindFirstValue(ClaimTypes.Role);
+            IEnumerable<Exam> Exams = new List<Exam>();
+            if (Role =="Teacher")
+                Exams = await _unit.ExamRepository.GetAllExamsofTeacher(UserId);
+            else if (Role == "Student")
+                Exams = await _unit.ExamRepository.GetAllExamsofStudent(UserId);
             List<ExamDTO> ExamsDTO = new List<ExamDTO>();
             foreach (var item in Exams)
             {
@@ -53,18 +59,9 @@ namespace backend.Controllers
             return ExamsDTO.ToList();
         }
 
-        [HttpGet("student")]
-        [Authorize(Roles = "Student")]
-        public async Task<IEnumerable<ExamDTO>> GetStudentExams()
-        {
-            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var Exams = await _unit.ExamRepository.GetAllExamsofStudent(UserId);
-            List<ExamDTO> examDTO = _mapper.Map<List<ExamDTO>>(Exams);
-            return examDTO;
-        }
-
+       
         [HttpGet("{id}")]
-        [Authorize(Roles = "Student")]
+        //[Authorize(Roles = "Student")]
         public async Task<IActionResult> GetStudentExamDetails(int id)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -126,19 +123,6 @@ namespace backend.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Teacher")]
-        public void AddExam([FromBody] Exam exam)
-        {
-            _unit.ExamRepository.Add(exam);
-        }
-
-        
-        //[HttpDelete("{id}")]
-        //public void RemoveExam(string Id)
-        //{
-        //    _unit.ExamRepository.Delete(Id);
-        //}
 
         [HttpGet("TakeExam")]
         public async Task<IActionResult> TakeExam(int ExamId)
@@ -202,7 +186,7 @@ namespace backend.Controllers
         }
 
       
-        [HttpPost("AddExam")]
+        [HttpPost]
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
         {
