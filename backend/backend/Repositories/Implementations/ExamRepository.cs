@@ -72,6 +72,8 @@ namespace backend.Repositories.Implementations
         }
         public async Task<Exam> GetExamByIdWithWithQuestionsWithOptions(int ExamId)
         {
+
+            
             return await _context.Exams
                 .Where(e=>e.Id == ExamId)
                 .Include(e=>e.Questions)

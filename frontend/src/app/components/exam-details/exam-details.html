@@ -6,7 +6,7 @@
     <div> MaxDegree: {{Exam.maxDegree}}</div>
     <div> MinDegree: {{Exam.minDegree}}</div>
     <div> StartDate: {{Exam.startDate}}</div>
-    <a class="btn btn-dark" [routerLink]="[Exam.id,'edit']">Edit Exam (Teacher only)</a>
+    <a class="btn btn-dark" [routerLink]="['/exams',Exam.id,'edit']">Edit Exam (Teacher only)</a>
     <!-- <a class="btn btn-success" [routerLink]="[exam.Id,'take']">Take Exam (Student Only)</a> -->
     <a class="btn btn-primary" [routerLink]="['/exams']">Return to exams</a>
 </div>

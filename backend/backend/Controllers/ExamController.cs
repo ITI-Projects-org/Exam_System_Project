@@ -3,19 +3,9 @@ using backend.DTOs;
 using backend.Models;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.AccessControl;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
+using System.Security.Claims;   
 
 namespace backend.Controllers
 {
@@ -59,40 +49,85 @@ namespace backend.Controllers
             return ExamsDTO.ToList();
         }
 
-       
-        [HttpGet("{id}")]
-        //[Authorize(Roles = "Student")]
-        public async Task<IActionResult> GetStudentExamDetails(int id)
+
+        //[HttpGet("{examId}")]
+        ////[Authorize(Roles = "Student")]
+        //public async Task<IActionResult> GetStudentExamDetails(int examId)
+        //{
+        //    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(currentUserId))
+        //        return Unauthorized("User ID not found.");
+
+        //    var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == examId);
+
+        //    if (exam == null)
+        //        return NotFound($"Exam with ID {examId} not found.");
+
+        //    DateTime currentTime = DateTime.Now;
+        //    TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
+        //    DateTime egyptCurrentTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, egyptTimeZone);
+        //    DateTime examEndDate = exam.StartDate + exam.Duration;
+
+        //    var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+        //    //if (egyptCurrentTime < exam.StartDate)
+        //    //    return Ok(_mapper.Map<ExamDTO>(exam));
+
+
+        //    else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
+        //    {
+        //        ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+        //        var duringExamDTO = _mapper.Map<DuringExamDTO>(ExamWithQuestionsWithOptions);
+        //        return Ok(duringExamDTO);
+        //    }
+        //    else
+        //    {
+        //        //var afterExam = new AfterExamEndDTO();
+        //        var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId).FirstOrDefaultAsync();
+
+        //        if (studentExamRecord == null)
+        //        {
+        //            var afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
+        //            afterExamDTO.IsAbsent = true;
+        //            return Ok(afterExamDTO);
+        //        }
+        //        else {
+        //            AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
+        //            List<Stud_Option> stud_Options = await _unit.StudentOptionRepository.GetAllStudentOptions(currentUserId);
+        //            foreach (var question in afterExamDTO.Questions)
+        //            {
+        //                foreach (var option in question.Options)
+        //                {
+        //                    if (stud_Options.Select(so => so.OptionId).ToList().Contains(option.Id))
+        //                    {
+        //                        option.IsChoosedByStudent = true;
+        //                    }
+        //                }
+        //            }
+        //            return Ok(afterExamDTO);
+        //        }
+
+
+        //    }
+
+        //    var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+        //    return Ok();
+        //}
+        [HttpGet("{examId}")]
+        [Authorize]
+        public async Task<IActionResult> GetExamDetails(int examId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var UserRole= User.FindFirstValue(ClaimTypes.Role);
             if (string.IsNullOrEmpty(currentUserId))
                 return Unauthorized("User ID not found.");
-
-            var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == id);
-
+            var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == examId);
             if (exam == null)
-                return NotFound($"Exam with ID {id} not found.");
+                return NotFound($"Exam with ID {examId} not found.");
 
-            DateTime currentTime = DateTime.Now;
-            TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
-            DateTime egyptCurrentTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, egyptTimeZone);
-            DateTime examEndDate = exam.StartDate + exam.Duration;
-
-            var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
-            if (egyptCurrentTime < exam.StartDate)
-                return Ok(_mapper.Map<ExamDTO>(exam));
-
-
-            else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
+            var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+            if (UserRole == "Student")
             {
-                ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
-                var duringExamDTO = _mapper.Map<DuringExamDTO>(ExamWithQuestionsWithOptions);
-                return Ok(duringExamDTO);
-            }
-            else
-            {
-                //var afterExam = new AfterExamEndDTO();
-                var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, id).FirstOrDefaultAsync();
+                var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId).FirstOrDefaultAsync();
 
                 if (studentExamRecord == null)
                 {
@@ -100,7 +135,8 @@ namespace backend.Controllers
                     afterExamDTO.IsAbsent = true;
                     return Ok(afterExamDTO);
                 }
-                else {
+                else
+                {
                     AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
                     List<Stud_Option> stud_Options = await _unit.StudentOptionRepository.GetAllStudentOptions(currentUserId);
                     foreach (var question in afterExamDTO.Questions)
@@ -115,14 +151,19 @@ namespace backend.Controllers
                     }
                     return Ok(afterExamDTO);
                 }
-
-
+            }
+            else if (UserRole == "Teacher")
+            {
+                AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam); 
+                return Ok(afterExamDTO);
             }
 
-            var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
+
+            //}
+
+            var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
             return Ok();
         }
-
 
         [HttpGet("TakeExam")]
         public async Task<IActionResult> TakeExam(int ExamId)

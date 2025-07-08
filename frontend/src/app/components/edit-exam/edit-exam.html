@@ -6,50 +6,85 @@
     Edit Exam
     }
 </h1>
-<form [formGroup]="examForm" (submit)="handel_Edit_Add_Exam(examForm)">
+<form [formGroup]="examForm" (ngSubmit)="handel_Edit_Add_Exam(examForm)">
+    <input formControlName="examId" type="text" class="form-control mb-3" id="exampleInputId">
     <div class="mb-3">
         <label for="exampleInputTitle" class="form-label">Title</label>
         <input formControlName="Title" type="text" class="form-control" id="exampleInputTitle"
             aria-describedby="TitleHelp">
-
-        @if(getTitle.touched)
-        {@if(getTitle.hasError('required')){
-        <div class="text-danger form-text">Required</div>
-        }
-        @else if(getTitle.hasError('minlength')){
-        <div class="text-danger form-text">Min Length is 3</div>
-        }}
-
+        <div *ngIf="getTitle.touched && getTitle.invalid" class="text-danger form-text">
+            <div *ngIf="getTitle.errors && getTitle.errors['required']">Required</div>
+            <div *ngIf="getTitle.errors && getTitle.errors['minlength']">Min Length is 3</div>
+        </div>
     </div>
     <div class="mb-3">
         <label for="exampleInputMaxDegree" class="form-label">Max Degree</label>
         <input formControlName="MaxDegree" type="number" class="form-control" id="exampleInputMaxDegree">
-        @if(getMaxDegree.touched)
-        {
-        @if(getMaxDegree.hasError('required')){
-        <div class="text-danger form-text">Required</div>
-        }
-        @else if(getMaxDegree.hasError('min')){
-        <div class="text-danger form-text">Min is 1</div>
-        }}
+        <div *ngIf="getMaxDegree.touched && getMaxDegree.invalid" class="text-danger form-text">
+            <div *ngIf="getMaxDegree.errors && getMaxDegree.errors['required']">Required</div>
+            <div *ngIf="getMaxDegree.errors && getMaxDegree.errors['min']">Min is 1</div>
+        </div>
     </div>
     <div class="mb-3">
         <label for="exampleInputMinDegree" class="form-label">Min Degree</label>
         <input formControlName="MinDegree" type="number" class="form-control" id="exampleInputMinDegree">
+        <div *ngIf="getMinDegree.touched && getMinDegree.invalid" class="text-danger form-text">
+            <div *ngIf="getMinDegree.errors && getMinDegree.errors['min']">Min is 0</div>
+        </div>
     </div>
-
     <div class="mb-3">
         <label for="exampleInputStartDate" class="form-label">Start Date: </label>
-        <input formControlName="StartDate" type="number" class="form-control" id="exampleInputStartDate">
+        <input formControlName="StartDate" type="datetime-local" class="form-control" id="exampleInputStartDate">
+        <div *ngIf="getStartDate.touched && getStartDate.invalid" class="text-danger form-text">
+            <div *ngIf="getStartDate.errors && getStartDate.errors['required']">Required</div>
+        </div>
     </div>
     <div class="mb-3">
         <label for="exampleInputDuration" class="form-label">Duration: </label>
         <input formControlName="Duration" type="number" class="form-control" id="exampleInputDuration">
+        <div *ngIf="getDuration.touched && getDuration.invalid" class="text-danger form-text">
+            <div *ngIf="getDuration.errors && getDuration.errors['required']">Required</div>
+        </div>
     </div>
     <!-- teacher Id get thesigned in teacher -->
-
     <!-- for students you can leave it empty !! do not assign student now for exam , there is component for it -->
-
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div formArrayName="questions">
+        <div *ngFor="let question of questions.controls; let qIndex = index" [formGroupName]="qIndex"
+            class="question-block">
+            <hr>
+            <label>Question {{qIndex + 1}}:</label>
+            <input formControlName="title" placeholder="Question text" class="form-control mb-2" />
+            <div *ngIf="question.get('title')?.touched && question.get('title')?.invalid" class="text-danger form-text">
+                <!-- <div *ngIf="question.get('title')?.errors && question.get('title')?.errors['required']">Required</div> -->
+            </div>
+            <input formControlName="degree" type="number" placeholder="Degree" class="form-control mb-2" />
+            <div *ngIf="question.get('degree')?.touched && question.get('degree')?.invalid"
+                class="text-danger form-text">
+                <!-- <div *ngIf="question.get('degree')?.errors && question.get('degree')?.errors['required']">Required</div> -->
+            </div>
+            <button type="button" (click)="removeQuestion(qIndex)" class="btn btn-danger btn-sm mb-2">Remove
+                Question</button>
+            <div formArrayName="options">
+                <div *ngFor="let option of getOptions(qIndex).controls; let oIndex = index" [formGroupName]="oIndex"
+                    class="option-block">
+                    <label>Option {{oIndex + 1}}:</label>
+                    <input formControlName="title" placeholder="Option text" class="form-control mb-1" />
+                    <div *ngIf="option?.get('title')?.touched && option?.get('title')?.invalid"
+                        class="text-danger form-text">
+                        <!-- <div *ngIf="option?.get('title')?.errors && option?.get('title')?.errors['required']">Required</div> -->
+                    </div>
+                    <label class="form-check-label">
+                        <input type="checkbox" formControlName="isCorrect" class="form-check-input" /> Correct
+                    </label>
+                    <button type="button" (click)="removeOption(qIndex, oIndex)" class="btn btn-warning btn-sm">Remove
+                        Option</button>
+                </div>
+                <button type="button" (click)="addOption(qIndex)" class="btn btn-secondary btn-sm mt-1">Add
+                    Option</button>
+            </div>
+        </div>
+        <button type="button" (click)="addQuestion()" class="btn btn-primary mt-2">Add Question</button>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
 </form>
 <p>{{examForm.value | json}}</p>

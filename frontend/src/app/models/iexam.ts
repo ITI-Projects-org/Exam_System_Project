@@ -1,13 +1,4 @@
 export interface IExam {
-    // id:string,
-    // Title:string,
-    // StartDate: Date,
-    // Duration: number,
-    // MaxDegree:number,
-    // MinDegree:number,
-    // CourseId : number,
-    // TeacherId: number
-
     id: string,
     title:string,
     startDate: Date,
@@ -16,6 +7,20 @@ export interface IExam {
     maxDegree: number,
     minDegree: number,
     courseId : number,
-    teacherId: number
+    teacherId: number,
+    questions: IQuestion[]
+}
 
+export interface IQuestion{
+    id: string,
+    title: string,
+    degree: number,
+    options:IOption[]
+    
+}
+export interface IOption{
+    id: string,
+    title: string,
+    isCorrect: boolean,
+    isChoosedByStudent: boolean
 }
