@@ -43,11 +43,11 @@ export class EditExam implements OnInit, OnDestroy{
           else
             this.exam = res;
           console.log('edited exam'+this.exam)
-          this.getCourseId.setValue(this.exam.CourseId ?? 0);
-          this.getTitle.setValue(this.exam.Title ?? '');
-          this.getMaxDegree.setValue(this.exam.MaxDegree ?? 0);
-          this.getMinDegree.setValue(this.exam.MinDegree ?? 0);
-          this.getDuration.setValue(this.exam.Duration ?? 0);
+          this.getCourseId.setValue(this.exam.courseId ?? 0);
+          this.getTitle.setValue(this.exam.title ?? '');
+          this.getMaxDegree.setValue(this.exam.maxDegree ?? 0);
+          this.getMinDegree.setValue(this.exam.minDegree ?? 0);
+          this.getDuration.setValue(this.exam.duration ?? 0);
           this.cdr.detectChanges();
   
       }

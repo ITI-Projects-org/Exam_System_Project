@@ -29,8 +29,9 @@ export class ExamServices {
     console.log(url);
     return this.http.get<any>(`${this.baseURL}${examId}`,{headers:this.headers});
   }
-  addExam(exam:any):Observable<IExam>{
+  addExam(exam:any) : Observable<IExam>{
     return this.http.post<IExam>(this.baseURL,exam,{headers:this.headers});
+
   }
   updateExam(examId:any, exam:any){
     return this.http.put(`${this.baseURL}/${examId}`,exam,{headers:this.headers});

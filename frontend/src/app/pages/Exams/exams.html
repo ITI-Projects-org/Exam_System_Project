@@ -4,12 +4,12 @@
 @for (exam of Exams; track exam.id) {
 <div>
     <div> Id: {{exam.id}}</div>
-    <div> Id: {{exam.Title}}</div>
-    <div> Course: {{exam.CourseId}}</div>
-    <div> TeacherId: {{exam.TeacherId}}</div>
-    <div> MaxDegree: {{exam.MaxDegree}}</div>
-    <div> MinDegree: {{exam.MinDegree}}</div>
-    <div> StartDate: {{exam.StartDate}}</div>
+    <div> Id: {{exam.title}}</div>
+    <div> Course: {{exam.courseId}}</div>
+    <div> TeacherId: {{exam.teacherId}}</div>
+    <div> MaxDegree: {{exam.maxDegree}}</div>
+    <div> MinDegree: {{exam.minDegree}}</div>
+    <div> StartDate: {{exam.startDate}}</div>
     <a class="btn btn-primary" [routerLink]="[exam.id]">View Exam Details</a>
     <a class="btn btn-dark" [routerLink]="[exam.id,'edit']">Edit Exam (Teacher only)</a>
     <a class="btn btn-success" [routerLink]="[exam.id,'take']">Take Exam (Student Only)</a>

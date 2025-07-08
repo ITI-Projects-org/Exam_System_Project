@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { StaticExamServices } from '../../services/static-exam-services';
 import { IExam } from '../../models/iexam';
 import { RouterLink } from '@angular/router';
 import { ExamServices } from '../../services/exam-services';
@@ -17,7 +16,7 @@ export class Exams implements OnInit, OnDestroy{
   mySubDel!: Subscription;
   ads:string[]=[];
 
-    constructor(private ExamServices:StaticExamServices, private ExamTestServices:ExamServices, private cdr:ChangeDetectorRef){
+    constructor( private ExamTestServices:ExamServices, private cdr:ChangeDetectorRef){
   }
   ngOnDestroy(): void {
     this.examObservable.unsubscribe();
