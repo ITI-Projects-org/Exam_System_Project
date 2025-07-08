@@ -36,6 +36,18 @@ export class EditExam implements OnInit, OnDestroy{
   ngOnInit(): void {
  
 
+    this.examForm = this.fb.group({
+      id: [''],
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      maxDegree: [100, [Validators.required, Validators.min(1)]],
+      minDegree: [0, Validators.min(0)],
+      startDate: [new Date().toISOString().slice(0, 16), Validators.required],
+      duration: [2, Validators.required],
+      courseId: [1, Validators.required],
+      teacherId: [1],
+      questions: this.fb.array([])
+    })
+
     this.subActive = this.activatedRoute.paramMap.subscribe({
       next:(params)=>{
         this.examId = params.get('id')!;
@@ -59,21 +71,9 @@ export class EditExam implements OnInit, OnDestroy{
           });
           this.cdr.detectChanges();
         }
-        
       })
       }
     });
-    this.examForm = this.fb.group({
-      Id: [this.examId],
-      Title: ['', [Validators.required, Validators.minLength(3)]],
-      MaxDegree: [0, [Validators.required]],
-      MinDegree: [0, Validators.required],
-      StartDate:[new Date().toISOString().split('T')[0]],
-      Duration:[2],
-      CourseId :[0, Validators.required],
-      TeacherId:[0],
-      questions: this.fb.array([])
-    })
   }
 
   get questions(): FormArray {
@@ -118,50 +118,141 @@ export class EditExam implements OnInit, OnDestroy{
     this.getOptions(qIndex).removeAt(oIndex);
   }
 
-  handel_Edit_Add_Exam(examForm:FormGroup):any{
-    if(this.examForm.status != 'VALID') {
-        console.log(this.examForm.status)
-      return 
-    } ;
-    console.log('adding exam') 
-    if(this.examId == '0') this.AddExam(examForm);  
+  handel_Edit_Add_Exam(examForm: FormGroup): any {
+    console.log('form status:', examForm.status);
+    
+    // Log validation errors for each field
+    Object.keys(examForm.controls).forEach(key => {
+      const control = examForm.get(key);
+      if (control && control.invalid) {
+        console.log(`${key} is invalid:`, control.errors);
+        console.log(`${key} value:`, control.value);
+      }
+    });
+    
+    if (examForm.status != 'VALID') return;
+    if (this.examId == '0') this.AddExam(examForm);
     else this.EditExam(examForm, this.examId)
   }
 
-  AddExam(examForm:FormGroup){
-    this.ExamTestServices.addExam(examForm.value).subscribe({
-      next:()=>{
+  AddExam(examForm: FormGroup) {
+    console.log('adding exam');
+    const formData = examForm.value;
+
+    // Convert duration to TimeSpan format (HH:mm:ss)
+    if (formData.duration) {
+      const hours = Math.floor(formData.duration);
+      const minutes = Math.floor((formData.duration - hours) * 60);
+      formData.duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    }
+
+    // Convert camelCase to PascalCase for backend compatibility
+    const examDataForBackend = {
+      id: formData.id,
+      title: formData.title,
+      startDate: formData.startDate,
+      duration: formData.duration,
+      courseId: formData.courseId,
+      maxDegree: formData.maxDegree,
+      minDegree: formData.minDegree,
+      teacherId: formData.teacherId,
+      questions: formData.questions?.map((q: any) => ({
+        id: q.id,
+        title: q.title,
+        degree: q.degree,
+        options: q.options?.map((opt: any) => ({
+          id: opt.id,
+          title: opt.title,
+          isCorrect: opt.isCorrect,
+          isChoosedByStudent: opt.isChoosedByStudent
+        })) || []
+      })) || []
+    };
+
+    // Wrap in examDTO object as expected by backend
+    const examDTO = { examDTO: examDataForBackend };
+
+    console.log('Sending exam data:', examDTO);
+    console.log('Exam data for backend:', examDataForBackend);
+    console.log('Title value being sent:', examDataForBackend.title);
+    this.ExamTestServices.addExam(examDTO).subscribe({
+      next: () => {
         this.router.navigate(['/exams'])
+      },
+      error: (error) => {
+        console.error(' Backend validation errors:', error.error?.errors);
+        console.error(' Title validation error details:', error.error?.errors?.Title);
+        console.error(' Full error response:', error);
       }
     })
   }
-  EditExam(examForm:FormGroup,examId:string){
-    this.ExamTestServices.updateExam (this.examId,this.examForm.value).subscribe({
-      next:()=>{
+  EditExam(examForm: FormGroup, examId: string) {
+    const formData = examForm.value;
+
+    // Convert duration to TimeSpan format (HH:mm:ss)
+    if (formData.duration) {
+      const hours = Math.floor(formData.duration);
+      const minutes = Math.floor((formData.duration - hours) * 60);
+      formData.duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    }
+
+    // Convert camelCase to PascalCase for backend compatibility
+    const examDataForBackend = {
+      Id: formData.id,
+      Title: formData.title,
+      StartDate: formData.startDate,
+      Duration: formData.duration,
+      CourseId: formData.courseId,
+      MaxDegree: formData.maxDegree,
+      MinDegree: formData.minDegree,
+      TeacherId: formData.teacherId,
+      Questions: formData.questions?.map((q: any) => ({
+        Id: q.id,
+        Title: q.title,
+        Degree: q.degree,
+        Options: q.options?.map((opt: any) => ({
+          Id: opt.id,
+          Title: opt.title,
+          IsCorrect: opt.isCorrect,
+          IsChoosedByStudent: opt.isChoosedByStudent
+        })) || []
+      })) || []
+    };
+
+    // Wrap in examDTO object as expected by backend
+    const examDTO = { examDTO: examDataForBackend };
+
+    this.ExamTestServices.updateExam(this.examId, examDTO).subscribe({
+      next: () => {
         this.router.navigate(['/exams'])
+      },
+      error: (error) => {
+        console.error(' Backend validation errors:', error.error?.errors);
+        console.error(' Title validation error details:', error.error?.errors?.Title);
+        console.error(' Full error response:', error);
       }
     })
   }
 
-get getTitle(){
-  return this.examForm.controls['Title'];
-}
-  get getMaxDegree(){
-  return this.examForm.controls['MaxDegree'];
-}
-  get getMinDegree(){
-  return this.examForm.controls['MinDegree'];
-}
-get getStartDate(){
-  return this.examForm.controls['StartDate'];
-}
-get getDuration(){
-  return this.examForm.controls['Duration'];
-}
-get getCourseId(){
-  return this.examForm.controls['CourseId'];
-}
-get getTeacherId(){
-  return this.examForm.controls['TeacherId'];
-}
+  get getTitle() {
+    return this.examForm.controls['title'];
+  }
+  get getMaxDegree() {
+    return this.examForm.controls['maxDegree'];
+  }
+  get getMinDegree() {
+    return this.examForm.controls['minDegree'];
+  }
+  get getStartDate() {
+    return this.examForm.controls['startDate'];
+  }
+  get getDuration() {
+    return this.examForm.controls['duration'];
+  }
+  get getCourseId() {
+    return this.examForm.controls['courseId'];
+  }
+  get getTeacherId() {
+    return this.examForm.controls['teacherId'];
+  }
 }

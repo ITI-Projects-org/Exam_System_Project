@@ -17,7 +17,7 @@ export class ExamServices {
   headers!: HttpHeaders;
     constructor(private http:HttpClient){
       // this.token = localStorage.getItem('token');
-      this.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZDkyYzBmNi0zZGQyLTQ4NDUtYTYwNi1jOWU0NGQ0ZmQ5ZWEiLCJlbWFpbCI6InRlYWNoZXIxQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVGVhY2hlciIsImV4cCI6MTc1MjA4MTU2MX0.F0aTSMEzvetO2WGykqcgGqzWvAY35Dzy03uUCJOBdhQ";
+      this.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZDkyYzBmNi0zZGQyLTQ4NDUtYTYwNi1jOWU0NGQ0ZmQ5ZWEiLCJlbWFpbCI6InRlYWNoZXIxQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVGVhY2hlciIsImV4cCI6MTc1MjEwNDI4NH0.zLWSBBpduo5tNTO9X19Mdh76_a17dN0J_H1KEFa1wDw";
       this.headers=new HttpHeaders({Authorization:'Bearer '+this.token});
     }
    
