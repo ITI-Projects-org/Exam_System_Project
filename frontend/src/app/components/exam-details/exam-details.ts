@@ -1,4 +1,4 @@
-import { IpcNetConnectOpts } from 'net';
+
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IExam } from '../../models/iexam';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -42,7 +42,7 @@ export class ExamDetails implements OnInit{
     if (!this.Exam) return 'loading';
     const now = new Date();
     const examDate = new Date(this.Exam.startDate);
-    const endDate = new Date(this.Exam.endDate);
+    const endDate = this.getEndDate();
     
     if (now < examDate) return 'upcoming';
     if (now >= examDate && now <= endDate) return 'active';
@@ -83,7 +83,7 @@ export class ExamDetails implements OnInit{
     
     const now = new Date();
     const startDate = new Date(this.Exam.startDate);
-    const endDate = new Date(this.Exam.endDate);
+    const endDate = this.getEndDate();
     
     if (now < startDate) {
       // Time until start
@@ -103,7 +103,7 @@ export class ExamDetails implements OnInit{
     
     const now = new Date();
     const startDate = new Date(this.Exam.startDate);
-    const endDate = new Date(this.Exam.endDate);
+    const endDate = this.getEndDate();
     
     if (now < startDate) return 'Until Start';
     if (now >= startDate && now <= endDate) return 'Time Remaining';
@@ -125,7 +125,7 @@ export class ExamDetails implements OnInit{
     
     const now = new Date();
     const startDate = new Date(this.Exam.startDate);
-    const endDate = new Date(this.Exam.endDate);
+    const endDate = this.getEndDate();
     
     if (now < startDate) {
       return 0;
@@ -146,5 +146,13 @@ export class ExamDetails implements OnInit{
     const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
     
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  public getEndDate(): Date {
+    if (!this.Exam) return new Date();
+    const start = new Date(this.Exam.startDate);
+    // duration is in hh:mm:ss format
+    const [h, m, s] = (this.Exam.duration || '00:00:00').split(':').map(Number);
+    return new Date(start.getTime() + h * 3600000 + m * 60000 + s * 1000);
   }
 }

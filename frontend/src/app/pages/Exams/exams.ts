@@ -41,39 +41,27 @@ export class Exams implements OnInit, OnDestroy{
     // Add some mock data for testing if no exams are loaded
     const mockExams: IExam[] = [
       {
-        id: '1',
+        id: 1,
         title: 'JavaScript Fundamentals',
         startDate: new Date('2024-01-15T10:00:00'),
-        endDate: new Date('2024-01-15T12:00:00'),
-        duration: 120,
+        // endDate: new Date('2024-01-15T12:00:00'),
+        duration: "120",
         maxDegree: 100,
         minDegree: 50,
         courseId: 1,
-        teacherId: 1,
+        // teacherId: 1,
         questions: []
       },
       {
-        id: '2',
+        id: 2,
         title: 'Angular Development',
         startDate: new Date('2024-01-20T14:00:00'),
-        endDate: new Date('2024-01-20T16:00:00'),
-        duration: 120,
+        // endDate: new Date('2024-01-20T16:00:00'),
+        duration: "120",
         maxDegree: 100,
         minDegree: 50,
         courseId: 2,
-        teacherId: 1,
-        questions: []
-      },
-      {
-        id: '3',
-        title: 'Database Design',
-        startDate: new Date('2024-01-10T09:00:00'),
-        endDate: new Date('2024-01-10T11:00:00'),
-        duration: 120,
-        maxDegree: 100,
-        minDegree: 50,
-        courseId: 3,
-        teacherId: 1,
+        // teacherId: 1,
         questions: []
       }
     ];
@@ -161,14 +149,14 @@ export class Exams implements OnInit, OnDestroy{
   isActive(exam: IExam): boolean {
     const now = new Date();
     const examDate = new Date(exam.startDate);
-    const endDate = new Date(examDate.getTime() + this.parseDuration(exam.duration));
+    const endDate = new Date(examDate.getTime() + this.parseDuration(Number(exam.duration)));
     return examDate <= now && now <= endDate;
   }
 
   isCompleted(exam: IExam): boolean {
     const now = new Date();
     const examDate = new Date(exam.startDate);
-    const endDate = new Date(examDate.getTime() + this.parseDuration(exam.duration));
+    const endDate = new Date(examDate.getTime() + this.parseDuration(Number(exam.duration)));
     return now > endDate;
   }
 

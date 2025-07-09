@@ -37,12 +37,12 @@ namespace backend.Controllers
             {
                 ExamDTO ExamDTO = new ExamDTO()
                 {
-                    id = item.Id,
-                    startDate = item.StartDate,
-                    duration = item.Duration,
-                    title = item.Title,
-                    maxDegree = item.MaxDegree,
-                    minDegree = item.MinDegree
+                    Id = item.Id,
+                    StartDate = item.StartDate,
+                    Duration = item.Duration,
+                    Title = item.Title,
+                    MaxDegree = item.MaxDegree,
+                    MinDegree = item.MinDegree
                 };
                 ExamsDTO.Add(ExamDTO);
             }
