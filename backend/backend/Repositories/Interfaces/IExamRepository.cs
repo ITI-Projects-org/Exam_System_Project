@@ -13,5 +13,7 @@ namespace backend.Repositories.Interfaces
         Task<Exam> GetExamByIdWithWithQuestionsWithOptions(int ExamId);
         void Remove(Exam exam);
         void Update(Exam exam);
+        List<Student> GetAllExamStudents(int examId);
+
     }
 }

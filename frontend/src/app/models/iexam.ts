@@ -32,3 +32,13 @@ export interface StudentOptionInputDTO {
     optionId: number;
     examId: number;
 }
+
+export interface IExamListItem {
+    id: number;
+    title: string;
+    startDate: string;
+    duration: string;
+    endDate: string;
+    maxDegree: number;
+    minDegree: number;
+} 

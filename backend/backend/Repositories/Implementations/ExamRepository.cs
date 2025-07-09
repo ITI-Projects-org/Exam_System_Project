@@ -1,4 +1,5 @@
-﻿using backend.DTOs;
+﻿using System.Reflection.Metadata.Ecma335;
+using backend.DTOs;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -97,6 +98,16 @@ namespace backend.Repositories.Implementations
 
             return examDTO;
         }
+
+
+        public List<Student> GetAllExamStudents(int examId)
+        {
+            return _context.StudExams
+                .Where(se=>se.ExamId==examId)
+                .Join(_context.Students, se => se.StudentId, s => s.Id, (se, s) => s)
+                .ToList();
+        }
+
         public void Remove(Exam exam)
         {
             _context.Exams.Remove(exam);

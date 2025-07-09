@@ -106,10 +106,10 @@ namespace backend
                 app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
             }
 
+            app.UseCors("AllowAll");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
-            app.UseCors("AllowAll");
             app.UseAuthorization();
             app.MapControllers();
 

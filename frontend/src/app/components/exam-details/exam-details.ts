@@ -1,158 +1,116 @@
-
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { IExam } from '../../models/iexam';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ExamServices } from '../../services/exam-services';
-import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ExamServices } from '../../services/exam-services';
+import { IExam } from '../../models/iexam';
+import { ExamStudentDegreeDTO } from '../../services/exam-services';
 
 @Component({
   selector: 'app-exam-details',
-  imports: [RouterLink, CommonModule],
-  templateUrl: './exam-details.html',
-  styleUrl: './exam-details.css'
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="container mt-4">
+      <h2>Exam Details</h2>
+      <div *ngIf="loading" class="alert alert-info">Loading exam details...</div>
+      <div *ngIf="!loading && !exam" class="alert alert-danger">Exam not found.</div>
+      <div *ngIf="!loading && exam">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h4 class="card-title">{{ exam.title }}</h4>
+            <p class="card-text">
+              <strong>Course ID:</strong> {{ exam.courseId }}<br>
+              <strong>Max Degree:</strong> {{ exam.maxDegree }}<br>
+              <strong>Min Degree:</strong> {{ exam.minDegree }}<br>
+              <strong>Start:</strong> {{ exam.startDate | date:'medium' }}<br>
+              <strong>Duration:</strong> {{ exam.duration }}
+            </p>
+          </div>
+        </div>
+        <ng-container *ngIf="isTeacher">
+          <div class="card mb-3">
+            <div class="card-header">Assigned Students & Degrees</div>
+            <div class="card-body">
+              <table class="table table-bordered" *ngIf="students.length > 0">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Degree</th>
+                    <th>Absent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of students">
+                    <td>{{ s.studentName }}</td>
+                    <td>{{ s.degree }}</td>
+                    <td>{{ s.isAbsent ? 'Yes' : 'No' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="students.length === 0" class="alert alert-secondary">No students assigned to this exam.</div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isTeacher">
+          <div class="card mb-3">
+            <div class="card-header">Your Exam Info</div>
+            <div class="card-body">
+              <!-- TODO: Replace with real data -->
+              <div class="alert alert-secondary">Your answers, degree, and correct answers will appear here if the exam is finished.</div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  `
 })
-export class ExamDetails implements OnInit{
-  Exam: IExam | null = null;
-  mySub!:Subscription;
-  Id! : string | null;
-  
-  constructor(private ExamTest:ExamServices, private activatedRoute:ActivatedRoute, private cdr:ChangeDetectorRef){
-    
-  }
+export class ExamDetails implements OnInit {
+  exam: IExam | null = null;
+  loading = true;
+  isTeacher = false;
+  students: ExamStudentDegreeDTO[] = [];
+
+  constructor(private examService: ExamServices, private route: ActivatedRoute, private cdr:ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.Id = this.activatedRoute.snapshot.paramMap.get('id')??'';
-    this.mySub = this.ExamTest.getExamById(this.Id).subscribe({
-      next: (exams) => {
-        if (Array.isArray(exams)) 
-          this.Exam = exams[0];
-         else 
-          this.Exam = exams;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading exam:', error);
+    this.isTeacher = this.getRoleFromToken() === 'Teacher';
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.examService.getExamById(id).subscribe({
+        next: (data) => {
+          this.exam = data;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.loading = false;
+        }
+      });
+      if (this.isTeacher) {
+        this.examService.getStudentsOfExam(id).subscribe({
+          next: (students) => {
+            this.students = students;
+          },
+          error: (err) => {
+            console.error('Error loading students for exam:', err);
+          }
+        });
       }
-    });
-  }
-
-  // Status Methods
-  getExamStatus(): string {
-    if (!this.Exam) return 'loading';
-    const now = new Date();
-    const examDate = new Date(this.Exam.startDate);
-    const endDate = this.getEndDate();
-    
-    if (now < examDate) return 'upcoming';
-    if (now >= examDate && now <= endDate) return 'active';
-    return 'completed';
-  }
-
-  getExamStatusText(): string {
-    const status = this.getExamStatus();
-    switch (status) {
-      case 'upcoming': return 'Upcoming';
-      case 'active': return 'Active';
-      case 'completed': return 'Completed';
-      default: return 'Loading...';
-    }
-  }
-
-  // Utility Methods
-  formatDate(date: string | Date): string {
-    if (!date) return 'N/A';
-    const d = new Date(date);
-    return d.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  getPassPercentage(): number {
-    if (!this.Exam) return 0;
-    return Math.round((this.Exam.minDegree / this.Exam.maxDegree) * 100);
-  }
-
-  // Time Methods
-  getTimeRemaining(): string {
-    if (!this.Exam) return '--:--:--';
-    
-    const now = new Date();
-    const startDate = new Date(this.Exam.startDate);
-    const endDate = this.getEndDate();
-    
-    if (now < startDate) {
-      // Time until start
-      const diff = startDate.getTime() - now.getTime();
-      return this.formatTimeRemaining(diff);
-    } else if (now >= startDate && now <= endDate) {
-      // Time remaining
-      const diff = endDate.getTime() - now.getTime();
-      return this.formatTimeRemaining(diff);
     } else {
-      return '00:00:00';
+      this.loading = false;
+    }
+    
+  }
+
+  getRoleFromToken(): string {
+    const token = this.examService.token;
+    if (!token) return '';
+    const payload = token.split('.')[1];
+    try {
+      const decoded = JSON.parse(atob(payload));
+      return decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
+    } catch {
+      return '';
     }
   }
-
-  getTimeStatusText(): string {
-    if (!this.Exam) return 'Loading...';
-    
-    const now = new Date();
-    const startDate = new Date(this.Exam.startDate);
-    const endDate = this.getEndDate();
-    
-    if (now < startDate) return 'Until Start';
-    if (now >= startDate && now <= endDate) return 'Time Remaining';
-    return 'Exam Ended';
-  }
-
-  getTimeStatusClass(): string {
-    const status = this.getExamStatus();
-    switch (status) {
-      case 'upcoming': return 'upcoming';
-      case 'active': return 'active';
-      case 'completed': return 'completed';
-      default: return 'loading';
-    }
-  }
-
-  getTimeProgress(): number {
-    if (!this.Exam) return 0;
-    
-    const now = new Date();
-    const startDate = new Date(this.Exam.startDate);
-    const endDate = this.getEndDate();
-    
-    if (now < startDate) {
-      return 0;
-    } else if (now >= startDate && now <= endDate) {
-      const totalDuration = endDate.getTime() - startDate.getTime();
-      const elapsed = now.getTime() - startDate.getTime();
-      return Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
-    } else {
-      return 100;
-    }
-  }
-
-  private formatTimeRemaining(milliseconds: number): string {
-    if (milliseconds <= 0) return '00:00:00';
-    
-    const hours = Math.floor(milliseconds / (1000 * 60 * 60));
-    const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
-    
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }
-
-  public getEndDate(): Date {
-    if (!this.Exam) return new Date();
-    const start = new Date(this.Exam.startDate);
-    // duration is in hh:mm:ss format
-    const [h, m, s] = (this.Exam.duration || '00:00:00').split(':').map(Number);
-    return new Date(start.getTime() + h * 3600000 + m * 60000 + s * 1000);
-  }
-}
+} 

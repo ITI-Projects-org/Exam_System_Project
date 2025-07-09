@@ -112,6 +112,8 @@ namespace backend.Controllers
         //    var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
         //    return Ok();
         //}
+        
+
         [HttpGet("{examId}")]
         [Authorize]
         public async Task<IActionResult> GetExamDetails(int examId)
@@ -164,6 +166,8 @@ namespace backend.Controllers
             var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
             return Ok();
         }
+
+
 
         [HttpGet("TakeExam")]
         public async Task<IActionResult> TakeExam(int ExamId)
@@ -226,7 +230,14 @@ namespace backend.Controllers
             });
         }
 
-      
+        //[HttpGet("{examId}/students")]
+        //[Authorize(Roles = "Teacher")]
+        //public async Task<IActionResult> GetAllExamStuents(int examId)
+        //{
+        //    return Ok(_unit.ExamRepository.GetAllExamStudents(examId));
+        //}
+
+
         [HttpPost]
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
@@ -464,6 +475,36 @@ namespace backend.Controllers
             catch (Exception err)
             {
                 return BadRequest(new { error = err.Message });
+            }
+        }
+
+        [HttpGet("{examId}/students")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<ActionResult<IEnumerable<ExamStudentDegreeDTO>>> GetStudentsOfExam(int examId)
+        {
+            try
+            {
+                var studExams = await _unit.StudentExamRepository.GetAllQueryable()
+                    .Where(se => se.ExamId == examId)
+                    .Include(se => se.Student)
+                    .ToListAsync();
+
+                var result = studExams.Select(se => new ExamStudentDegreeDTO
+                {
+                    StudentId = se.StudentId,
+                    StudentName = se.Student != null
+                        ? ((se.Student.FirstName ?? "") + " " + (se.Student.LastName ?? "")).Trim()
+                        : se.StudentId,
+                    Degree = se.StudDegree,
+                    IsAbsent = se.IsAbsent
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (ex.ToString())
+                return StatusCode(500, ex.ToString());
             }
         }
 
