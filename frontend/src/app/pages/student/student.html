@@ -1,0 +1,56 @@
+<div class="container my-5">
+  <div class="card shadow-sm mx-auto search-card">
+    <div class="card-body">
+      <h5 class="card-title text-center mb-4">Search Course</h5>
+
+      <form class="row g-3 align-items-end">
+        <div class="col-12 col-md-9">
+          <label for="courseTitle" class="form-label fw-semibold">Title</label>
+          <input type="text" id="courseTitle" class="form-control" placeholder="Enter course title">
+        </div>
+        <div class="col-12 col-md-3 text-md-end">
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-search me-1"></i>Search
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="mt-5 table-responsive">
+    <table class="table table-hover custom-table align-middle">
+      <thead class="table-primary">
+        <tr>
+          <th scope="col">Course ID</th>
+          <th scope="col">Title</th>
+          <th scope="col" class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Test Course</td>
+<td class="text-center">
+  <div class="d-flex justify-content-center gap-2">
+    <button 
+      class="btn btn-outline-warning p-2" 
+      title="Edit" 
+      aria-label="Edit"
+    >
+      <i class="bi bi-pencil fs-5"></i>
+    </button>
+    <button 
+      class="btn btn-outline-danger rounded-circle p-2" 
+      title="Delete" 
+      aria-label="Delete"
+    >
+      <i class="bi bi-trash3-fill fs-5"></i>
+    </button>
+  </div>
+</td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
