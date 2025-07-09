@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ExamServices, Student } from '../../services/exam-services';
+import { ExamServices, Student, ExamStudentDegreeDTO } from '../../services/exam-services';
 
 @Component({
   selector: 'app-assign-student-to-exam',
@@ -15,6 +15,7 @@ export class AssignStudentToExamComponent implements OnInit {
   examId: number = 0;
   students: Student[] = [];
   filteredStudents: Student[] = [];
+  assignedStudents: ExamStudentDegreeDTO[] = [];
   searchTerm: string = '';
   selectedStudents: Set<string> = new Set();
   loading: boolean = false;
@@ -31,37 +32,44 @@ export class AssignStudentToExamComponent implements OnInit {
     this.route.paramMap.subscribe({
       next: (params) => {
         this.examId = Number(params.get('id'));
-        this.loadStudents();
+        this.loadData();
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading exam ID:', err);
       }
     });
-
-  
-    this.loadStudents();
-    this.cdr.detectChanges();
   }
 
-  loadStudents() {
+  loadData() {
     this.loading = true;
     this.error = '';
     
-    this.examService.getAllStudents().subscribe({
-      next: (students) => {
-        
-        console.log('Loaded students:', students);
+    // Load all students and assigned students in parallel
+    Promise.all([
+      this.examService.getAllStudents().toPromise(),
+      this.examService.getStudentsOfExam(this.examId).toPromise()
+    ]).then(([students, assignedStudents]) => {
+      if (students) {
         this.students = students;
         this.filteredStudents = students;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error loading students:', err);
-        this.error = 'Failed to load students';
-        this.loading = false;
       }
+      
+      if (assignedStudents) {
+        this.assignedStudents = assignedStudents;
+        // Mark pre-assigned students as selected
+        this.selectedStudents.clear();
+        assignedStudents.forEach(assigned => {
+          this.selectedStudents.add(assigned.studentId);
+        });
+      }
+      
+      this.loading = false;
+      this.cdr.detectChanges();
+    }).catch(err => {
+      console.error('Error loading data:', err);
+      this.error = 'Failed to load data';
+      this.loading = false;
     });
   }
 
@@ -86,6 +94,40 @@ export class AssignStudentToExamComponent implements OnInit {
     }
   }
 
+  isStudentAssigned(studentId: string): boolean {
+    return this.assignedStudents.some(assigned => assigned.studentId === studentId);
+  }
+
+  getStudentStatus(studentId: string): string {
+    const isCurrentlySelected = this.selectedStudents.has(studentId);
+    const wasPreviouslyAssigned = this.isStudentAssigned(studentId);
+    
+    if (isCurrentlySelected && wasPreviouslyAssigned) {
+      return 'Currently Assigned';
+    } else if (isCurrentlySelected && !wasPreviouslyAssigned) {
+      return 'Will Be Assigned';
+    } else if (!isCurrentlySelected && wasPreviouslyAssigned) {
+      return 'Will Be Unassigned';
+    } else {
+      return 'Not Assigned';
+    }
+  }
+
+  getStatusBadgeClass(studentId: string): string {
+    const isCurrentlySelected = this.selectedStudents.has(studentId);
+    const wasPreviouslyAssigned = this.isStudentAssigned(studentId);
+    
+    if (isCurrentlySelected && wasPreviouslyAssigned) {
+      return 'bg-success';
+    } else if (isCurrentlySelected && !wasPreviouslyAssigned) {
+      return 'bg-primary';
+    } else if (!isCurrentlySelected && wasPreviouslyAssigned) {
+      return 'bg-warning';
+    } else {
+      return 'bg-secondary';
+    }
+  }
+
   selectAll() {
     this.filteredStudents.forEach(student => {
       this.selectedStudents.add(student.id);
@@ -97,11 +139,6 @@ export class AssignStudentToExamComponent implements OnInit {
   }
 
   assignStudents() {
-    if (this.selectedStudents.size === 0) {
-      this.error = 'Please select at least one student';
-      return;
-    }
-
     this.loading = true;
     this.error = '';
     

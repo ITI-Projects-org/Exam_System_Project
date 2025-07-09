@@ -50,6 +50,8 @@ namespace backend.Repositories.Implementations
 
         public void AssignStudsToExam(int ExamId, ICollection<string> StudentsId)
         {
+            List<Stud_Exam> studentExams = _context.StudExams.Where(se => se.ExamId == ExamId).ToList();
+            _context.StudExams.RemoveRange(studentExams);
             foreach (var StudentId in StudentsId)
             {
                 Stud_Exam st_exam = new Stud_Exam()

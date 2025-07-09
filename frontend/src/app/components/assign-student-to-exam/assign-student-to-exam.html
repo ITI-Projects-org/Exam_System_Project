@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header">
                 <h5>Exam ID: {{ examId }}</h5>
-                <p class="mb-0">Select students to assign to this exam</p>
+                <p class="mb-0">Select students to assign to this exam. Uncheck to unassign.</p>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
@@ -31,6 +31,29 @@
                     </div>
                 </div>
 
+                <!-- Status Legend -->
+                <div class="alert alert-info mb-3">
+                    <h6 class="mb-2">Status Legend:</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span class="badge bg-success me-2">●</span>
+                            <small>Currently Assigned</small>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="badge bg-primary me-2">●</span>
+                            <small>Will Be Assigned</small>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="badge bg-warning me-2">●</span>
+                            <small>Will Be Unassigned</small>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="badge bg-secondary me-2">●</span>
+                            <small>Not Assigned</small>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
@@ -46,7 +69,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let student of filteredStudents">
+                            <tr *ngFor="let student of filteredStudents"
+                                [class.table-success]="isStudentAssigned(student.id) && selectedStudents.has(student.id)"
+                                [class.table-warning]="isStudentAssigned(student.id) && !selectedStudents.has(student.id)"
+                                [class.table-primary]="!isStudentAssigned(student.id) && selectedStudents.has(student.id)">
                                 <td>
                                     <input type="checkbox" class="form-check-input"
                                         [checked]="selectedStudents.has(student.id)"
@@ -55,9 +81,8 @@
                                 <td>{{ student.firstName }} {{ student.lastName }}</td>
                                 <td>{{ student.email }}</td>
                                 <td>
-                                    <span class="badge"
-                                        [class]="selectedStudents.has(student.id) ? 'bg-success' : 'bg-secondary'">
-                                        {{ selectedStudents.has(student.id) ? 'Selected' : 'Not Selected' }}
+                                    <span class="badge" [class]="getStatusBadgeClass(student.id)">
+                                        {{ getStudentStatus(student.id) }}
                                     </span>
                                 </td>
                             </tr>
@@ -70,12 +95,15 @@
                         <span class="text-muted">
                             {{ selectedStudents.size }} of {{ filteredStudents.length }} students selected
                         </span>
+                        <br>
+                        <small class="text-muted">
+                            {{ assignedStudents.length }} currently assigned to this exam
+                        </small>
                     </div>
                     <div>
                         <button type="button" class="btn btn-secondary me-2" (click)="cancel()">Cancel</button>
-                        <button type="button" class="btn btn-primary"
-                            [disabled]="loading || selectedStudents.size === 0" (click)="assignStudents()">
-                            {{ loading ? 'Saving...' : 'Save Assignments' }}
+                        <button type="button" class="btn btn-primary" [disabled]="loading" (click)="assignStudents()">
+                            {{ loading ? 'Saving...' : 'Save Changes' }}
                         </button>
                     </div>
                 </div>
