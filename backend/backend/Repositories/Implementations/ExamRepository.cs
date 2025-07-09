@@ -94,6 +94,10 @@ namespace backend.Repositories.Implementations
         {
             _context.Exams.Remove(exam);
         }
+        public async void Update(Exam exam)
+        {
+            _context.Exams.Update(exam);
+        }
 
 
     }

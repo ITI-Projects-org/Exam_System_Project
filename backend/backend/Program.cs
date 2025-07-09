@@ -50,7 +50,7 @@ namespace backend
             //builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             //builder.Services.AddScoped<IStudentExamRepository, StudentExamRepository>();
             //builder.Services.AddScoped<IStudentOptionRepository, StudentOptionRepository>();
-            
+
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -85,8 +85,22 @@ namespace backend
                };
            });
 
-
             var app = builder.Build();
+
+            // // Seed the database
+            // // comment out after finishing
+            // using (var scope = app.Services.CreateScope())
+            // {
+            //     try
+            //     {
+            //         await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            //         logger.LogError(ex, "An error occurred while seeding the database.");
+            //     }
+            // }
 
             if (app.Environment.IsDevelopment())
             {
@@ -101,7 +115,7 @@ namespace backend
             app.UseCors(_policy);
             app.MapControllers();
 
-            await app.RunAsync(); 
+            await app.RunAsync();
         }
     }
 }

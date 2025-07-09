@@ -24,8 +24,8 @@ namespace backend.MapperConfig
             CreateMap<Stud_Option, StudentOptionDTO>()
                 .ForMember(dest => dest.OptionTitle, opt => opt.MapFrom(src => src.Option.Title))
                 .ForMember(dest => dest.IsCorrect, opt => opt.MapFrom(src => src.Option.IsCorrect))
-                .ForMember(dest => dest.QuestionId, opt => opt.MapFrom(src => src.Option.QuestionId))
-                .ForMember(dest => dest.QuestionTitle, opt => opt.MapFrom(src => src.Option.Question.Title));
+                .ForMember(dest => dest.QuestionId, opt => opt.MapFrom(src => src.Option.QuestionId));
+                //.ForMember(dest => dest.QuestionTitle, opt => opt.MapFrom(src => src.Option.Question.Title));
 
             CreateMap<Student, RegisterDTO>().ReverseMap();
             CreateMap<Teacher, TeacherDTO>().ReverseMap();

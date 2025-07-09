@@ -60,7 +60,7 @@ namespace backend.Models
                 .HasForeignKey(e => e.TeacherId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            //Question -> Exam(RESTRICT)
+            // Question -> Exam (RESTRICT)
             builder.Entity<Question>()
                 .HasOne(q => q.Exam)
                 .WithMany(e => e.Questions)
