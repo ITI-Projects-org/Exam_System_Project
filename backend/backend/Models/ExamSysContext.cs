@@ -34,6 +34,9 @@ namespace backend.Models
             builder.Entity<Exam>()
                 .HasIndex(e => e.Title);
 
+            builder.Entity<ApplicationUser>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
             // Configure foreign key relationships with proper delete behavior
 
             //Course->Teacher(NO ACTION to prevent cascade conflicts)

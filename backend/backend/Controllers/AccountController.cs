@@ -35,13 +35,25 @@ namespace backend.Controllers
             // Teacher or Student
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var existing = await userManager.FindByEmailAsync(userDTO.Email);
+            if (existing != null)
+            {
+                return BadRequest(new
+                {
+                    errors = new[] { "This email is already registered." }
+                });
+            }
             Student student = _map.Map<Student>(userDTO);
             student.Role = UserRole.Student;
             var result = await userManager.CreateAsync(student, userDTO.Password);
             if (!result.Succeeded)
-                return BadRequest(result);
+            {
+                // return an array of error messages
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new { errors });
+            }
             await userManager.AddToRoleAsync(student, "Student");
-            return Ok("Done");
+            return Ok(new { msg = "registered successfully" });
         }
 
         [HttpPost("login")]
@@ -49,11 +61,14 @@ namespace backend.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDTO userDTO)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Not Valid Data");
+                return BadRequest(new { errors = new[] { "Invalid request data" } });
 
             ApplicationUser user = await userManager.FindByEmailAsync(userDTO.Email);
             if (user == null)
-                return Unauthorized("Invalid Email or Password");
+                return Unauthorized(new { errors = new[] { "Invalid email or password" } });
+
+            if (!await userManager.CheckPasswordAsync(user, userDTO.Password))
+                return Unauthorized(new { errors = new[] { "Invalid email or password" } });
 
             var found = await userManager.CheckPasswordAsync(user, userDTO.Password);
             if (found)
