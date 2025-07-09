@@ -114,7 +114,7 @@ namespace backend.Controllers
             return Ok(stsDTO);
         }
 
-        [HttpGet("byStudent/{studentid:int}")] //byStudent عشان تبقى كل جت مميزة
+        [HttpGet("byStudent/{studentid:int}")]
         public async Task<IActionResult> getCoursesforStudent(int studentid)
         {
             var Crs = await Unit.TeacherRepository.getCoursesforStudent(studentid.ToString());
@@ -130,7 +130,7 @@ namespace backend.Controllers
             return Ok(teachersDto);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> AddTeacher(TeacherDTO teacherDto)
         {
             if (!ModelState.IsValid)
