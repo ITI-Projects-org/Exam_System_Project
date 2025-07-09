@@ -7,7 +7,6 @@
         Task<T> GetById(string Id);
         Task<T> GetById(int Id);
         Task<T> Add(T Entity);
-        Task<T> Adds(T Entity);
         T Update(string Id, T Entity);
         void Delete(string Id);
     }
