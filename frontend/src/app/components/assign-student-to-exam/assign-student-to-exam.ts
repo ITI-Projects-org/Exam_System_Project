@@ -28,34 +28,47 @@ export class AssignStudentToExamComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
-    this.route.paramMap.subscribe({
-      next: (params) => {
-        this.examId = Number(params.get('id'));
-        this.loadData();
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error loading exam ID:', err);
-      }
-    });
+  async ngOnInit() {
+    try {
+      this.route.paramMap.subscribe({
+        next: (params) => {
+          this.examId = Number(params.get('id'));
+          this.loadData();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading exam ID:', err);
+          this.error = 'Failed to load exam ID';
+        }
+      });
+    } catch (error) {
+      console.error('Error in ngOnInit:', error);
+      this.error = 'Failed to initialize component';
+    }
   }
 
-  loadData() {
+  async loadData() {
     this.loading = true;
     this.error = '';
     
-    // Load all students and assigned students in parallel
-    Promise.all([
-      this.examService.getAllStudents().toPromise(),
-      this.examService.getStudentsOfExam(this.examId).toPromise()
-    ]).then(([students, assignedStudents]) => {
+    try {
+      // Wait a bit for token initialization
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Load all students and assigned students in parallel
+      const [students, assignedStudents] = await Promise.all([
+        this.examService.getAllStudents().toPromise(),
+        this.examService.getStudentsOfExam(this.examId).toPromise()
+      ]);
+      
       if (students) {
+        console.log('Students loaded successfully:', students);
         this.students = students;
         this.filteredStudents = students;
       }
       
       if (assignedStudents) {
+        console.log('Assigned students loaded successfully:', assignedStudents);
         this.assignedStudents = assignedStudents;
         // Mark pre-assigned students as selected
         this.selectedStudents.clear();
@@ -66,11 +79,12 @@ export class AssignStudentToExamComponent implements OnInit {
       
       this.loading = false;
       this.cdr.detectChanges();
-    }).catch(err => {
+    } catch (err) {
       console.error('Error loading data:', err);
-      this.error = 'Failed to load data';
+      this.error = 'Failed to load data: ' + (err instanceof Error ? err.message : String(err));
       this.loading = false;
-    });
+      this.cdr.detectChanges();
+    }
   }
 
   filterStudents() {
@@ -154,8 +168,9 @@ export class AssignStudentToExamComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error assigning students:', err);
-        this.error = 'Failed to assign students';
+        this.error = 'Failed to assign students: ' + (err instanceof Error ? err.message : String(err));
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
