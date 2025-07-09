@@ -11,6 +11,19 @@ export interface ExamStudentDegreeDTO {
   isAbsent: boolean;
 }
 
+export interface Student {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isAssigned?: boolean;
+}
+
+export interface AssignStudentsRequest {
+  examId: number;
+  studentIds: string[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -69,5 +82,14 @@ export class ExamServices {
 
   getStudentsOfExam(examId: number | string): Observable<ExamStudentDegreeDTO[]> {
     return this.http.get<ExamStudentDegreeDTO[]>(`${this.baseURL}/${examId}/students`, { headers: this.headers });
+  }
+
+  getAllStudents(): Observable<Student[]> {
+    return this.http.get<Student[]>('http://localhost:7251/api/Students', { headers: this.headers });
+  }
+
+  assignStudentsToExam(examId: number, studentIds: string[]): Observable<any> {
+    const params = studentIds.map(id => `studs_Id=${id}`).join('&');
+    return this.http.post(`${this.baseURL}/Assign?ExamId=${examId}&${params}`, {}, { headers: this.headers });
   }
 } 

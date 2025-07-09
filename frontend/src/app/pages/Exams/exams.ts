@@ -13,7 +13,7 @@ import { IExamListItem } from '../../models/iexam';
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Exams</h2>
         <ng-container *ngIf="isTeacher">
-          <a [routerLink]="['/exams/new']" class="btn btn-success">
+          <a [routerLink]="['/exams/0/edit']" class="btn btn-success">
             <i class="fas fa-plus"></i> Create New Exam
           </a>
         </ng-container>
@@ -38,6 +38,7 @@ import { IExamListItem } from '../../models/iexam';
               <ng-container *ngIf="isTeacher">
                 <a [routerLink]="['/exams', exam.id, 'edit']" class="btn btn-warning btn-sm ms-2">Edit</a>
                 <a [routerLink]="['/exams', exam.id, 'assign-students']" class="btn btn-secondary btn-sm ms-2">Assign Students</a>
+                <button (click)="deleteExam(exam.id)" class="btn btn-danger btn-sm ms-2">Delete</button>
               </ng-container>
             </div>
           </div>
@@ -68,6 +69,21 @@ export class ExamsComponent implements OnInit {
         console.error('Exams API error:', err);
       }
     });
+  }
+
+  deleteExam(examId: number) {
+    if (confirm('Are you sure you want to delete this exam? This action cannot be undone.')) {
+      this.examService.deleteExam(examId).subscribe({
+        next: () => {
+          // Remove the exam from the local array
+          this.exams = this.exams.filter(exam => exam.id !== examId);
+        },
+        error: (err) => {
+          console.error('Error deleting exam:', err);
+          alert('Failed to delete exam. Please try again.');
+        }
+      });
+    }
   }
 
   getRoleFromToken(): string {

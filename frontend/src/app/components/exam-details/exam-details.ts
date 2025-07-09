@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExamServices } from '../../services/exam-services';
 import { IExam } from '../../models/iexam';
 import { ExamStudentDegreeDTO } from '../../services/exam-services';
@@ -11,7 +11,17 @@ import { ExamStudentDegreeDTO } from '../../services/exam-services';
   imports: [CommonModule],
   template: `
     <div class="container mt-4">
-      <h2>Exam Details</h2>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Exam Details</h2>
+        <div *ngIf="isTeacher && exam">
+          <button class="btn btn-primary me-2" (click)="editExam()">
+            <i class="fas fa-edit"></i> Edit Exam
+          </button>
+          <button class="btn btn-success" (click)="assignStudents()">
+            <i class="fas fa-users"></i> Assign Students
+          </button>
+        </div>
+      </div>
       <div *ngIf="loading" class="alert alert-info">Loading exam details...</div>
       <div *ngIf="!loading && !exam" class="alert alert-danger">Exam not found.</div>
       <div *ngIf="!loading && exam">
@@ -70,7 +80,12 @@ export class ExamDetails implements OnInit {
   isTeacher = false;
   students: ExamStudentDegreeDTO[] = [];
 
-  constructor(private examService: ExamServices, private route: ActivatedRoute, private cdr:ChangeDetectorRef) {}
+  constructor(
+    private examService: ExamServices, 
+    private route: ActivatedRoute, 
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.isTeacher = this.getRoleFromToken() === 'Teacher';
@@ -111,6 +126,18 @@ export class ExamDetails implements OnInit {
       return decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
     } catch {
       return '';
+    }
+  }
+
+  editExam(): void {
+    if (this.exam) {
+      this.router.navigate(['/exams', this.exam.id, 'edit']);
+    }
+  }
+
+  assignStudents(): void {
+    if (this.exam) {
+      this.router.navigate(['/exams', this.exam.id, 'assign']);
     }
   }
 } 
