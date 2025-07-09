@@ -10,7 +10,14 @@ import { IExamListItem } from '../../models/iexam';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="container mt-4">
-      <h2>Exams</h2>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Exams</h2>
+        <ng-container *ngIf="isTeacher">
+          <a [routerLink]="['/exams/new']" class="btn btn-success">
+            <i class="fas fa-plus"></i> Create New Exam
+          </a>
+        </ng-container>
+      </div>
       <div *ngIf="loading" class="alert alert-info">Loading exams...</div>
       <div *ngIf="errorMsg" class="alert alert-danger">{{errorMsg}}</div>
       <div *ngIf="!loading && !errorMsg && exams.length === 0" class="alert alert-warning">No exams found.</div>

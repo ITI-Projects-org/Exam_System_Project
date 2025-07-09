@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IExam, IExamListItem } from '../models/iexam';
 
+
 export interface ExamStudentDegreeDTO {
   studentId: string;
   studentName: string;
@@ -14,7 +15,7 @@ export interface ExamStudentDegreeDTO {
   providedIn: 'root'
 })
 export class ExamServices {
-  baseURL: string = 'http://localhost:7251/api/Exam/';
+  baseURL: string = 'http://localhost:7251/api/Exam';
   token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZDkyYzBmNi0zZGQyLTQ4NDUtYTYwNi1jOWU0NGQ0ZmQ5ZWEiLCJlbWFpbCI6InRlYWNoZXIxQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVGVhY2hlciIsImV4cCI6MTc1MjE1NDI2M30.4XEjrnbJAmOG534fpT8-QQ28_vlvdVaROGwshU0Hqy0';
   headers: HttpHeaders = new HttpHeaders({ Authorization: 'Bearer ' + this.token });
 
@@ -40,11 +41,22 @@ export class ExamServices {
   }
 
   getExamById(examId: number | string): Observable<IExam> {
-    return this.http.get<IExam>(`${this.baseURL}${examId}`, { headers: this.headers });
+    return this.http.get<IExam>(`${this.baseURL}/${examId}`, { headers: this.headers });
   }
 
   addExam(exam: IExam): Observable<IExam> {
-    return this.http.post<IExam>(this.baseURL, exam, { headers: this.headers });
+    console.log('ExamServices.addExam() called with:', exam);
+    console.log('Exam ID:', exam.id);
+    console.log('Base URL:', this.baseURL);
+    
+    // For new exams, don't include the ID in the URL
+    const examData = { ...exam };
+    delete examData.id; // Remove ID for new exams
+    
+    console.log('Exam data after removing ID:', examData);
+    console.log('Final URL:', this.baseURL);
+    
+    return this.http.post<IExam>(this.baseURL, examData, { headers: this.headers });
   }
 
   updateExam(exam: IExam): Observable<IExam> {
@@ -52,10 +64,10 @@ export class ExamServices {
   }
 
   deleteExam(examId: number | string): Observable<any> {
-    return this.http.delete(`${this.baseURL}${examId}`, { headers: this.headers });
+    return this.http.delete(`${this.baseURL}/${examId}`, { headers: this.headers });
   }
 
   getStudentsOfExam(examId: number | string): Observable<ExamStudentDegreeDTO[]> {
-    return this.http.get<ExamStudentDegreeDTO[]>(`${this.baseURL}${examId}/students`, { headers: this.headers });
+    return this.http.get<ExamStudentDegreeDTO[]>(`${this.baseURL}/${examId}/students`, { headers: this.headers });
   }
 } 

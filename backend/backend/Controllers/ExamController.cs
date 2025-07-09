@@ -230,12 +230,7 @@ namespace backend.Controllers
             });
         }
 
-        //[HttpGet("{examId}/students")]
-        //[Authorize(Roles = "Teacher")]
-        //public async Task<IActionResult> GetAllExamStuents(int examId)
-        //{
-        //    return Ok(_unit.ExamRepository.GetAllExamStudents(examId));
-        //}
+      
 
 
         [HttpPost]
@@ -270,60 +265,7 @@ namespace backend.Controllers
 
             catch (Exception err) { return BadRequest(err); }
         }
-        #region Update
-
-        //[HttpPut("{ExamId}")]
-        //[Authorize(Roles = "Teacher")]
-        //public async Task<IActionResult> EditExam(int ExamId, [FromBody] ExamInputDTO examDTO)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-        //    try
-        //    {
-        //        Exam exam = await _unit.ExamRepository.GetExamByIdWithWithQuestionsWithOptions(ExamId);
-
-        //        exam.Duration = examDTO.Duration;
-        //        exam.MaxDegree =examDTO.MaxDegree;
-        //        exam.MinDegree =examDTO.MinDegree;
-        //        exam.StartDate= examDTO.StartDate;
-        //        exam.CourseId= examDTO.CourseId;
-        //        exam.Title = examDTO.Title;
-        //        exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //        if (exam.Questions?.Any() == true)
-        //        {
-        //            foreach (var question in exam.Questions)
-        //                if (question.Options?.Any() == true)
-        //                    _unit.OptionRepository.RemoveRange(question.Options);
-        //            _unit.QuestionRepository.RemoveRange(exam.Questions);
-        //        }
-
-        //        if (examDTO.Questions == null || examDTO.Questions.Count <= 0)
-        //            return Ok(new { Message="..."});
-
-        //        exam.Questions = new List<Question>();
-        //        foreach (var questionDTO in examDTO.Questions)
-        //        {
-        //            Question question = _mapper.Map<Question>(questionDTO);
-        //            if (questionDTO.Options == null || questionDTO.Options.Count <= 0)
-        //                continue;
-        //            foreach (var optionDTO in questionDTO.Options)
-        //            {
-        //                Option option = _mapper.Map<Option>(optionDTO);
-        //                question.Options.Add(option);
-        //            }
-        //            exam.Questions.Add(question);
-        //        }
-        //        _unit.ExamRepository.Add(exam);
-        //        await _unit.SaveAsync();
-        //        return Ok(new { 
-
-        //        Message="Exam UPdated Succesully",
-        //        ExamId = ExamId,
-        //        Title = exam.Title
-        //        });
-        //    }
-
-        //    catch (Exception err) { return BadRequest(err); }
-        //}
+       
 
         [HttpPut]
         [Authorize(Roles = "Teacher")]
@@ -426,7 +368,7 @@ namespace backend.Controllers
                 return BadRequest(new { error = err.Message });
             }
         }
-        #endregion
+        
 
 
         [HttpDelete("{id}")]

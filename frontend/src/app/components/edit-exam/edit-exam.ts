@@ -147,7 +147,12 @@ export class EditExamComponent implements OnInit {
 
   ngOnInit(): void {
     this.examId = this.route.snapshot.paramMap.get('id');
-    this.isEditMode = !!this.examId;
+    
+    // Check if we're in edit mode: id should exist and not be '0' or 'new'
+    this.isEditMode = !!(this.examId && this.examId !== '0' && this.examId !== 'new');
+    
+    console.log('Exam ID from route:', this.examId);
+    console.log('Is edit mode:', this.isEditMode);
     
     if (this.isEditMode && this.examId) {
       this.loadExam();
@@ -233,14 +238,61 @@ export class EditExamComponent implements OnInit {
     });
   }
 
+  // onSubmit() {
+  //   if (this.examForm.invalid) return;
+
+  //   this.loading = true;
+  //   const formValue = this.examForm.value;
+
+  //   const examData: IExam = {
+  //     // Only include id if we're editing (not creating)
+  //     ...(this.isEditMode && this.examId ? { id: parseInt(this.examId) } : {}),
+  //     title: formValue.title,
+  //     startDate: new Date(formValue.startDate),
+  //     duration: this.formatDuration(formValue.duration),
+  //     courseId: formValue.courseId,
+  //     maxDegree: formValue.maxDegree,
+  //     minDegree: formValue.minDegree,
+  //     questions: formValue.questions.map((q: any) => ({
+  //       id: undefined,
+  //       title: q.title,
+  //       degree: q.degree,
+  //       options: q.options.map((o: any) => ({
+  //         id: undefined,
+  //         title: o.title,
+  //         isCorrect: o.isCorrect,
+  //         isChoosedByStudent: false
+  //       }))
+  //     }))
+  //   };
+
+  //   console.log('Submitting exam data:', examData);
+  //   console.log('Is edit mode:', this.isEditMode);
+
+  //   const request = this.isEditMode 
+  //     ? this.examService.updateExam(examData)
+  //     : this.examService.addExam(examData);
+
+  //   request.subscribe({
+  //     next: () => {
+  //       this.loading = false;
+  //       this.router.navigate(['/exams']);
+  //     },
+  //     error: (err) => {
+  //       this.loading = false;
+  //       console.error('Error saving exam:', err);
+  //     }
+  //   });
+  // }
   onSubmit() {
     if (this.examForm.invalid) return;
-
+  
     this.loading = true;
     const formValue = this.examForm.value;
-
+  
     const examData: IExam = {
-      id: this.isEditMode ? parseInt(this.examId!) : undefined,
+      // Only include id if we're editing (not creating)
+      ...(this.isEditMode && this.examId ? { id: parseInt(this.examId) } : {}),
       title: formValue.title,
       startDate: new Date(formValue.startDate),
       duration: this.formatDuration(formValue.duration),
@@ -248,30 +300,43 @@ export class EditExamComponent implements OnInit {
       maxDegree: formValue.maxDegree,
       minDegree: formValue.minDegree,
       questions: formValue.questions.map((q: any) => ({
-        id: undefined,
+        // Don't include id for new questions
         title: q.title,
         degree: q.degree,
         options: q.options.map((o: any) => ({
-          id: undefined,
+          // Don't include id for new options
           title: o.title,
           isCorrect: o.isCorrect,
           isChoosedByStudent: false
         }))
       }))
     };
-
+  
+    console.log('Submitting exam data:', examData);
+    console.log('Is edit mode:', this.isEditMode);
+  
     const request = this.isEditMode 
       ? this.examService.updateExam(examData)
       : this.examService.addExam(examData);
-
+  
     request.subscribe({
-      next: () => {
+      next: (response) => {
         this.loading = false;
+        console.log('Success response:', response);
         this.router.navigate(['/exams']);
       },
       error: (err) => {
         this.loading = false;
         console.error('Error saving exam:', err);
+        
+        // Better error handling
+        if (err.status === 400) {
+          alert('Invalid data. Please check your input.');
+        } else if (err.status === 401) {
+          alert('Unauthorized. Please log in again.');
+        } else {
+          alert('Error saving exam. Please try again.');
+        }
       }
     });
   }

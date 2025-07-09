@@ -6,6 +6,7 @@ import { AssignStudentToExamComponent } from './components/assign-student-to-exa
 
 export const routes: Routes = [
   { path: 'exams', component: ExamsComponent },
+  { path: 'exams/new', component: EditExamComponent },
   { path: 'exams/:id', component: ExamDetails },
   { path: 'exams/:id/edit', component: EditExamComponent },
   { path: 'exams/:id/assign-students', component: AssignStudentToExamComponent },
