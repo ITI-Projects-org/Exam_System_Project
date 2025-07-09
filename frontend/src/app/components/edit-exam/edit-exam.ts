@@ -18,6 +18,7 @@ export class EditExam implements OnInit, OnDestroy{
   examId!:string;
   exam!:IExam;
   examForm!:FormGroup;
+  formSubmitted = false;
 
   constructor(
     private ExamTestServices:ExamServices ,
@@ -60,7 +61,7 @@ export class EditExam implements OnInit, OnDestroy{
             this.exam = res;
           // Patch exam fields
           this.getCourseId.setValue(this.exam.courseId ?? 0);
-          this.getTitle.setValue(this.exam.title ?? '');
+          this.getTitle.setValue(this.exam.title || '');
           this.getMaxDegree.setValue(this.exam.maxDegree ?? 0);
           this.getMinDegree.setValue(this.exam.minDegree ?? 0);
           this.getDuration.setValue(this.exam.duration ?? 0);
@@ -118,8 +119,32 @@ export class EditExam implements OnInit, OnDestroy{
     this.getOptions(qIndex).removeAt(oIndex);
   }
 
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      } else if (control instanceof FormArray) {
+        control.controls.forEach((arrayControl: any) => {
+          if (arrayControl instanceof FormGroup) {
+            this.markFormGroupTouched(arrayControl);
+          } else {
+            arrayControl.markAsTouched();
+          }
+        });
+      } else {
+        control?.markAsTouched();
+      }
+    });
+  }
+
   handel_Edit_Add_Exam(examForm: FormGroup): any {
+    this.formSubmitted = true;
     console.log('form status:', examForm.status);
+    console.log('form value:', examForm.value);
+    
+    // Mark all form controls as touched to trigger validation display
+    this.markFormGroupTouched(examForm);
     
     // Log validation errors for each field
     Object.keys(examForm.controls).forEach(key => {
@@ -127,10 +152,23 @@ export class EditExam implements OnInit, OnDestroy{
       if (control && control.invalid) {
         console.log(`${key} is invalid:`, control.errors);
         console.log(`${key} value:`, control.value);
+        console.log(`${key} touched:`, control.touched);
+        console.log(`${key} dirty:`, control.dirty);
       }
     });
     
-    if (examForm.status != 'VALID') return;
+    // Check if title field is specifically invalid
+    const titleControl = examForm.get('title');
+    if (titleControl && titleControl.invalid) {
+      console.log('Title field errors:', titleControl.errors);
+      console.log('Title field value:', titleControl.value);
+      console.log('Title field touched:', titleControl.touched);
+    }
+    
+    if (examForm.status != 'VALID') {
+      console.log('Form is invalid, cannot submit');
+      return;
+    }
     if (this.examId == '0') this.AddExam(examForm);
     else this.EditExam(examForm, this.examId)
   }
@@ -139,97 +177,114 @@ export class EditExam implements OnInit, OnDestroy{
     console.log('adding exam');
     const formData = examForm.value;
 
-    // Convert duration to TimeSpan format (HH:mm:ss)
-    if (formData.duration) {
-      const hours = Math.floor(formData.duration);
-      const minutes = Math.floor((formData.duration - hours) * 60);
-      formData.duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    // Convert duration to TimeSpan format (HH:mm:ss) as expected by backend
+    let durationInMinutes = formData.duration;
+    if (typeof durationInMinutes === 'string') {
+      durationInMinutes = parseInt(durationInMinutes);
     }
+    
+    // Convert minutes to TimeSpan format (HH:mm:ss)
+    const hours = Math.floor(durationInMinutes / 60);
+    const minutes = durationInMinutes % 60;
+    const timeSpanString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
 
-    // Convert camelCase to PascalCase for backend compatibility
-    const examDataForBackend = {
-      id: formData.id,
-      title: formData.title,
-      startDate: formData.startDate,
-      duration: formData.duration,
-      courseId: formData.courseId,
-      maxDegree: formData.maxDegree,
-      minDegree: formData.minDegree,
-      teacherId: formData.teacherId,
-      questions: formData.questions?.map((q: any) => ({
-        id: q.id,
-        title: q.title,
-        degree: q.degree,
-        options: q.options?.map((opt: any) => ({
-          id: opt.id,
-          title: opt.title,
-          isCorrect: opt.isCorrect,
-          isChoosedByStudent: opt.isChoosedByStudent
+    // Create ExamInputDTO structure exactly as expected by backend
+    const examInputDTO = {
+      Id: null, // null for new exam
+      Title: formData.title,
+      StartDate: new Date(formData.startDate).toISOString(), // Convert to ISO string
+      Duration: timeSpanString, // Backend expects TimeSpan string format "HH:mm:ss"
+      CourseId: parseInt(formData.courseId),
+      MaxDegree: parseInt(formData.maxDegree),
+      MinDegree: parseInt(formData.minDegree),
+      IsAbsent: false, // Default value
+      Stud_Options: [], // Empty array for new exam
+      Questions: formData.questions?.map((q: any) => ({
+        Id: q.id ? parseInt(q.id) : 0,
+        Title: q.title,
+        Degree: parseInt(q.degree),
+        Options: q.options?.map((opt: any) => ({
+          Id: opt.id ? parseInt(opt.id) : 0,
+          Title: opt.title,
+          IsCorrect: opt.isCorrect,
+          IsChoosedByStudent: opt.isChoosedByStudent || false
         })) || []
-      })) || []
+      })) || [],
+      StudDegree: 0 // Default value
     };
 
     // Wrap in examDTO object as expected by backend
-    const examDTO = { examDTO: examDataForBackend };
+    const examDTO = { examDTO: examInputDTO };
 
-    console.log('Sending exam data:', examDTO);
-    console.log('Exam data for backend:', examDataForBackend);
-    console.log('Title value being sent:', examDataForBackend.title);
+    console.log('Sending examDTO to backend for new exam:', examDTO);
+    console.log('Duration being sent:', examInputDTO.Duration);
     this.ExamTestServices.addExam(examDTO).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Exam added successfully:', response);
         this.router.navigate(['/exams'])
       },
       error: (error) => {
-        console.error(' Backend validation errors:', error.error?.errors);
-        console.error(' Title validation error details:', error.error?.errors?.Title);
-        console.error(' Full error response:', error);
+        console.error('Add exam error:', error);
+        console.error('Backend validation errors:', error.error?.errors);
+        console.error('Full error response:', error);
       }
     })
   }
   EditExam(examForm: FormGroup, examId: string) {
     const formData = examForm.value;
 
-    // Convert duration to TimeSpan format (HH:mm:ss)
-    if (formData.duration) {
-      const hours = Math.floor(formData.duration);
-      const minutes = Math.floor((formData.duration - hours) * 60);
-      formData.duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    // Convert duration to TimeSpan format (HH:mm:ss) as expected by backend
+    let durationInMinutes = formData.duration;
+    if (typeof durationInMinutes === 'string') {
+      durationInMinutes = parseInt(durationInMinutes);
     }
+    
+    // Convert minutes to TimeSpan format (HH:mm:ss)
+    const hours = Math.floor(durationInMinutes / 60);
+    const minutes = durationInMinutes % 60;
+    const timeSpanString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
 
-    // Convert camelCase to PascalCase for backend compatibility
-    const examDataForBackend = {
-      Id: formData.id,
+    // Create ExamInputDTO structure exactly as expected by backend
+    const examInputDTO = {
+      Id: parseInt(examId), // Convert string to int
       Title: formData.title,
-      StartDate: formData.startDate,
-      Duration: formData.duration,
-      CourseId: formData.courseId,
-      MaxDegree: formData.maxDegree,
-      MinDegree: formData.minDegree,
-      TeacherId: formData.teacherId,
+      StartDate: new Date(formData.startDate).toISOString(), // Convert to ISO string
+      Duration: timeSpanString, // Backend expects TimeSpan string format "HH:mm:ss"
+      CourseId: parseInt(formData.courseId),
+      MaxDegree: parseInt(formData.maxDegree),
+      MinDegree: parseInt(formData.minDegree),
+      IsAbsent: false, // Default value
+      Stud_Options: [], // Empty array as we're not handling student options in edit
       Questions: formData.questions?.map((q: any) => ({
-        Id: q.id,
+        Id: q.id ? parseInt(q.id) : 0,
         Title: q.title,
-        Degree: q.degree,
+        Degree: parseInt(q.degree),
         Options: q.options?.map((opt: any) => ({
-          Id: opt.id,
+          Id: opt.id ? parseInt(opt.id) : 0,
           Title: opt.title,
           IsCorrect: opt.isCorrect,
-          IsChoosedByStudent: opt.isChoosedByStudent
+          IsChoosedByStudent: opt.isChoosedByStudent || false
         })) || []
-      })) || []
+      })) || [],
+      StudDegree: 0 // Default value
     };
 
     // Wrap in examDTO object as expected by backend
-    const examDTO = { examDTO: examDataForBackend };
+    const examDTO = { examDTO: examInputDTO };
+
+    console.log('Sending examDTO to backend:', examDTO);
+    console.log('Exam ID being sent:', examInputDTO.Id);
+    console.log('Duration being sent:', examInputDTO.Duration);
 
     this.ExamTestServices.updateExam(this.examId, examDTO).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Exam updated successfully:', response);
         this.router.navigate(['/exams'])
       },
       error: (error) => {
-        console.error(' Backend validation errors:', error.error?.errors);
-        console.error(' Title validation error details:', error.error?.errors?.Title);
-        console.error(' Full error response:', error);
+        console.error('Update exam error:', error);
+        console.error('Backend validation errors:', error.error?.errors);
+        console.error('Full error response:', error);
       }
     })
   }

@@ -25,7 +25,7 @@ export class ExamServices {
     return this.http.get<any>(this.baseURL,{headers:this.headers});
   }
   getExamById(examId:string){
-    let url = `${this.baseURL}/${examId}`
+    let url = `${this.baseURL}${examId}`
     console.log(url);
     return this.http.get<any>(`${this.baseURL}${examId}`,{headers:this.headers});
   }
@@ -34,10 +34,15 @@ export class ExamServices {
 
   }
   updateExam(examId:any, exam:any){
-    return this.http.put(`${this.baseURL}/${examId}`,exam,{headers:this.headers});
-
+    // Backend expects PUT without ID in URL, ID should be in the request body
+    console.log('Updating exam with ID:', examId);
+    console.log('Exam data:', exam);
+    
+    // The backend EditExam method uses [HttpPut] without route parameters
+    // So we send PUT to the base URL with exam data including ID
+    return this.http.put<IExam>(this.baseURL, exam, {headers:this.headers});
   }
   deleteExam(examId:any):Observable<IExam> {
-    return this.http.delete<IExam>(`${this.baseURL}/${examId}`,{headers:this.headers});
+    return this.http.delete<IExam>(`${this.baseURL}${examId}`,{headers:this.headers});
   }
 }

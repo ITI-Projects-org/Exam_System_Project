@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './exam-details.css'
 })
 export class ExamDetails implements OnInit{
-  Exam !: IExam ;
+  Exam: IExam | null = null;
   mySub!:Subscription;
   Id! : string | null;
   

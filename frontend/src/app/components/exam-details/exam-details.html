@@ -67,7 +67,7 @@
                         </div>
                         <div class="info-item">
                             <div class="info-label">Questions Count</div>
-                            <div class="info-value">{{Exam.questions?.length || 0}} questions</div>
+                            <div class="info-value">{{Exam?.questions?.length || 0}} questions</div>
                         </div>
                     </div>
                 </div>
@@ -85,11 +85,11 @@
                     <div class="scoring-info">
                         <div class="score-item">
                             <div class="score-label">Maximum Score</div>
-                            <div class="score-value max-score">{{Exam.maxDegree}} points</div>
+                            <div class="score-value max-score">{{Exam?.maxDegree}} points</div>
                         </div>
                         <div class="score-item">
                             <div class="score-label">Minimum Score</div>
-                            <div class="score-value min-score">{{Exam.minDegree}} points</div>
+                            <div class="score-value min-score">{{Exam?.minDegree}} points</div>
                         </div>
                         <div class="score-progress">
                             <div class="progress-bar">
@@ -117,7 +117,8 @@
                             </div>
                             <div class="schedule-details">
                                 <div class="schedule-label">Start Date & Time</div>
-                                <div class="schedule-value">{{formatDate(Exam.startDate)}}</div>
+                                <div class="schedule-value">{{Exam?.startDate ? formatDate(Exam.startDate) : 'N/A'}}
+                                </div>
                             </div>
                         </div>
                         <div class="schedule-item">
@@ -126,7 +127,7 @@
                             </div>
                             <div class="schedule-details">
                                 <div class="schedule-label">End Date & Time</div>
-                                <div class="schedule-value">{{formatDate(Exam.endDate)}}</div>
+                                <div class="schedule-value">{{Exam?.endDate ? formatDate(Exam.endDate) : 'N/A'}}</div>
                             </div>
                         </div>
                         <div class="schedule-item">
@@ -135,7 +136,7 @@
                             </div>
                             <div class="schedule-details">
                                 <div class="schedule-label">Duration</div>
-                                <div class="schedule-value">{{Exam.duration}} minutes</div>
+                                <div class="schedule-value">{{Exam?.duration}} minutes</div>
                             </div>
                         </div>
                     </div>
@@ -174,7 +175,7 @@
                     <h3 class="card-title">Questions Preview</h3>
                 </div>
                 <div class="card-body">
-                    <div *ngIf="Exam.questions && Exam.questions.length > 0" class="questions-list">
+                    <div *ngIf="Exam?.questions && Exam.questions.length > 0" class="questions-list">
                         <div *ngFor="let question of Exam.questions; let i = index" class="question-item">
                             <div class="question-header">
                                 <span class="question-number">Q{{i + 1}}</span>
@@ -208,11 +209,11 @@
                 <i class="fas fa-arrow-left"></i>
                 <span>Back to Exams</span>
             </a>
-            <a class="btn btn-secondary" [routerLink]="['/exams', Exam.id, 'edit']">
+            <a class="btn btn-secondary" [routerLink]="['/exams', Exam?.id, 'edit']">
                 <i class="fas fa-edit"></i>
                 <span>Edit Exam</span>
             </a>
-            <a class="btn btn-primary" [routerLink]="['/exams', Exam.id, 'take']">
+            <a class="btn btn-primary" [routerLink]="['/exams', Exam?.id, 'take']">
                 <i class="fas fa-play"></i>
                 <span>Take Exam</span>
             </a>

@@ -16,26 +16,29 @@
                         <label for="exampleInputTitle" class="form-label">Title</label>
                         <input formControlName="title" type="text" class="form-control" id="exampleInputTitle"
                             aria-describedby="TitleHelp">
-                        <div *ngIf="getTitle.touched && getTitle.invalid" class="text-danger form-text">
-                            <div *ngIf="getTitle.errors && getTitle.errors['required']">Required</div>
-                            <div *ngIf="getTitle.errors && getTitle.errors['minlength']">Min Length is 3</div>
+                        <div *ngIf="(getTitle.touched || formSubmitted) && getTitle.invalid"
+                            class="text-danger form-text">
+                            <div *ngIf="getTitle.errors?.['required']">The Title field is required.</div>
+                            <div *ngIf="getTitle.errors?.['minlength']">Title must be at least 3 characters long.</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label for="exampleInputMaxDegree" class="form-label">Max Degree</label>
                         <input formControlName="maxDegree" type="number" class="form-control"
                             id="exampleInputMaxDegree">
-                        <div *ngIf="getMaxDegree.touched && getMaxDegree.invalid" class="text-danger form-text">
-                            <div *ngIf="getMaxDegree.errors && getMaxDegree.errors['required']">Required</div>
-                            <div *ngIf="getMaxDegree.errors && getMaxDegree.errors['min']">Min is 1</div>
+                        <div *ngIf="(getMaxDegree.touched || formSubmitted) && getMaxDegree.invalid"
+                            class="text-danger form-text">
+                            <div *ngIf="getMaxDegree.errors?.['required']">Required</div>
+                            <div *ngIf="getMaxDegree.errors?.['min']">Min is 1</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label for="exampleInputMinDegree" class="form-label">Min Degree</label>
                         <input formControlName="minDegree" type="number" class="form-control"
                             id="exampleInputMinDegree">
-                        <div *ngIf="getMinDegree.touched && getMinDegree.invalid" class="text-danger form-text">
-                            <div *ngIf="getMinDegree.errors && getMinDegree.errors['min']">Min is 0</div>
+                        <div *ngIf="(getMinDegree.touched || formSubmitted) && getMinDegree.invalid"
+                            class="text-danger form-text">
+                            <div *ngIf="getMinDegree.errors?.['min']">Min is 0</div>
                         </div>
                     </div>
                 </div>
@@ -44,15 +47,17 @@
                         <label for="exampleInputStartDate" class="form-label">Start Date</label>
                         <input formControlName="startDate" type="datetime-local" class="form-control"
                             id="exampleInputStartDate">
-                        <div *ngIf="getStartDate.touched && getStartDate.invalid" class="text-danger form-text">
-                            <div *ngIf="getStartDate.errors && getStartDate.errors['required']">Required</div>
+                        <div *ngIf="(getStartDate.touched || formSubmitted) && getStartDate.invalid"
+                            class="text-danger form-text">
+                            <div *ngIf="getStartDate.errors?.['required']">Required</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label for="exampleInputDuration" class="form-label">Duration (hours)</label>
                         <input formControlName="duration" type="number" class="form-control" id="exampleInputDuration">
-                        <div *ngIf="getDuration.touched && getDuration.invalid" class="text-danger form-text">
-                            <div *ngIf="getDuration.errors && getDuration.errors['required']">Required</div>
+                        <div *ngIf="(getDuration.touched || formSubmitted) && getDuration.invalid"
+                            class="text-danger form-text">
+                            <div *ngIf="getDuration.errors?.['required']">Required</div>
                         </div>
                     </div>
                 </div>
@@ -74,18 +79,20 @@
                                     <label class="form-label">Question Text</label>
                                     <input formControlName="title" placeholder="Question text"
                                         class="form-control mb-2" />
-                                    <div *ngIf="question.get('title')?.touched && question.get('title')?.invalid"
+                                    <div *ngIf="(question.get('title')?.touched || formSubmitted) && question.get('title')?.invalid"
                                         class="text-danger form-text">
-                                        <!-- <div *ngIf="question.get('title')?.errors && question.get('title')?.errors['required']">Required</div> -->
+                                        <div *ngIf="question.get('title')?.errors?.['required']">
+                                            Question text is required.</div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Degree</label>
                                     <input formControlName="degree" type="number" placeholder="Degree"
                                         class="form-control mb-2" />
-                                    <div *ngIf="question.get('degree')?.touched && question.get('degree')?.invalid"
+                                    <div *ngIf="(question.get('degree')?.touched || formSubmitted) && question.get('degree')?.invalid"
                                         class="text-danger form-text">
-                                        <!-- <div *ngIf="question.get('degree')?.errors && question.get('degree')?.errors['required']">Required</div> -->
+                                        <div *ngIf="question.get('degree')?.errors?.['required']">Degree is required.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -97,9 +104,10 @@
                                         <div class="col-md-7">
                                             <input formControlName="title" placeholder="Option text"
                                                 class="form-control" />
-                                            <div *ngIf="option?.get('title')?.touched && option?.get('title')?.invalid"
+                                            <div *ngIf="(option?.get('title')?.touched || formSubmitted) && option?.get('title')?.invalid"
                                                 class="text-danger form-text">
-                                                <!-- <div *ngIf="option?.get('title')?.errors && option?.get('title')?.errors['required']">Required</div> -->
+                                                <div *ngIf="option?.get('title')?.errors?.['required']">Option text is
+                                                    required.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-3">

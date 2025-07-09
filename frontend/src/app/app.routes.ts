@@ -7,9 +7,9 @@ import { EditExam } from './components/edit-exam/edit-exam';
 
 export const routes: Routes = [
     {path:'exams', component: Exams}, // Student, Teacher
-    {path:'exams/:id/AssignStudentsToExam', component: AssignStudentToExam}, // Teacher
-    {path:'exams/:id', component: ExamDetails},   // form // Student, Teacher
-    {path:'exams/:id/take', component: TakeExam}, // form // Student
-    {path:'exams/:id/edit', component: EditExam}, // form // Teacher
+    {path:'exams/:id/AssignStudentsToExam', component: AssignStudentToExam, data: { renderMode: 'dynamic' }}, // Teacher
+    {path:'exams/:id', component: ExamDetails, data: { renderMode: 'dynamic' }},   // form // Student, Teacher
+    {path:'exams/:id/take', component: TakeExam, data: { renderMode: 'dynamic' }}, // form // Student
+    {path:'exams/:id/edit', component: EditExam, data: { renderMode: 'dynamic' }}, // form // Teacher
     
 ];
