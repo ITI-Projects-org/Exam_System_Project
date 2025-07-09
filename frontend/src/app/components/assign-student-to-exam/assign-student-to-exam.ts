@@ -28,7 +28,18 @@ export class AssignStudentToExamComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.examId = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        this.examId = Number(params.get('id'));
+        this.loadStudents();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading exam ID:', err);
+      }
+    });
+
+  
     this.loadStudents();
     this.cdr.detectChanges();
   }
@@ -44,6 +55,7 @@ export class AssignStudentToExamComponent implements OnInit {
         this.students = students;
         this.filteredStudents = students;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading students:', err);

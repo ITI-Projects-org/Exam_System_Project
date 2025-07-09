@@ -21,7 +21,7 @@ import { IExamListItem } from '../../models/iexam';
       <div *ngIf="loading" class="alert alert-info">Loading exams...</div>
       <div *ngIf="errorMsg" class="alert alert-danger">{{errorMsg}}</div>
       <div *ngIf="!loading && !errorMsg && exams.length === 0" class="alert alert-warning">No exams found.</div>
-      <pre>{{ exams | json }}</pre>
+      
       <div class="row" *ngIf="!loading && !errorMsg && exams.length > 0">
         <div class="col-md-4 mb-3" *ngFor="let exam of exams">
           <div class="card h-100">

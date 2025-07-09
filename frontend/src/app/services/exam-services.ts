@@ -28,7 +28,7 @@ export interface AssignStudentsRequest {
   providedIn: 'root'
 })
 export class ExamServices {
-  baseURL: string = 'http://localhost:7251/api/Exam';
+  baseURL: string = 'http://localhost:5088/api/Exam';
   token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZDkyYzBmNi0zZGQyLTQ4NDUtYTYwNi1jOWU0NGQ0ZmQ5ZWEiLCJlbWFpbCI6InRlYWNoZXIxQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVGVhY2hlciIsImV4cCI6MTc1MjE1NDI2M30.4XEjrnbJAmOG534fpT8-QQ28_vlvdVaROGwshU0Hqy0';
   headers: HttpHeaders = new HttpHeaders({ Authorization: 'Bearer ' + this.token });
 
@@ -85,7 +85,7 @@ export class ExamServices {
   }
 
   getAllStudents(): Observable<Student[]> {
-    return this.http.get<Student[]>('http://localhost:7251/api/Students', { headers: this.headers });
+    return this.http.get<Student[]>('http://localhost:5088/api/Students', { headers: this.headers });
   }
 
   assignStudentsToExam(examId: number, studentIds: string[]): Observable<any> {
