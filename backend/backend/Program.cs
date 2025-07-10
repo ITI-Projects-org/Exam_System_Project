@@ -110,9 +110,9 @@ namespace backend
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(_policy);
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors(_policy);
             app.MapControllers();
 
             await app.RunAsync();
