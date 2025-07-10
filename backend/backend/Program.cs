@@ -50,7 +50,7 @@ namespace backend
             //builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             //builder.Services.AddScoped<IStudentExamRepository, StudentExamRepository>();
             //builder.Services.AddScoped<IStudentOptionRepository, StudentOptionRepository>();
-            
+
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -63,11 +63,14 @@ namespace backend
                 options.AddPolicy(_policy,
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200");
+                    builder.AllowAnyOrigin();
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
                 });
             });
+
+            // Add this before app.UseAuthorization();
+            
 
             builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
            .AddJwtBearer("auth_schema", options =>
@@ -83,8 +86,22 @@ namespace backend
                };
            });
 
-
             var app = builder.Build();
+
+            // // Seed the database
+            // // comment out after finishing
+            // using (var scope = app.Services.CreateScope())
+            // {
+            //     try
+            //     {
+            //         await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            //         logger.LogError(ex, "An error occurred while seeding the database.");
+            //     }
+            // }
 
             if (app.Environment.IsDevelopment())
             {
@@ -97,10 +114,9 @@ namespace backend
             app.UseCors(_policy);
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
 
-            await app.RunAsync(); 
+            await app.RunAsync();
         }
     }
 }

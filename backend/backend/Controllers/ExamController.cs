@@ -3,18 +3,9 @@ using backend.DTOs;
 using backend.Models;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.AccessControl;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;   
 
 namespace backend.Controllers
 {
@@ -30,12 +21,17 @@ namespace backend.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("teacher")]
-        [Authorize(Roles = "Teacher")]
-        public async Task<IEnumerable<ExamDTO>> GetTeacherExams()
+        [HttpGet]
+        [Authorize]
+        public async Task<IEnumerable<ExamDTO>> GetExams()
         {
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var Exams = await _unit.ExamRepository.GetAllExamsofTeacher(UserId);
+            string Role = User.FindFirstValue(ClaimTypes.Role);
+            IEnumerable<Exam> Exams = new List<Exam>();
+            if (Role =="Teacher")
+                Exams = await _unit.ExamRepository.GetAllExamsofTeacher(UserId);
+            else if (Role == "Student")
+                Exams = await _unit.ExamRepository.GetAllExamsofStudent(UserId);
             List<ExamDTO> ExamsDTO = new List<ExamDTO>();
             foreach (var item in Exams)
             {
@@ -53,49 +49,87 @@ namespace backend.Controllers
             return ExamsDTO.ToList();
         }
 
-        [HttpGet("student")]
-        [Authorize(Roles = "Student")]
-        public async Task<IEnumerable<ExamDTO>> GetStudentExams()
-        {
-            var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var Exams = await _unit.ExamRepository.GetAllExamsofStudent(UserId);
-            List<ExamDTO> examDTO = _mapper.Map<List<ExamDTO>>(Exams);
-            return examDTO;
-        }
 
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Student")]
-        public async Task<IActionResult> GetStudentExamDetails(int id)
+        //[HttpGet("{examId}")]
+        ////[Authorize(Roles = "Student")]
+        //public async Task<IActionResult> GetStudentExamDetails(int examId)
+        //{
+        //    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(currentUserId))
+        //        return Unauthorized("User ID not found.");
+
+        //    var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == examId);
+
+        //    if (exam == null)
+        //        return NotFound($"Exam with ID {examId} not found.");
+
+        //    DateTime currentTime = DateTime.Now;
+        //    TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
+        //    DateTime egyptCurrentTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, egyptTimeZone);
+        //    DateTime examEndDate = exam.StartDate + exam.Duration;
+
+        //    var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+        //    //if (egyptCurrentTime < exam.StartDate)
+        //    //    return Ok(_mapper.Map<ExamDTO>(exam));
+
+
+        //    else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
+        //    {
+        //        ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+        //        var duringExamDTO = _mapper.Map<DuringExamDTO>(ExamWithQuestionsWithOptions);
+        //        return Ok(duringExamDTO);
+        //    }
+        //    else
+        //    {
+        //        //var afterExam = new AfterExamEndDTO();
+        //        var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId).FirstOrDefaultAsync();
+
+        //        if (studentExamRecord == null)
+        //        {
+        //            var afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
+        //            afterExamDTO.IsAbsent = true;
+        //            return Ok(afterExamDTO);
+        //        }
+        //        else {
+        //            AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
+        //            List<Stud_Option> stud_Options = await _unit.StudentOptionRepository.GetAllStudentOptions(currentUserId);
+        //            foreach (var question in afterExamDTO.Questions)
+        //            {
+        //                foreach (var option in question.Options)
+        //                {
+        //                    if (stud_Options.Select(so => so.OptionId).ToList().Contains(option.Id))
+        //                    {
+        //                        option.IsChoosedByStudent = true;
+        //                    }
+        //                }
+        //            }
+        //            return Ok(afterExamDTO);
+        //        }
+
+
+        //    }
+
+        //    var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+        //    return Ok();
+        //}
+        
+
+        [HttpGet("{examId}")]
+        [Authorize]
+        public async Task<IActionResult> GetExamDetails(int examId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var UserRole= User.FindFirstValue(ClaimTypes.Role);
             if (string.IsNullOrEmpty(currentUserId))
                 return Unauthorized("User ID not found.");
-
-            var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == id);
-
+            var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == examId);
             if (exam == null)
-                return NotFound($"Exam with ID {id} not found.");
+                return NotFound($"Exam with ID {examId} not found.");
 
-            DateTime currentTime = DateTime.Now;
-            TimeZoneInfo egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
-            DateTime egyptCurrentTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, egyptTimeZone);
-            DateTime examEndDate = exam.StartDate + exam.Duration;
-
-            var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
-            if (egyptCurrentTime < exam.StartDate)
-                return Ok(_mapper.Map<ExamDTO>(exam));
-
-
-            else if (egyptCurrentTime >= exam.StartDate && egyptCurrentTime <= examEndDate)
+            var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+            if (UserRole == "Student")
             {
-                ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
-                var duringExamDTO = _mapper.Map<DuringExamDTO>(ExamWithQuestionsWithOptions);
-                return Ok(duringExamDTO);
-            }
-            else
-            {
-                //var afterExam = new AfterExamEndDTO();
-                var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, id).FirstOrDefaultAsync();
+                var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId).FirstOrDefaultAsync();
 
                 if (studentExamRecord == null)
                 {
@@ -103,7 +137,8 @@ namespace backend.Controllers
                     afterExamDTO.IsAbsent = true;
                     return Ok(afterExamDTO);
                 }
-                else {
+                else
+                {
                     AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
                     List<Stud_Option> stud_Options = await _unit.StudentOptionRepository.GetAllStudentOptions(currentUserId);
                     foreach (var question in afterExamDTO.Questions)
@@ -118,27 +153,21 @@ namespace backend.Controllers
                     }
                     return Ok(afterExamDTO);
                 }
-
-
+            }
+            else if (UserRole == "Teacher")
+            {
+                AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam); 
+                return Ok(afterExamDTO);
             }
 
-            var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(id);
+
+            //}
+
+            var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
             return Ok();
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Teacher")]
-        public void AddExam([FromBody] Exam exam)
-        {
-            _unit.ExamRepository.Add(exam);
-        }
 
-        
-        //[HttpDelete("{id}")]
-        //public void RemoveExam(string Id)
-        //{
-        //    _unit.ExamRepository.Delete(Id);
-        //}
 
         [HttpGet("TakeExam")]
         public async Task<IActionResult> TakeExam(int ExamId)
@@ -202,7 +231,9 @@ namespace backend.Controllers
         }
 
       
-        [HttpPost("AddExam")]
+
+
+        [HttpPost]
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
         {
@@ -234,60 +265,7 @@ namespace backend.Controllers
 
             catch (Exception err) { return BadRequest(err); }
         }
-        #region Update
-
-        //[HttpPut("{ExamId}")]
-        //[Authorize(Roles = "Teacher")]
-        //public async Task<IActionResult> EditExam(int ExamId, [FromBody] ExamInputDTO examDTO)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-        //    try
-        //    {
-        //        Exam exam = await _unit.ExamRepository.GetExamByIdWithWithQuestionsWithOptions(ExamId);
-
-        //        exam.Duration = examDTO.Duration;
-        //        exam.MaxDegree =examDTO.MaxDegree;
-        //        exam.MinDegree =examDTO.MinDegree;
-        //        exam.StartDate= examDTO.StartDate;
-        //        exam.CourseId= examDTO.CourseId;
-        //        exam.Title = examDTO.Title;
-        //        exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //        if (exam.Questions?.Any() == true)
-        //        {
-        //            foreach (var question in exam.Questions)
-        //                if (question.Options?.Any() == true)
-        //                    _unit.OptionRepository.RemoveRange(question.Options);
-        //            _unit.QuestionRepository.RemoveRange(exam.Questions);
-        //        }
-
-        //        if (examDTO.Questions == null || examDTO.Questions.Count <= 0)
-        //            return Ok(new { Message="..."});
-
-        //        exam.Questions = new List<Question>();
-        //        foreach (var questionDTO in examDTO.Questions)
-        //        {
-        //            Question question = _mapper.Map<Question>(questionDTO);
-        //            if (questionDTO.Options == null || questionDTO.Options.Count <= 0)
-        //                continue;
-        //            foreach (var optionDTO in questionDTO.Options)
-        //            {
-        //                Option option = _mapper.Map<Option>(optionDTO);
-        //                question.Options.Add(option);
-        //            }
-        //            exam.Questions.Add(question);
-        //        }
-        //        _unit.ExamRepository.Add(exam);
-        //        await _unit.SaveAsync();
-        //        return Ok(new { 
-
-        //        Message="Exam UPdated Succesully",
-        //        ExamId = ExamId,
-        //        Title = exam.Title
-        //        });
-        //    }
-
-        //    catch (Exception err) { return BadRequest(err); }
-        //}
+       
 
         [HttpPut]
         [Authorize(Roles = "Teacher")]
@@ -390,7 +368,7 @@ namespace backend.Controllers
                 return BadRequest(new { error = err.Message });
             }
         }
-        #endregion
+        
 
 
         [HttpDelete("{id}")]
@@ -439,6 +417,36 @@ namespace backend.Controllers
             catch (Exception err)
             {
                 return BadRequest(new { error = err.Message });
+            }
+        }
+
+        [HttpGet("{examId}/students")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<ActionResult<IEnumerable<ExamStudentDegreeDTO>>> GetStudentsOfExam(int examId)
+        {
+            try
+            {
+                var studExams = await _unit.StudentExamRepository.GetAllQueryable()
+                    .Where(se => se.ExamId == examId)
+                    .Include(se => se.Student)
+                    .ToListAsync();
+
+                var result = studExams.Select(se => new ExamStudentDegreeDTO
+                {
+                    StudentId = se.StudentId,
+                    StudentName = se.Student != null
+                        ? ((se.Student.FirstName ?? "") + " " + (se.Student.LastName ?? "")).Trim()
+                        : se.StudentId,
+                    Degree = se.StudDegree,
+                    IsAbsent = se.IsAbsent
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (ex.ToString())
+                return StatusCode(500, ex.ToString());
             }
         }
 

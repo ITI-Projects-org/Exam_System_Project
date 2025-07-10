@@ -13,5 +13,10 @@ namespace backend.Repositories.Implementations
         {
             return _context.StudExams.Where(se => se.StudentId == StdId && se.ExamId == ExamId);
         }
+
+        public IQueryable<Stud_Exam> GetAllQueryable()
+        {
+            return _context.StudExams.AsQueryable();
+        }
     }
 }

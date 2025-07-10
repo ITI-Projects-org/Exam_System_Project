@@ -135,7 +135,7 @@ namespace backend.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-                
+
             var teacher = Map.Map<Teacher>(teacherDto);
             await Unit.TeacherRepository.Add(teacher);
             await Unit.SaveAsync();
@@ -160,6 +160,6 @@ namespace backend.Controllers
 
             return NoContent();
         }
-       
+
     }
 }

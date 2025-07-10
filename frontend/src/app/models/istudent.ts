@@ -1,5 +1,5 @@
-export interface Istudent {
-  FirstName : string;
-  LastName : string;
-  Email : string;
+export interface IStudent {
+  firstName: string;
+  lastName: string;
+  email: string;
 }

@@ -11,11 +11,16 @@ namespace backend.Repositories.Implementations
         {
         }
 
+        //public async Task<IEnumerable<Exam>> GetAllUserExams(string UserId)
+        //{
+        //    return _context.Exams.Where(e => e.TeacherId == Teacher_Id.ToString());
+
+        //}
         public async Task<IEnumerable<Exam>> GetAllExamsofTeacher(string Teacher_Id)
         {
             return _context.Exams.Where(e => e.TeacherId == Teacher_Id.ToString());
         }
-
+        
         public async Task<IEnumerable<Exam>> GetAllExamsofStudent(string Student_ID)
         {
          
@@ -44,6 +49,8 @@ namespace backend.Repositories.Implementations
 
         public void AssignStudsToExam(int ExamId, ICollection<string> StudentsId)
         {
+            List<Stud_Exam> studentExams = _context.StudExams.Where(se => se.ExamId == ExamId).ToList();
+            _context.StudExams.RemoveRange(studentExams);
             foreach (var StudentId in StudentsId)
             {
                 Stud_Exam st_exam = new Stud_Exam()
@@ -90,6 +97,16 @@ namespace backend.Repositories.Implementations
 
             return examDTO;
         }
+
+
+        public List<Student> GetAllExamStudents(int examId)
+        {
+            return _context.StudExams
+                .Where(se=>se.ExamId==examId)
+                .Join(_context.Students, se => se.StudentId, s => s.Id, (se, s) => s)
+                .ToList();
+        }
+
         public void Remove(Exam exam)
         {
             _context.Exams.Remove(exam);

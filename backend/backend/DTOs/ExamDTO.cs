@@ -91,4 +91,12 @@ namespace backend.DTOs
 
         public int StudDegree { get; set; }
     }
+
+    public class ExamStudentDegreeDTO
+    {
+        public string StudentId { get; set; }
+        public string StudentName { get; set; }
+        public int Degree { get; set; }
+        public bool IsAbsent { get; set; }
+    }
 }
