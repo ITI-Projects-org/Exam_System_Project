@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using backend.DTOs;
+﻿using backend.DTOs;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -75,8 +74,6 @@ namespace backend.Repositories.Implementations
         }
         public async Task<Exam> GetExamByIdWithWithQuestionsWithOptions(int ExamId)
         {
-
-            
             return await _context.Exams
                 .Where(e=>e.Id == ExamId)
                 .Include(e=>e.Questions)

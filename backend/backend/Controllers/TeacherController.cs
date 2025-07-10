@@ -10,7 +10,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles ="Teacher")]
+    [Authorize(Roles = "Teacher")]
     public class TeacherController : Controller
     {
         readonly IUnitOfWork Unit;
@@ -66,29 +66,31 @@ namespace backend.Controllers
             return Ok(cr);
         }
         [HttpPost("AssignCourses")]
-        public async Task< IActionResult> AssignCourses([FromBody]CoursesAssignedToStudsDTO crsstudDTO) {
+        public async Task<IActionResult> AssignCourses([FromBody] CoursesAssignedToStudsDTO crsstudDTO)
+        {
             List<Stud_Course> stud_Course = new List<Stud_Course>();
-            
+
             foreach (var studID in crsstudDTO.StudentsIds)
             {
                 foreach (var crsID in crsstudDTO.CourseIds)
                 {
 
-                    stud_Course.Add(new Stud_Course() { 
-                    
-                    StudentId = studID,
-                    CourseId = crsID
-                    
+                    stud_Course.Add(new Stud_Course()
+                    {
+
+                        StudentId = studID,
+                        CourseId = crsID
+
                     });
                 }
             }
-           await Unit.CourseRepository.AddRange(stud_Course);
+            await Unit.CourseRepository.AddRange(stud_Course);
             await Unit.SaveAsync();
             return Ok(stud_Course);
-            
-            
-           
-        
+
+
+
+
         }
         [HttpGet("findCourse/{search:alpha}")]
         public IActionResult getCoursesBySearch(string search)
@@ -114,7 +116,7 @@ namespace backend.Controllers
             return Ok(stsDTO);
         }
 
-        [HttpGet("byStudent/{studentid:int}")] //byStudent عشان تبقى كل جت مميزة
+        [HttpGet("byStudent/{studentid:int}")]
         public async Task<IActionResult> getCoursesforStudent(int studentid)
         {
             var Crs = await Unit.TeacherRepository.getCoursesforStudent(studentid.ToString());
@@ -126,16 +128,16 @@ namespace backend.Controllers
         {
             var teachers = await Unit.TeacherRepository.GetAll();
             var teachersDto = Map.Map<List<TeacherDTO>>(teachers);
-            
+
             return Ok(teachersDto);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> AddTeacher(TeacherDTO teacherDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-                
+
             var teacher = Map.Map<Teacher>(teacherDto);
             await Unit.TeacherRepository.Add(teacher);
             await Unit.SaveAsync();
@@ -160,6 +162,6 @@ namespace backend.Controllers
 
             return NoContent();
         }
-       
+
     }
 }

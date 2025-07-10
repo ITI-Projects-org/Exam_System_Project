@@ -49,7 +49,7 @@ namespace backend
             //builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             //builder.Services.AddScoped<IStudentExamRepository, StudentExamRepository>();
             //builder.Services.AddScoped<IStudentOptionRepository, StudentOptionRepository>();
-            
+
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -57,26 +57,14 @@ namespace backend
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingConfigurations>());
 
             // Register Cors
-            //builder.Services.AddCors(options =>
-            //{
-            //    options.AddPolicy(_policy,
-            //    builder =>
-            //    {
-            //        builder.AllowAnyOrigin();
-            //        builder.WithOrigins("https://localhost:7088");
-            //        //builder.WithOrigins("http://localhost:7088");
-            //        builder.WithMethods("Post", "get");
-            //        builder.AllowAnyMethod();
-            //        builder.AllowAnyHeader();
-            //    });
-            //});
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", policy =>
+                options.AddPolicy(_policy,
+                builder =>
                 {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
                 });
             });
 
@@ -97,8 +85,22 @@ namespace backend
                };
            });
 
-
             var app = builder.Build();
+
+            // // Seed the database
+            // // comment out after finishing
+            // using (var scope = app.Services.CreateScope())
+            // {
+            //     try
+            //     {
+            //         await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            //         logger.LogError(ex, "An error occurred while seeding the database.");
+            //     }
+            // }
 
             if (app.Environment.IsDevelopment())
             {
@@ -106,14 +108,14 @@ namespace backend
                 app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
             }
 
-            app.UseCors("AllowAll");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCors(_policy);
             app.MapControllers();
 
-            await app.RunAsync(); 
+            await app.RunAsync();
         }
     }
 }
