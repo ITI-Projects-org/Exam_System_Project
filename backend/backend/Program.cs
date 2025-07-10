@@ -15,7 +15,7 @@ namespace backend
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var _policy = "_allowAllOrigins";
+            string _policy = "AllowAngular";
 
             // Add services to the container.  
 
@@ -59,17 +59,16 @@ namespace backend
             // Register Cors
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: _policy,
-                    builder =>
-                    {
-                        builder
-                            .AllowAnyOrigin()       
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
+                options.AddPolicy(_policy,
+                builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                });
             });
 
-
+            // Add this before app.UseAuthorization();
             builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
            .AddJwtBearer("auth_schema", options =>
            {
@@ -112,7 +111,6 @@ namespace backend
             app.UseCors(_policy);
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
 
             await app.RunAsync();

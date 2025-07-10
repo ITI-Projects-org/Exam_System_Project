@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './layout/navbar/navbar';
 import { Footer } from './layout/footer/footer';
-import { Home } from './pages/home/home';
-import { Student } from './pages/student/student';
+import { RouterOutlet } from '@angular/router';
+import { TeachersList } from './pages/teacher/teachers-list/teachers-list';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, Navbar, Footer, Home, Student],
+  imports: [Footer, Navbar, RouterOutlet, TeachersList],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
