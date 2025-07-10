@@ -30,7 +30,7 @@ namespace backend.Controllers
 
             return Ok(courses);
         }
-        [HttpPost("AddCourse{courseName}")]
+        [HttpPost("AddCourse/{courseName}")]
 
         public async Task<IActionResult> AddCourse(string courseName)
         {

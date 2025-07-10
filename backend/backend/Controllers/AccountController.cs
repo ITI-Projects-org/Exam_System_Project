@@ -36,11 +36,11 @@ namespace backend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             Student student = _map.Map<Student>(userDTO);
-            student.Role = UserRole.Student;
+            student.Role = UserRole.Teacher;
             var result = await userManager.CreateAsync(student, userDTO.Password);
             if (!result.Succeeded)
                 return BadRequest(result);
-            await userManager.AddToRoleAsync(student, "Student");
+            await userManager.AddToRoleAsync(student, "Teacher");
             return Ok("Done");
         }
 

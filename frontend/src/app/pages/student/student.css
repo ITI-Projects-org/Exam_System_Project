@@ -55,3 +55,24 @@
   transform: scale(1.1);
 }
 }
+.modal-content {
+  transition: all 0.3s ease;
+  border-radius: 16px;
+}
+
+.modal-header, .modal-footer {
+  padding: 1rem 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+}
+
+.btn-light {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+}
+
+.btn-light:hover {
+  background-color: #e2e6ea;
+}

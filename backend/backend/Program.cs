@@ -15,7 +15,7 @@ namespace backend
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            string _policy = "";
+            var _policy = "_allowAllOrigins";
 
             // Add services to the container.  
 
@@ -59,16 +59,16 @@ namespace backend
             // Register Cors
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(_policy,
-                builder =>
-                {
-                    builder.AllowAnyOrigin();
-                    builder.WithOrigins("https://localhost:7088");
-                    builder.WithMethods("Post", "get");
-                    builder.AllowAnyMethod();
-                    builder.AllowAnyHeader();
-                });
+                options.AddPolicy(name: _policy,
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyOrigin()       
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
             });
+
 
             builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
            .AddJwtBearer("auth_schema", options =>
@@ -88,18 +88,18 @@ namespace backend
 
             // // Seed the database
             // // comment out after finishing
-            // using (var scope = app.Services.CreateScope())
-            // {
-            //     try
-            //     {
-            //         await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            //         logger.LogError(ex, "An error occurred while seeding the database.");
-            //     }
-            // }
+             //using (var scope = app.Services.CreateScope())
+             //{
+             //    try
+             //    {
+             //        await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+             //    }
+             //    catch (Exception ex)
+             //    {
+             //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+             //        logger.LogError(ex, "An error occurred while seeding the database.");
+             //    }
+             //}
 
             if (app.Environment.IsDevelopment())
             {
@@ -109,6 +109,7 @@ namespace backend
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(_policy);
             app.UseAuthentication();
             app.UseAuthorization();
 
