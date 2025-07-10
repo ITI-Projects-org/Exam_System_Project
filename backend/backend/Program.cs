@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace backend
 {
@@ -64,8 +63,6 @@ namespace backend
                 builder =>
                 {
                     builder.AllowAnyOrigin();
-                    //builder.WithOrigins("https://localhost:7088");
-                    //builder.WithMethods("Post", "get");
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
                 });
