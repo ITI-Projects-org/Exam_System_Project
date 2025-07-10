@@ -10,7 +10,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles ="Teacher")]
+    //[Authorize(Roles ="Teacher")]
     public class TeacherController : Controller
     {
         readonly IUnitOfWork Unit;
@@ -23,16 +23,16 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("/api/Courses")]
+        [Route("GetCourses")]
         public async Task<IActionResult> GetCourses()
         {
             var courses = await Unit.CourseRepository.GetAll();
 
             return Ok(courses);
         }
-        [HttpPost("AddCourse{courseName}")]
+        [HttpPost("AddCourse")]
 
-        public async Task<IActionResult> AddCourse(string courseName)
+        public async Task<IActionResult> AddCourse([FromBody]string courseName)
         {
             var TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -66,31 +66,31 @@ namespace backend.Controllers
             return Ok(cr);
         }
         [HttpPost("AssignCourses")]
-        public async Task< IActionResult> AssignCourses([FromBody]CoursesAssignedToStudsDTO crsstudDTO) {
+        public async Task<IActionResult> AssignCourses([FromBody] CoursesAssignedToStudsDTO crsstudDTO) {
             List<Stud_Course> stud_Course = new List<Stud_Course>();
-            
+
             foreach (var studID in crsstudDTO.StudentsIds)
             {
-                foreach (var crsID in crsstudDTO.CourseIds)
+                foreach (var crsID in crsstudDTO.CoursesIds)
                 {
 
-                    stud_Course.Add(new Stud_Course() { 
-                    
-                    StudentId = studID,
-                    CourseId = crsID
-                    
+                    stud_Course.Add(new Stud_Course() {
+
+                        StudentId = studID,
+                        CourseId = crsID
+
                     });
                 }
             }
-           await Unit.CourseRepository.AddRange(stud_Course);
+            await Unit.CourseRepository.AddRange(stud_Course);
             await Unit.SaveAsync();
             return Ok(stud_Course);
-            
-            
-           
-        
+
+
+
+
         }
-        [HttpGet("findCourse/{search:alpha}")]
+        [HttpGet("GetCoursesBySearch/{search:alpha}")]
         public IActionResult getCoursesBySearch(string search)
         {
             var courses = Unit.TeacherRepository.getCoursesBySearch(search);
@@ -105,7 +105,7 @@ namespace backend.Controllers
             return Ok(sts);
         }
 
-        [HttpGet("{courseid:int}")]
+        [HttpGet("GetStudentsforCourse/{courseid:int}")]
         public async Task<IActionResult> getStudentsforCourse(int courseid)
         {
             var sts = await Unit.TeacherRepository.getStudentsforCourse(courseid);
@@ -114,24 +114,24 @@ namespace backend.Controllers
             return Ok(stsDTO);
         }
 
-        [HttpGet("byStudent/{studentid:int}")] //byStudent عشان تبقى كل جت مميزة
+        [HttpGet("GetCoursesforStudent/{studentid:int}")] //byStudent عشان تبقى كل جت مميزة
         public async Task<IActionResult> getCoursesforStudent(int studentid)
         {
             var Crs = await Unit.TeacherRepository.getCoursesforStudent(studentid.ToString());
             return Ok(Crs);
         }
 
-        [HttpGet("all")]
+        [HttpGet("GetAllTeachers")]
         public async Task<IActionResult> GetAllTeachers()
         {
             var teachers = await Unit.TeacherRepository.GetAll();
             var teachersDto = Map.Map<List<TeacherDTO>>(teachers);
-            
+
             return Ok(teachersDto);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddTeacher(TeacherDTO teacherDto)
+        [HttpPost("AddTeacher")]
+        public async Task<IActionResult> AddTeacher([FromBody]TeacherDTO teacherDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -143,8 +143,8 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(AddTeacher), new { id = teacher.Id }, teacherDto);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTeacher(string id, TeacherDTO teacherDto)
+        [HttpPut("UpdateTeacher/{id}")]
+        public async Task<IActionResult> UpdateTeacher(string id,[FromBody] TeacherDTO teacherDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

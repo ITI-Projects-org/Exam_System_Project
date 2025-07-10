@@ -15,7 +15,8 @@ namespace backend
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            string _policy = "";
+            //string _policy = "";
+            string _policy = "AllowAngular";
 
             // Add services to the container.  
 
@@ -62,9 +63,7 @@ namespace backend
                 options.AddPolicy(_policy,
                 builder =>
                 {
-                    builder.AllowAnyOrigin();
-                    builder.WithOrigins("https://localhost:7088");
-                    builder.WithMethods("Post", "get");
+                    builder.WithOrigins("http://localhost:4200");
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
                 });
@@ -95,6 +94,7 @@ namespace backend
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(_policy);
             app.UseAuthentication();
             app.UseAuthorization();
 
