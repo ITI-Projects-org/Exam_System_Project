@@ -4,52 +4,64 @@ import { Observable } from 'rxjs';
 import { Course } from '../models/course';
 import { IupdateCourse } from '../models/iupdate-course';
 import { IassignStudCrs } from '../models/iassign-stud-crs';
-import { Istudent } from '../models/istudent';
+import { IStudent } from '../models/istudent';
 import { Iteacher } from '../models/iteacher';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BackendService {
-baseUrl : string = "https://localhost:7251/api/Teacher"
-  constructor(private http : HttpClient) {  }
+  baseUrl: string = 'https://localhost:7251/api/Teacher';
+  constructor(private http: HttpClient) {}
 
-  GetCourses ():Observable<Course[]>{
-    return this.http.get<Course[]>(`${this.baseUrl}/GetCourses`)
-  }
-
-  AddCourse(courseName: string ):Observable<Course>{
-    return this.http.post<Course>(`${this.baseUrl}/AddCourse`,courseName)
-
-  }
-  UpdateCourse(IupdateCourse:any):Observable<IupdateCourse>{
-    return this.http.put<IupdateCourse>(`${this.baseUrl}/UpdateCourse`,IupdateCourse)
+  GetCourses(): Observable<Course[]> {
+    return this.http.get<Course[]>(`${this.baseUrl}/GetCourses`);
   }
 
-  AssignCourses(IassignStudCrs:any):Observable<IassignStudCrs>{
-    return this.http.post<IassignStudCrs>(`${this.baseUrl}/AssignCourses`,IassignStudCrs)
+  AddCourse(courseName: string): Observable<Course> {
+    return this.http.post<Course>(`${this.baseUrl}/AddCourse`, courseName);
   }
-  getCoursesBySearch():Observable<Course[]>{
-    return this.http.get<Course[]>(`${this.baseUrl}/GetCoursesBySearch`)
-  }
-  getStudentsBySearch(name : string):Observable<Istudent[]>{
-    return this.http.get<Istudent[]>(`${this.baseUrl}/GetStudentsBySearch/${name}`)
-  }
-  getStudentsforCourse(courseId:number):Observable<Istudent[]>{
-    return this.http.get<Istudent[]>(`${this.baseUrl}/GetStudentsforCourse/${courseId}`)
+  UpdateCourse(IupdateCourse: any): Observable<IupdateCourse> {
+    return this.http.put<IupdateCourse>(
+      `${this.baseUrl}/UpdateCourse`,
+      IupdateCourse
+    );
   }
 
-  getCoursesforStudent():Observable<Course[]>{
-    return this.http.get<Course[]>(`${this.baseUrl}/GetCoursesforStudent`)
+  AssignCourses(IassignStudCrs: any): Observable<IassignStudCrs> {
+    return this.http.post<IassignStudCrs>(
+      `${this.baseUrl}/AssignCourses`,
+      IassignStudCrs
+    );
   }
-  GetAllTeachers():Observable<Iteacher[]>{
-    return this.http.get<Iteacher[]>(`${this.baseUrl}/GetAllTeachers`)
+  getCoursesBySearch(): Observable<Course[]> {
+    return this.http.get<Course[]>(`${this.baseUrl}/GetCoursesBySearch`);
+  }
+  getStudentsBySearch(name: string): Observable<IStudent[]> {
+    return this.http.get<IStudent[]>(
+      `${this.baseUrl}/GetStudentsBySearch/${name}`
+    );
+  }
+  getStudentsforCourse(courseId: number): Observable<IStudent[]> {
+    return this.http.get<IStudent[]>(
+      `${this.baseUrl}/GetStudentsforCourse/${courseId}`
+    );
   }
 
-  AddTeacher(iteacher : Iteacher):Observable<Iteacher>{
-    return this.http.post<Iteacher>(`${this.baseUrl}/AddTeacher`,iteacher)
+  getCoursesforStudent(): Observable<Course[]> {
+    return this.http.get<Course[]>(`${this.baseUrl}/GetCoursesforStudent`);
   }
-  UpdateTeacher(teacherId:string,iteacher : Iteacher):Observable<Iteacher>{
-    return this.http.put<Iteacher>(`${this.baseUrl}/UpdateTeacher/${teacherId}`,iteacher)
+  GetAllTeachers(): Observable<Iteacher[]> {
+    return this.http.get<Iteacher[]>(`${this.baseUrl}/GetAllTeachers`);
+  }
+
+  AddTeacher(iteacher: Iteacher): Observable<Iteacher> {
+    return this.http.post<Iteacher>(`${this.baseUrl}/AddTeacher`, iteacher);
+  }
+  UpdateTeacher(teacherId: string, iteacher: Iteacher): Observable<Iteacher> {
+    return this.http.put<Iteacher>(
+      `${this.baseUrl}/UpdateTeacher/${teacherId}`,
+      iteacher
+    );
   }
 }
