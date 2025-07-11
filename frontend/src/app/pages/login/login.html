@@ -1,103 +1,87 @@
-<div class="login-page">
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="logo">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h1>Welcome Back</h1>
-                <p>Sign in to your Exam System account</p>
-            </div>
-
-            <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                <div class="form-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <div class="input-group">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" formControlName="email" class="form-control"
-                            placeholder="Enter your email" [class.is-invalid]="isFieldInvalid('email')">
-                    </div>
-                    <div *ngIf="isFieldInvalid('email')" class="form-error">
-                        <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
-                        <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
-                            class="form-control" placeholder="Enter your password"
-                            [class.is-invalid]="isFieldInvalid('password')">
-                        <button type="button" class="password-toggle" (click)="togglePassword()"
-                            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
-                            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-                        </button>
-                    </div>
-                    <div *ngIf="isFieldInvalid('password')" class="form-error">
-                        <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
-                        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6
-                            characters</span>
-                    </div>
-                </div>
-
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="rememberMe">
-                        <span class="checkmark"></span>
-                        Remember me
-                    </label>
-                    <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-lg login-btn"
-                    [disabled]="loginForm.invalid || loading">
-                    <span *ngIf="!loading">Sign In</span>
-                    <div *ngIf="loading" class="spinner-small"></div>
-                </button>
-            </form>
-
-            <div class="login-divider">
-                <span>or</span>
-            </div>
-
-            <div class="social-login">
-                <button class="btn btn-outline social-btn">
-                    <i class="fab fa-google"></i>
-                    <span>Continue with Google</span>
-                </button>
-                <button class="btn btn-outline social-btn">
-                    <i class="fab fa-microsoft"></i>
-                    <span>Continue with Microsoft</span>
-                </button>
-            </div>
-
-            <div class="login-footer">
-                <p>Don't have an account? <a href="/register" class="signup-link">Sign up</a></p>
-            </div>
-        </div>
-
-        <div class="login-illustration">
-            <div class="illustration-content">
-                <h2>Ready to Ace Your Exams?</h2>
-                <p>Join thousands of students and teachers using our platform to create and take exams with confidence.
-                </p>
-                <div class="features">
-                    <div class="feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Easy exam creation</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Real-time results</span>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Secure platform</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div
+  class="login-page d-flex align-items-center justify-content-center min-vh-100 bg-light"
+>
+  <div
+    class="card shadow-lg p-4"
+    style="max-width: 400px; width: 100%; border-radius: 1rem"
+  >
+    <div class="text-center mb-4">
+      <img
+        src="/images/logo/onlinexamlogo.png"
+        alt="Online Exam Logo"
+        style="height: 60px; margin-bottom: 1rem"
+      />
+      <h2 class="fw-bold mb-2" style="color: var(--bright-blue-dark)">
+        Sign In
+      </h2>
+      <p class="text-muted mb-0">Welcome back! Please login to your account.</p>
     </div>
+    <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+      <div *ngIf="loginError?.length" class="alert alert-danger">
+        <ul class="mb-0">
+          <li *ngFor="let e of loginError">{{ e }}</li>
+        </ul>
+      </div>
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="Email" class="form-label">Email</label>
+        <input
+          id="Email"
+          type="email"
+          class="form-control"
+          placeholder="Enter your email"
+          formControlName="Email"
+          [ngClass]="{'is-invalid': getEmail.invalid && getEmail.touched}"
+        />
+        <div
+          *ngIf="getEmail.invalid && getEmail.touched"
+          class="invalid-feedback"
+        >
+          <div *ngIf="getEmail.hasError('required')">Email is required.</div>
+          <div *ngIf="getEmail.hasError('email')">
+            Email must be in valid format
+          </div>
+        </div>
+      </div>
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="Password" class="form-label">Password</label>
+        <input
+          id="Password"
+          type="password"
+          class="form-control"
+          placeholder="Enter your password"
+          formControlName="Password"
+          [ngClass]="{'is-invalid': getPassword.invalid && getPassword.touched}"
+        />
+        <div
+          *ngIf="getPassword.invalid && getPassword.touched"
+          class="invalid-feedback"
+        >
+          <div *ngIf="getPassword.hasError('required')">
+            Password is required.
+          </div>
+          <div *ngIf="getPassword.hasError('minlength')">
+            Password should be at least 7 characters.
+          </div>
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary w-100 mt-2"
+        [disabled]="loginForm.invalid"
+      >
+        Login
+      </button>
+    </form>
+    <div class="text-center mt-3">
+      <span class="text-muted">Don't have an account?</span>
+      <a
+        [routerLink]="['/register']"
+        class="fw-semibold text-primary text-decoration-none ms-1"
+      >
+        Register Now!
+      </a>
+    </div>
+  </div>
 </div>

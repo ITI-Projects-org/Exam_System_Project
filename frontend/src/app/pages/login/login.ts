@@ -50,7 +50,7 @@ export class Login {
       Password: formValue.Password ?? '',
     };
     this.authService.login(dto).subscribe({
-      next: () => this.router.navigateByUrl('/dashboard'),
+      next: () => this.router.navigateByUrl('/home'),
       error: (err: HttpErrorResponse) => {
         // look for our `{ errors: string[] }` shape
         this.loginError = err.error?.errors ?? ['An unexpected error occurred'];
