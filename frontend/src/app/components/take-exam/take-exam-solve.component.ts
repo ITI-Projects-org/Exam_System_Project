@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExamServices } from '../../services/exam-services';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth-service';
 import { IExam } from '../../models/iexam';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './take-exam-solve.component.html',
   styleUrls: ['./take-exam-solve.component.css'],
   standalone: true,
-  imports: [ CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
 })
 export class TakeExamSolveComponent implements OnInit {
   examId: string | null = null;
@@ -31,7 +31,7 @@ export class TakeExamSolveComponent implements OnInit {
 
   ngOnInit(): void {
     this.examId = this.route.snapshot.paramMap.get('id');
-    this.isStudent = this.authService.currentUserRole === 'student';
+    this.isStudent = this.authService.getUserRole() === 'Student';
     if (this.examId) {
       // Use getExamToSolve for /solve route
       this.examService.getExamToSolve(this.examId).subscribe({
@@ -53,7 +53,7 @@ export class TakeExamSolveComponent implements OnInit {
         },
         error: (err) => {
           this.error = 'Failed to load solved exam.';
-        }
+        },
       });
     } else {
       this.error = 'No exam ID provided.';
@@ -63,7 +63,7 @@ export class TakeExamSolveComponent implements OnInit {
   submitExam(answers: any) {
     // Transform answers to backend format if needed
     // Example: { q1: 'answer1', q2: 'answer2' } => [{ questionId: 1, answer: 'answer1' }, ...]
-    const formattedAnswers = Object.keys(answers).map(key => {
+    const formattedAnswers = Object.keys(answers).map((key) => {
       const questionId = Number(key.replace('q', ''));
       return { questionId, answer: answers[key] };
     });
@@ -74,10 +74,12 @@ export class TakeExamSolveComponent implements OnInit {
         // Mark chosen options for display
         if (this.exam && result.answers) {
           for (const ans of result.answers) {
-            const q = this.exam.questions.find(q => q.id === ans.questionId);
+            const q = this.exam.questions.find((q) => q.id === ans.questionId);
             if (q) {
               for (const opt of q.options) {
-                opt.isChoosedByStudent = (opt.id === ans.answer || (Array.isArray(ans.answer) && ans.answer.includes(opt.id)));
+                opt.isChoosedByStudent =
+                  opt.id === ans.answer ||
+                  (Array.isArray(ans.answer) && ans.answer.includes(opt.id));
               }
             }
           }
@@ -85,7 +87,7 @@ export class TakeExamSolveComponent implements OnInit {
       },
       error: (err) => {
         this.error = 'Failed to submit exam.';
-      }
+      },
     });
   }
 
