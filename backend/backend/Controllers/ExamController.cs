@@ -450,6 +450,53 @@ namespace backend.Controllers
             }
         }
 
+        [HttpPost("{examId}/submit")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> SubmitExam(int examId, [FromBody] List<backend.DTOs.ExamSubmitAnswerDTO> answers)
+        {
+            var studentId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            // Prevent double submission
+            //var alreadySubmitted = await _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId).AnyAsync();
+            //if (alreadySubmitted)
+            //    return BadRequest("You have already submitted this exam.");
+
+            // Save each selected option
+            var studOptions = new List<Stud_Option>();
+            foreach (var answer in answers)
+            {
+                if (answer.OptionIds != null)
+                {
+                    foreach (var optionId in answer.OptionIds)
+                    {
+                        studOptions.Add(new backend.Models.Stud_Option
+                        {
+                            StudentId = studentId,
+                            OptionId = optionId
+                        });
+                    }
+                }
+            }
+            _unit.StudentOptionRepository.AddRange(studOptions);
+
+            // Mark exam as submitted for this student
+            var now = DateTime.Now;
+            var studExam = new backend.Models.Stud_Exam
+            {
+                StudentId = studentId,
+                ExamId = examId,
+                StudStartDate = now,
+                StudEndDate = now,
+                StudDegree = 0, // You can calculate the degree if needed
+                IsAbsent = false
+            };
+            await _unit.StudentExamRepository.Add(studExam);
+
+             await _unit.SaveAsync();
+
+            return Ok(new { success = true });
+        }
+
 
     }
 }

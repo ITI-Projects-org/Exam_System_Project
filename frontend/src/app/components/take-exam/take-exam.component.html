@@ -7,6 +7,11 @@
     <p>Start Time: {{ exam.startTime | date:'short' }}</p>
     <p *ngIf="exam.endTime">End Time: {{ exam.endTime | date:'short' }}</p>
     <p *ngIf="exam.isActive">Status: Active</p>
+    <div>
+        exam.questions: {{ exam.questions ? 'yes' : 'no' }}<br>
+        exam.questions.length: {{ exam.questions?.length }}<br>
+        canTakeExam: {{ canTakeExam }}
+    </div>
     <!-- Student answer form: select one option per question and submit -->
     <form *ngIf="exam.questions && exam.questions.length > 0 && canTakeExam" (ngSubmit)="submitExam(answersForm.value)"
         #answersForm="ngForm">
@@ -15,14 +20,16 @@
             <ul>
                 <li *ngFor="let option of question.options">
                     <label>
-                        <input type="radio" [name]="'q' + (question.id || i)" [value]="option.id"
-                            [(ngModel)]="studentAnswers[question.id || i]" required />
+                        <input type="checkbox" [checked]="isOptionSelected(question, option, i)"
+                            (change)="onCheckboxChange($event, question.id || i, option.id)" />
                         {{ option.title || option.text }}
                     </label>
                 </li>
             </ul>
         </div>
-        <button type="submit">Submit Answers</button>
+        <!-- <button type="submit" [disabled]="!allQuestionsAnswered()">Submit Exam</button> -->
+        <button type="submit">Submit Exam</button>
+        <div *ngIf="submissionSuccess" style="color: green; margin-top: 10px;">Exam submitted successfully!</div>
     </form>
     <!-- If student cannot take the exam, show questions/options as read-only -->
     <div *ngIf="exam.questions && exam.questions.length > 0 && !canTakeExam">
@@ -30,12 +37,14 @@
             <p><b>Q{{ i + 1 }}: {{ question.title || question.text }}</b></p>
             <ul>
                 <li *ngFor="let option of question.options">
-                    {{ option.title || option.text }}
+                    <label>
+                        <input type="checkbox" [checked]="isOptionSelected(question, option, i)" />
+                        {{ option.title || option.text }}
+                    </label>
                 </li>
             </ul>
         </div>
     </div>
-    <button *ngIf="canTakeExam" (click)="startExam()">Take Exam</button>
     <div *ngIf="!canTakeExam && authService.currentUserRole === 'student'">
         <span *ngIf="!exam.isActive">Exam is not active yet.</span>
     </div>

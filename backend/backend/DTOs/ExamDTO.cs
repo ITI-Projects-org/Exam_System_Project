@@ -99,4 +99,11 @@ namespace backend.DTOs
         public int Degree { get; set; }
         public bool IsAbsent { get; set; }
     }
+
+    // DTO for submitted answers
+    public class ExamSubmitAnswerDTO
+    {
+        public int QuestionId { get; set; }
+        public List<int> OptionIds { get; set; }
+    }
 }
