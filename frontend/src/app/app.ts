@@ -12,5 +12,4 @@ import { TeachersList } from './pages/teacher/teachers-list/teachers-list';
 })
 export class App {
   protected title = 'frontend';
-  constructor(public authService: AuthService) {}
 }
