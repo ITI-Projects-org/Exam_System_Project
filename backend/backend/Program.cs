@@ -75,7 +75,7 @@ namespace backend
             builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
            .AddJwtBearer("auth_schema", options =>
            {
-               var key = "this is my secrect key for the WebAPI/Angular project";
+               var key = builder.Configuration["JwtKey"]!;
                var secrectKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
 
                options.TokenValidationParameters = new TokenValidationParameters()
