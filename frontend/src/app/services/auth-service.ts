@@ -4,7 +4,8 @@ import { IRegister } from '../models/iregister';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { ILogin } from '../models/ilogin';
 import { isPlatformBrowser } from '@angular/common';
-
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../models/jwt-payload';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,9 +27,18 @@ export class AuthService {
     return this.http.post<{ token: string }>(`${this.baseUrl}/login`, dto).pipe(
       tap((res) => {
         localStorage.setItem('token', res.token);
-        const payload = this.decodeToken(res.token); // ✳️ استخراج البيانات من التوكن
-        const roleClaim = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
-        localStorage.setItem('role', payload[roleClaim]);   // ✳️ تخزين الرول داخل localStorage
+        const payload = this.decodeToken(res.token);
+        localStorage.setItem('userId', payload.sub);
+        localStorage.setItem('email', payload.email);
+        // role claim may be string or array
+        const role =
+          payload[
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+          ];
+        localStorage.setItem(
+          'role',
+          Array.isArray(role) ? role[0] : role || ''
+        );
       }),
       catchError((err) => throwError(() => err))
     );
@@ -36,7 +46,9 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
-    localStorage.removeItem('role'); // ✳️ نضيف كمان إزالة الـ role عند تسجيل الخروج
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('role');
   }
 
   get token(): string | null {
@@ -50,32 +62,33 @@ export class AuthService {
     return !!this.token;
   }
 
-  // ✳️ استخراج role من التوكن مباشرة
-  getUserRole(): string | null {
-    const token = this.token;
-    if (!token) return null;
-
-    const payload = this.decodeToken(token);
-
-    // ✅ نحاول نقرأ من المفتاح الرسمي الخاص بـ .NET
-    const roleClaim = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
-    return payload?.[roleClaim] || null;
+  getUserId(): string | null {
+    return isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('userId')
+      : null;
   }
 
-  // ✳️ هل المستخدم له Role معينة؟
+  getEmail(): string | null {
+    return isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('email')
+      : null;
+  }
+
+  getUserRole(): string | null {
+    return isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('role')
+      : null;
+  }
+
   isInRole(expectedRole: string): boolean {
     return this.getUserRole() === expectedRole;
   }
 
-
-  // ✳️ دالة فك تشفير JWT Token (بدون مكتبة خارجية)
-  private decodeToken(token: string): any {
+  private decodeToken(token: string): JwtPayload {
     try {
-      const payload = token.split('.')[1];
-      const decoded = atob(payload);
-      return JSON.parse(decoded);
-    } catch (e) {
-      return null;
+      return jwtDecode<JwtPayload>(token);
+    } catch {
+      return {} as JwtPayload;
     }
   }
 }
