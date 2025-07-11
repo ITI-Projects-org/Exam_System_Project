@@ -31,7 +31,6 @@ namespace backend.Controllers
             return Ok(courses);
         }
         [HttpPost("AddCourse")]
-
         public async Task<IActionResult> AddCourse([FromBody]string courseName)
         {
             var TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
