@@ -164,6 +164,15 @@ a:hover {
   cursor: not-allowed;
 }
 
+.btn,
+.btn:hover,
+.btn:focus,
+.btn a,
+.btn a:hover,
+.btn a:focus {
+  text-decoration: none !important;
+}
+
 /* Button Variants */
 .btn-primary {
   background: linear-gradient(

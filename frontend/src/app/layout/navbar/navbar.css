@@ -26,6 +26,7 @@
 .navbar-nav .nav-link.active {
   color: #fff;
   background: #00bcd4;
+  text-decoration: none;
 }
 
 .btn-logout,
@@ -38,12 +39,26 @@
 }
 
 .btn-logout {
-  background: #20c997;
+  background: linear-gradient(
+    135deg,
+    var(--bright-blue) 0%,
+    var(--blue-green) 100%
+  );
   color: #fff;
+  font-weight: 600;
   border: none;
+  border-radius: 5px;
+  padding: 8px 28px;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: var(--shadow-md);
 }
 .btn-logout:hover {
-  background: #1abc9c;
+  background: linear-gradient(
+    135deg,
+    var(--bright-blue-dark) 0%,
+    var(--blue-green-dark) 100%
+  );
   color: #fff;
 }
 
