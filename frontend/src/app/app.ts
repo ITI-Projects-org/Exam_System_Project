@@ -3,6 +3,7 @@ import { Navbar } from './layout/navbar/navbar';
 import { Footer } from './layout/footer/footer';
 import { RouterOutlet } from '@angular/router';
 import { TeachersList } from './pages/teacher/teachers-list/teachers-list';
+import { AuthService } from './services/auth-service';
 
 @Component({
   selector: 'app-root',
