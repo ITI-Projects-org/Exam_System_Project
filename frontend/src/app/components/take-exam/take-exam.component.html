@@ -1,0 +1,42 @@
+<div *ngIf="isLoading">Loading exam...</div>
+<div *ngIf="error">{{ error }}</div>
+<div *ngIf="!isLoading && !error && exam">
+    <h2>{{ exam.title }}</h2>
+    <p *ngIf="exam.description">{{ exam.description }}</p>
+    <p>Duration: {{ exam.duration }} minutes</p>
+    <p>Start Time: {{ exam.startTime | date:'short' }}</p>
+    <p *ngIf="exam.endTime">End Time: {{ exam.endTime | date:'short' }}</p>
+    <p *ngIf="exam.isActive">Status: Active</p>
+    <!-- Student answer form: select one option per question and submit -->
+    <form *ngIf="exam.questions && exam.questions.length > 0 && canTakeExam" (ngSubmit)="submitExam(answersForm.value)"
+        #answersForm="ngForm">
+        <div *ngFor="let question of exam.questions; let i = index">
+            <p><b>Q{{ i + 1 }}: {{ question.title || question.text }}</b></p>
+            <ul>
+                <li *ngFor="let option of question.options">
+                    <label>
+                        <input type="radio" [name]="'q' + (question.id || i)" [value]="option.id"
+                            [(ngModel)]="studentAnswers[question.id || i]" required />
+                        {{ option.title || option.text }}
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <button type="submit">Submit Answers</button>
+    </form>
+    <!-- If student cannot take the exam, show questions/options as read-only -->
+    <div *ngIf="exam.questions && exam.questions.length > 0 && !canTakeExam">
+        <div *ngFor="let question of exam.questions; let i = index">
+            <p><b>Q{{ i + 1 }}: {{ question.title || question.text }}</b></p>
+            <ul>
+                <li *ngFor="let option of question.options">
+                    {{ option.title || option.text }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <button *ngIf="canTakeExam" (click)="startExam()">Take Exam</button>
+    <div *ngIf="!canTakeExam && authService.currentUserRole === 'student'">
+        <span *ngIf="!exam.isActive">Exam is not active yet.</span>
+    </div>
+</div>

@@ -1,7 +1,8 @@
+import { ExamServices } from './../../services/exam-services';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExamServices } from '../../services/exam-services';
+// import { ExamServices } from '../../services/exam-services';
 import { IExam } from '../../models/iexam';
 import { ExamStudentDegreeDTO } from '../../services/exam-services';
 
@@ -581,7 +582,7 @@ export class ExamDetails implements OnInit {
       // Wait for token initialization
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      this.isTeacher = this.getRoleFromToken() === 'Teacher';
+      this.isTeacher = this.examService.getRoleFromToken() === 'Teacher';
       const id = this.route.snapshot.paramMap.get('id');
 
       if (id) {
@@ -633,10 +634,7 @@ export class ExamDetails implements OnInit {
     }
   }
 
-  getRoleFromToken(): string {
-    // For now, return Teacher since we're using teacher credentials
-    return 'Teacher';
-  }
+ 
 
   getDegreeClass(degree: number, minDegree?: number): string {
     if (!minDegree) return 'fail';

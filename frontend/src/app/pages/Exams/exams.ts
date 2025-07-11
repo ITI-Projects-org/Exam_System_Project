@@ -134,7 +134,12 @@ import { firstValueFrom } from 'rxjs';
                   <i class="fas fa-eye"></i>
                   <span>View Details</span>
                 </button>
-                
+                <ng-container *ngIf="isStudent && getExamStatus(exam) === 'Active'">
+                  <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
+                    <i class="fas fa-play"></i>
+                    Take Exam
+                  </button>
+                </ng-container>
                 <ng-container *ngIf="isTeacher">
                   <div class="teacher-actions">
                     <button [routerLink]="['/exams', exam.id, 'edit']" class="btn-secondary" title="Edit Exam">
@@ -618,6 +623,7 @@ export class ExamsComponent implements OnInit {
   exams: IExamListItem[] = [];
   loading = true;
   isTeacher = false;
+  isStudent = false;
   errorMsg = '';
 
   constructor(private examService: ExamServices, private cdr:ChangeDetectorRef) {}
@@ -627,7 +633,9 @@ export class ExamsComponent implements OnInit {
       // Wait a bit for token initialization
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      this.isTeacher = this.getRoleFromToken() === 'Teacher';
+      this.isTeacher = this.examService.getRoleFromToken() === 'Teacher';
+      this.isStudent = this.examService.getRoleFromToken() === 'Student';
+      console.log(this.examService.getRoleFromToken());
       this.examService.getExams().subscribe({
         next: (data) => {
           console.log('Exams loaded successfully:', data);
@@ -711,8 +719,9 @@ export class ExamsComponent implements OnInit {
     }
   }
 
-  getRoleFromToken(): string {
-    // For now, return Teacher since we're using teacher credentials
-    return 'Teacher';
+ 
+  gteToken():string|null{
+    return localStorage.getItem('token')
   }
-} 
+  
+}

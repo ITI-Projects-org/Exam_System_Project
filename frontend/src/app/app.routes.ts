@@ -7,6 +7,7 @@ import { ExamsComponent } from './pages/Exams/exams';
 import { ExamDetails } from './components/exam-details/exam-details';
 import { EditExamComponent } from './components/edit-exam/edit-exam';
 import { AssignStudentToExamComponent } from './components/assign-student-to-exam/assign-student-to-exam';
+import { studentGuard } from './guards/student.guard';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -22,6 +23,18 @@ export const routes: Routes = [
   { path: 'exams/:id', component: ExamDetails },
   { path: 'exams/:id/edit', component: EditExamComponent },
   { path: 'exams/:id/assign', component: AssignStudentToExamComponent },
+  {
+    path: 'take-exam/:id',
+    loadComponent: () =>
+      import('./components/take-exam/take-exam.component').then((m) => m.TakeExamComponent),
+    canActivate: [studentGuard],
+  },
+  {
+    path: 'take-exam/:id/solve',
+    loadComponent: () =>
+      import('./components/take-exam/take-exam-solve.component').then((m) => m.TakeExamSolveComponent),
+    canActivate: [studentGuard],
+  },
   { path: '', redirectTo: '/exams', pathMatch: 'full' },
   { path: '**', redirectTo: '/exams' },
 ];
