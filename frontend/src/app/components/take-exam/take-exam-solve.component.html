@@ -1,15 +1,42 @@
 <div *ngIf="error">{{ error }}</div>
 <div *ngIf="!error && exam">
-    <h2>{{ exam?.title }}</h2>
+    <h2>{{ exam.title }}</h2>
     <form *ngIf="!submitted" (ngSubmit)="submitExam(answersForm.value)" #answersForm="ngForm">
-        <!-- Render exam questions here -->
         <div *ngFor="let question of exam.questions">
-            <label>{{ question.text }}</label>
-            <input name="q{{question.id}}" ngModel required />
+            <p><b>{{ question.title }}</b></p>
+            <div *ngFor="let option of question.options">
+                <label>
+                    <input type="radio" name="q{{question.id}}" [value]="option.id" ngModel required />
+                    {{ option.title }}
+                </label>
+            </div>
         </div>
         <button type="submit">Submit Exam</button>
     </form>
     <div *ngIf="submitted">
         <h3>Your Degree: {{ degree }}</h3>
+        <div *ngFor="let question of exam.questions">
+            <p><b>{{ question.title }}</b></p>
+            <div>
+                <b>Student Answer:</b>
+                <span *ngIf="getStudentAnswers(question).length > 0">
+                    <span *ngFor="let option of getStudentAnswers(question); let last = last">
+                        {{ option.title }}<span *ngIf="!last">, </span>
+                    </span>
+                </span>
+                <span *ngIf="getStudentAnswers(question).length === 0">No answer</span>
+            </div>
+            <div *ngFor="let option of question.options">
+                <span [ngStyle]="{
+                    'font-weight': option.isChoosedByStudent ? 'bold' : 'normal',
+                    'color': option.isCorrect ? (option.isChoosedByStudent ? 'green' : 'blue') : (option.isChoosedByStudent ? 'red' : 'black')
+                }">
+                    {{ option.title }}
+                    <span *ngIf="option.isChoosedByStudent && option.isCorrect">(Your Answer, Correct)</span>
+                    <span *ngIf="option.isChoosedByStudent && !option.isCorrect">(Your Answer, Wrong)</span>
+                    <span *ngIf="!option.isChoosedByStudent && option.isCorrect">(Correct Answer)</span>
+                </span>
+            </div>
+        </div>
     </div>
 </div>

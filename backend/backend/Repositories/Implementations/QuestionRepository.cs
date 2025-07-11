@@ -21,5 +21,11 @@ namespace backend.Repositories.Implementations
         {
             _context.Questions.RemoveRange(questions);
         }
+        public void Update(Question question)
+        {
+            _context.Questions.Update(question);
+        }
+
+        
     }
 }

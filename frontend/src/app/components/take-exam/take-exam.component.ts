@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExamServices } from '../../services/exam-services';
-import { AuthService } from '../../services/auth-service';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -21,22 +21,31 @@ export class TakeExamComponent implements OnInit {
   studentAnswers: { [key: string]: any[] } = {}; // { questionId: [optionId, ...] }
   submissionSuccess = false;
   formDisabled = false;
+  status: 'pending' | 'completed' = 'pending';
+  showAnswers = false;
+  results: any[] = [];
+  studentDegree: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private examService: ExamServices,
     public authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.examId = this.route.snapshot.paramMap.get('id');
+    const url = this.router.url;
     if (this.examId) {
       this.isLoading = true;
-      this.examService.getExamById(this.examId).subscribe({
+      // Use getExamToSolve for /take/:id/solve, otherwise getExamById
+      const examObs = url.includes('/solve')
+        ? this.examService.getExamToSolve(this.examId)
+        : this.examService.getExamById(this.examId);
+      examObs.subscribe({
         next: (exam) => {
           this.exam = exam;
-          // Defensive: ensure questions is always an array
           if (!Array.isArray(this.exam.questions)) {
             this.exam.questions = [];
           }
@@ -44,20 +53,18 @@ export class TakeExamComponent implements OnInit {
           this.submissionSuccess = false;
           this.formDisabled = false;
           this.studentAnswers = {};
-          // Initialize answer arrays for each question
           if (this.exam.questions) {
             this.exam.questions.forEach((q: any, i: number) => {
               const qid = q.id ?? i;
               this.studentAnswers[qid] = [];
             });
           }
-          // Determine if exam is active and student can take it
           const now = new Date();
           const start = new Date(exam.startDate);
           const [h, m, s] = exam.duration.split(':').map(Number);
           const endDate = new Date(start.getTime() + (h * 3600 + m * 60 + s) * 1000);
-          const isActive = now >= start && now <= endDate;
           const role = this.examService.getRoleFromToken ? this.examService.getRoleFromToken() : (this.authService as any).currentUserRole;
+          const isActive = now >= start && now <= endDate;
           this.canTakeExam = role && role.toLowerCase() === 'student' && isActive;
           this.cdr.detectChanges();
         },
@@ -123,6 +130,9 @@ export class TakeExamComponent implements OnInit {
       next: (result) => {
         this.submissionSuccess = true;
         this.formDisabled = true;
+        this.status = 'completed';
+        this.results = result.results || [];
+        this.studentDegree = result.degree ?? null;
         alert('Exam submitted!');
       },
       error: (err) => {
@@ -131,5 +141,9 @@ export class TakeExamComponent implements OnInit {
         alert('Failed to submit exam.');
       }
     });
+  }
+
+  toggleShowAnswers() {
+    this.showAnswers = !this.showAnswers;
   }
 }

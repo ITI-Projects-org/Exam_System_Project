@@ -6,5 +6,7 @@ namespace backend.Repositories.Interfaces
     {
         public IQueryable<Stud_Exam> GetByStudentAndExamAsync(string StdId, int ExamId);
         public IQueryable<Stud_Exam> GetAllQueryable();
+        public Task UpdateAsync(Stud_Exam studExam);
+
     }
 }

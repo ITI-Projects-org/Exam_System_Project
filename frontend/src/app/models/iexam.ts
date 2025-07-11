@@ -1,7 +1,7 @@
 export interface IExam {
     id?: number;
     title: string;
-    startDate: Date;
+    startDate: string;
     duration: string; // hh:mm:ss for backend
     maxDegree: number;
     minDegree: number;
@@ -13,6 +13,7 @@ export interface IExam {
 }
 
 export interface IQuestion {
+text: any;
     id?: number;
     title: string;
     degree: number;

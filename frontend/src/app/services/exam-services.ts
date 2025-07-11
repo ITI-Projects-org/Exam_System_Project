@@ -187,4 +187,7 @@ export class ExamServices {
     return this.http.post(`${this.baseURL}/${examId}/submit`, answers, { headers: this.headers })
       .pipe(catchError(this.handleError));
   }
+  getExamToSolve(examId: string): Observable<any> {
+    return this.http.get(`${this.baseURL}/${examId}/solve`, { headers: this.headers });
+  }
 }

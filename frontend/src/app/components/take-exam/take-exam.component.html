@@ -31,6 +31,32 @@
         <button type="submit">Submit Exam</button>
         <div *ngIf="submissionSuccess" style="color: green; margin-top: 10px;">Exam submitted successfully!</div>
     </form>
+    <!-- Show answers button and results after completion -->
+    <div *ngIf="status === 'completed'">
+        <button (click)="toggleShowAnswers()">{{ showAnswers ? 'Hide' : 'Show' }} My Answers</button>
+        <div *ngIf="showAnswers">
+            <h3>Your Degree: {{ studentDegree }}</h3>
+            <div *ngFor="let res of results">
+                <h4>{{ res.questionText }}</h4>
+                <div>
+                    <span>Correct options: {{ res.correctOptionIds.join(', ') }}</span>
+                </div>
+                <div>
+                    <span>Your answers:
+                        <span *ngFor="let id of res.selectedOptionIds"
+                            [ngStyle]="{'color': res.isCorrect ? 'green' : 'red'}">
+                            {{ id }}
+                        </span>
+                    </span>
+                </div>
+                <div>
+                    <span *ngIf="res.isCorrect" style="color:green;">Correct! (+{{ res.degree }})</span>
+                    <span *ngIf="!res.isCorrect" style="color:red;">Incorrect (0)</span>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
     <!-- If student cannot take the exam, show questions/options as read-only -->
     <div *ngIf="exam.questions && exam.questions.length > 0 && !canTakeExam">
         <div *ngFor="let question of exam.questions; let i = index">

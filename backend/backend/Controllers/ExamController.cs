@@ -5,7 +5,7 @@ using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;   
+using System.Security.Claims;
 
 namespace backend.Controllers
 {
@@ -28,7 +28,7 @@ namespace backend.Controllers
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             string Role = User.FindFirstValue(ClaimTypes.Role);
             IEnumerable<Exam> Exams = new List<Exam>();
-            if (Role =="Teacher")
+            if (Role == "Teacher")
                 Exams = await _unit.ExamRepository.GetAllExamsofTeacher(UserId);
             else if (Role == "Student")
                 Exams = await _unit.ExamRepository.GetAllExamsofStudent(UserId);
@@ -112,14 +112,14 @@ namespace backend.Controllers
         //    var questionsWithAllOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
         //    return Ok();
         //}
-        
+
 
         [HttpGet("{examId}")]
         [Authorize]
         public async Task<IActionResult> GetExamDetails(int examId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var UserRole= User.FindFirstValue(ClaimTypes.Role);
+            var UserRole = User.FindFirstValue(ClaimTypes.Role);
             if (string.IsNullOrEmpty(currentUserId))
                 return Unauthorized("User ID not found.");
             var exam = await _unit.ExamRepository.GetAllQueryable().Result.FirstOrDefaultAsync(e => e.Id == examId);
@@ -156,7 +156,7 @@ namespace backend.Controllers
             }
             else if (UserRole == "Teacher")
             {
-                AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam); 
+                AfterExamEndDTO afterExamDTO = _mapper.Map<AfterExamEndDTO>(exam);
                 return Ok(afterExamDTO);
             }
 
@@ -167,6 +167,41 @@ namespace backend.Controllers
             return Ok();
         }
 
+        [HttpGet("{examId}/solve")]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> GetExamToSolve(int examId)
+        {
+            var studentId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            // Get the exam with questions and options
+            var examWithQuestions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+
+            // Get the student's selected options for this exam
+            var studentOptions = (await _unit.StudentOptionRepository.GetAllStudentOptions(studentId))
+                //.Where(so => so.ExamId == examId)
+                .ToList();
+
+            // Get the student's degree for this exam
+            var studExam = await _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId).FirstOrDefaultAsync();
+            int studDegree = studExam?.StudDegree ?? 0;
+
+            // Map to AfterExamEndDTO
+            var examDto = _mapper.Map<backend.DTOs.AfterExamEndDTO>(examWithQuestions);
+
+            // Set IsChoosedByStudent for each option
+            foreach (var question in examDto.Questions)
+            {
+                foreach (var option in question.Options)
+                {
+                    option.IsChoosedByStudent = studentOptions.Any(so => so.OptionId == option.Id);
+                }
+            }
+
+            // Set StudDegree for this student
+            examDto.StudDegree = studDegree;
+
+            return Ok(examDto);
+        }
 
 
         [HttpGet("TakeExam")]
@@ -199,7 +234,8 @@ namespace backend.Controllers
 
         public async Task<IActionResult> CloseExam(int ExamId)
         {
-            try {
+            try
+            {
                 var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 Exam exam = await _unit.ExamRepository.GetStudentExamById(currentUserId, ExamId);
@@ -209,7 +245,8 @@ namespace backend.Controllers
                 await _unit.SaveAsync();
                 return Ok();
             }
-            catch (Exception err) {
+            catch (Exception err)
+            {
                 return StatusCode(500, "error while closing exam");
             }
             return Ok();
@@ -230,7 +267,7 @@ namespace backend.Controllers
             });
         }
 
-      
+
 
 
         [HttpPost]
@@ -238,7 +275,8 @@ namespace backend.Controllers
         public async Task<IActionResult> AddExam(ExamInputDTO examDTO)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            try {
+            try
+            {
                 Exam exam = _mapper.Map<Exam>(examDTO);
                 exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -265,7 +303,7 @@ namespace backend.Controllers
 
             catch (Exception err) { return BadRequest(err); }
         }
-       
+
 
         [HttpPut]
         [Authorize(Roles = "Teacher")]
@@ -273,7 +311,7 @@ namespace backend.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-                
+
             try
             {
                 // 1. Get the existing exam with all related data
@@ -297,60 +335,81 @@ namespace backend.Controllers
                 //existingExam.IsAbsent = examDTO.IsAbsent;
                 // Keep the same TeacherId - don't change it
 
-                // 4. Handle Questions and Options
-                if (examDTO.Questions != null && examDTO.Questions.Count > 0)
+
+                // Add new questions
+
+                //existingExam.Questions;
+                //foreach (var questionDTO in examDTO.Questions)
+                //{
+                //    Question question = _mapper.Map<Question>(questionDTO);
+                //    question.ExamId = existingExam.Id; // Set the foreign key
+                //    _unit.QuestionRepository.Update(question);
+
+                //    if (questionDTO.Options != null && questionDTO.Options.Count > 0)
+                //    {
+                //        //question.Options = _unit.OptionRepository.GetById();
+                //        foreach (var optionDTO in questionDTO.Options)
+                //        {
+                //            var existingOption = existingQuestion.Options.FirstOrDefault(o => o.Id == optionDTO.Id);
+
+                //            //Option option = _mapper.Map<Option>(optionDTO);
+                //            _mapper.Map(optionDTO,)
+                //            // Don't set QuestionId manually - EF will handle it
+                //            _unit.OptionRepository.Update(existingOption);
+                //        }
+                //    }
+                //    //existingExam.Questions.Add(question);
+                //}
+
+                foreach (var questionDTO in examDTO.Questions)
                 {
-                    // Remove existing questions and options
-                    if (existingExam.Questions?.Any() == true)
+                    var existingQuestion = existingExam.Questions.FirstOrDefault(q => q.Id == questionDTO.Id);
+
+                    if (existingQuestion != null)
                     {
-                        // Remove options first
-                        foreach (var question in existingExam.Questions)
+                        // Update existing question
+                        _mapper.Map(questionDTO, existingQuestion);
+
+                        // Update or add options
+                        foreach (var optionDTO in questionDTO.Options)
                         {
-                            if (question.Options?.Any() == true)
+                            var existingOption = existingQuestion.Options.FirstOrDefault(o => o.Id == optionDTO.Id);
+                            if (existingOption != null)
                             {
-                                _unit.OptionRepository.RemoveRange(question.Options);
+                                _mapper.Map(optionDTO, existingOption);
+                            }
+                            else
+                            {
+                                var newOption = _mapper.Map<Option>(optionDTO);
+                                existingQuestion.Options.Add(newOption);
                             }
                         }
-                        // Then remove questions
-                        _unit.QuestionRepository.RemoveRange(existingExam.Questions);
                     }
-
-                    // Add new questions
-                    existingExam.Questions = new List<Question>();
-                    foreach (var questionDTO in examDTO.Questions)
+                    else
                     {
-                        Question question = _mapper.Map<Question>(questionDTO);
-                        question.ExamId = existingExam.Id; // Set the foreign key
-
-                        if (questionDTO.Options != null && questionDTO.Options.Count > 0)
-                        {
-                            question.Options = new List<Option>();
-                            foreach (var optionDTO in questionDTO.Options)
-                            {
-                                Option option = _mapper.Map<Option>(optionDTO);
-                                // Don't set QuestionId manually - EF will handle it
-                                question.Options.Add(option);
-                            }
-                        }
-                        existingExam.Questions.Add(question);
+                        // Add new question
+                        var newQuestion = _mapper.Map<Question>(questionDTO);
+                        newQuestion.ExamId = existingExam.Id;
+                        existingExam.Questions.Add(newQuestion);
                     }
                 }
-                else
-                {
-                    // If no questions provided, remove existing ones
-                    if (existingExam.Questions?.Any() == true)
-                    {
-                        foreach (var question in existingExam.Questions)
-                        {
-                            if (question.Options?.Any() == true)
-                            {
-                                _unit.OptionRepository.RemoveRange(question.Options);
-                            }
-                        }
-                        _unit.QuestionRepository.RemoveRange(existingExam.Questions);
-                        existingExam.Questions.Clear();
-                    }
-                }
+                //}
+                //else
+                //{
+                //    // If no questions provided, remove existing ones
+                //    if (existingExam.Questions?.Any() == true)
+                //    {
+                //        foreach (var question in existingExam.Questions)
+                //        {
+                //            if (question.Options?.Any() == true)
+                //            {
+                //                _unit.OptionRepository.RemoveRange(question.Options);
+                //            }
+                //        }
+                //        _unit.QuestionRepository.RemoveRange(existingExam.Questions);
+                //        existingExam.Questions.Clear();
+                //    }
+                //}
 
                 _unit.ExamRepository.Update(existingExam);
                 await _unit.SaveAsync();
@@ -368,7 +427,7 @@ namespace backend.Controllers
                 return BadRequest(new { error = err.Message });
             }
         }
-        
+
 
 
         [HttpDelete("{id}")]
@@ -457,12 +516,12 @@ namespace backend.Controllers
             var studentId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
             // Prevent double submission
-            //var alreadySubmitted = await _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId).AnyAsync();
+            var studentExam = await _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId).AnyAsync();
             //if (alreadySubmitted)
             //    return BadRequest("You have already submitted this exam.");
 
             // Save each selected option
-            var studOptions = new List<Stud_Option>();
+            var studOptions = new List<backend.Models.Stud_Option>();
             foreach (var answer in answers)
             {
                 if (answer.OptionIds != null)
@@ -487,14 +546,48 @@ namespace backend.Controllers
                 ExamId = examId,
                 StudStartDate = now,
                 StudEndDate = now,
-                StudDegree = 0, // You can calculate the degree if needed
+                StudDegree = 0, // Will set below
                 IsAbsent = false
             };
-            await _unit.StudentExamRepository.Add(studExam);
 
-             await _unit.SaveAsync();
+            // Calculate degree
+            int degree = 0;
+            var questions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+            var results = new List<object>();
+            foreach (var answer in answers)
+            {
+                // Fix for CS1061: 'Exam' does not contain a definition for 'FirstOrDefault'  
+                // Explanation: The error occurs because 'Exam' is not a collection and does not have LINQ methods like 'FirstOrDefault'.  
+                // The correct approach is to use 'questions', which is a collection of questions, instead of 'Exam'.  
 
-            return Ok(new { success = true });
+                // Original line:  
+                // var question = questions.FirstOrDefault(q => q.Id == answer.QuestionId);  
+
+                // Fixed line:  
+                var question = questions.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
+                if (question == null) continue;
+                var correctOptionIds = question.Options.Where(o => o.IsCorrect == true).Select(o => o.Id).ToList();
+                bool isCorrect = answer.OptionIds != null && correctOptionIds.Count == answer.OptionIds.Count &&
+                                 !correctOptionIds.Except(answer.OptionIds).Any();
+                if (isCorrect)
+                {
+                    degree += question.Degree;
+                }
+                results.Add(new
+                {
+                    questionId = question.Id,
+                    questionText = question.Title,
+                    selectedOptionIds = answer.OptionIds,
+                    correctOptionIds = correctOptionIds,
+                    isCorrect = isCorrect,
+                    degree = isCorrect ? question.Degree : 0
+                });
+            }
+            studExam.StudDegree = degree;
+            await _unit.StudentExamRepository.UpdateAsync(studExam);
+            await _unit.SaveAsync();
+
+            return Ok(new { success = true, degree, results });
         }
 
 

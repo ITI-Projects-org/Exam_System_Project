@@ -4,12 +4,14 @@ import { ExamServices } from '../../services/exam-services';
 import { AuthService } from '../../services/auth.service';
 import { IExam } from '../../models/iexam';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-take-exam-solve',
   templateUrl: './take-exam-solve.component.html',
-  imports: [ FormsModule],
-  styleUrls: ['./take-exam-solve.component.css']
+  styleUrls: ['./take-exam-solve.component.css'],
+  standalone: true,
+  imports: [ CommonModule, FormsModule],
 })
 export class TakeExamSolveComponent implements OnInit {
   examId: string | null = null;
@@ -31,25 +33,26 @@ export class TakeExamSolveComponent implements OnInit {
     this.examId = this.route.snapshot.paramMap.get('id');
     this.isStudent = this.authService.currentUserRole === 'student';
     if (this.examId) {
-      this.examService.getExamById(this.examId).subscribe({
+      // Use getExamToSolve for /solve route
+      this.examService.getExamToSolve(this.examId).subscribe({
         next: (exam) => {
           this.exam = exam;
-          // Determine if exam is active based on startDate and endDate
-          const now = new Date();
-          const start = new Date(exam.startDate);
-          // If endDate exists, use it, else use duration
-          let end: Date;
-          if ((exam as any).endDate) {
-            end = new Date((exam as any).endDate);
-          } else {
-            // fallback: add duration to startDate
-            const [h, m, s] = exam.duration.split(':').map(Number);
-            end = new Date(start.getTime() + (h * 3600 + m * 60 + s) * 1000);
+          this.degree = exam.degree || exam.studDegree || null;
+          this.submitted = true;
+          // Mark chosen and correct answers for display
+          if (this.exam && this.exam.questions) {
+            for (const q of this.exam.questions) {
+              for (const opt of q.options) {
+                // Mark if this option was chosen by the student
+                opt.isChoosedByStudent = !!opt.isChoosedByStudent;
+                // Mark if this option is correct
+                opt.isCorrect = !!opt.isCorrect;
+              }
+            }
           }
-          this.isActive = now >= start && now <= end;
         },
         error: (err) => {
-          this.error = 'Failed to load exam.';
+          this.error = 'Failed to load solved exam.';
         }
       });
     } else {
@@ -68,10 +71,26 @@ export class TakeExamSolveComponent implements OnInit {
       next: (result) => {
         this.degree = result.degree;
         this.submitted = true;
+        // Mark chosen options for display
+        if (this.exam && result.answers) {
+          for (const ans of result.answers) {
+            const q = this.exam.questions.find(q => q.id === ans.questionId);
+            if (q) {
+              for (const opt of q.options) {
+                opt.isChoosedByStudent = (opt.id === ans.answer || (Array.isArray(ans.answer) && ans.answer.includes(opt.id)));
+              }
+            }
+          }
+        }
       },
       error: (err) => {
         this.error = 'Failed to submit exam.';
       }
     });
+  }
+
+  getStudentAnswers(question: any) {
+    if (!question || !question.options) return [];
+    return question.options.filter((o: any) => o.isChoosedByStudent);
   }
 }

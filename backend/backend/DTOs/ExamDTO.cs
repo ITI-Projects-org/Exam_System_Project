@@ -52,7 +52,10 @@ namespace backend.DTOs
         //public bool IsChoosedByStudent { get; set; } = false;
     }
 
-    public class DuringQuestionForExamDTO {
+
+
+    public class DuringQuestionForExamDTO
+    {
         public int Id { get; set; }
         public string Title { get; set; }
         public int Degree { get; set; }
@@ -77,7 +80,7 @@ namespace backend.DTOs
     public class AfterExamEndDTO
     {
         public int CourseId { get; set; }
-        
+
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
