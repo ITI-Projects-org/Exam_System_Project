@@ -1,0 +1,12 @@
+.container {
+  max-width: 600px;
+}
+.display-1 {
+  font-size: 6rem;
+  font-weight: bold;
+  color: #dc3545;
+}
+.btn-primary {
+  padding: 0.75rem 2rem;
+  font-size: 1.25rem;
+}

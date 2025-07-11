@@ -6,7 +6,7 @@ import { TeachersList } from './pages/teacher/teachers-list/teachers-list';
 
 @Component({
   selector: 'app-root',
-  imports: [Footer, Navbar, RouterOutlet, TeachersList],
+  imports: [Footer, Navbar, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

@@ -40,8 +40,7 @@
       </thead>
       <!-- Table Body -->
       <tbody>
-        @for(course of Courses;track course.id)
-        {
+        @for(course of Courses;track course.id) {
         <tr>
           <td>{{course.id}}</td>
           <td>{{course.name}}</td>
@@ -72,22 +71,35 @@
             </div>
           </td>
         </tr>
-      }
+        }
       </tbody>
     </table>
   </div>
 </div>
 
 <!-- Edit Course Modal: Allows editing the selected course -->
-<div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="editCourseModal"
+  tabindex="-1"
+  aria-labelledby="editCourseModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-sm rounded-3">
       <!-- Edit Form -->
       <form (ngSubmit)="saveEdit()" #editForm="ngForm">
         <!-- Modal Header -->
         <div class="modal-header border-bottom-0">
-          <h5 class="modal-title fw-semibold" id="editCourseModalLabel">Edit Course</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-semibold" id="editCourseModalLabel">
+            Edit Course
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
 
         <!-- Modal Body -->
@@ -107,7 +119,9 @@
 
         <!-- Modal Footer -->
         <div class="modal-footer border-top-0">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+            Cancel
+          </button>
           <button type="submit" class="btn btn-primary px-4">Save</button>
         </div>
       </form>
@@ -116,29 +130,52 @@
 </div>
 
 <!-- Confirm Delete Modal: Asks for confirmation before deleting a course -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="confirmDeleteModal"
+  tabindex="-1"
+  aria-labelledby="confirmDeleteModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-sm rounded-3">
       <!-- Modal Header -->
-      <div class="modal-header bg-danger text-white border-bottom-0 rounded-top">
-        <h5 class="modal-title fw-semibold" id="confirmDeleteModalLabel">Confirm Delete</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div
+        class="modal-header bg-danger text-white border-bottom-0 rounded-top"
+      >
+        <h5 class="modal-title fw-semibold" id="confirmDeleteModalLabel">
+          Confirm Delete
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
 
       <!-- Modal Body -->
       <div class="modal-body text-center">
         <p class="mb-0">
           Are you sure you want to delete
-          <strong class="text-danger">{{ selectedCourse?.name}}</strong> Course?
+          <strong class="text-danger">{{ selectedCourse.name}}</strong> Course?
         </p>
       </div>
 
       <!-- Modal Footer -->
       <div class="modal-footer border-top-0 justify-content-center">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger px-4" (click)="confirmDeleteCourse()" data-bs-dismiss="modal">Delete</button>
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          (click)="confirmDeleteCourse()"
+          data-bs-dismiss="modal"
+        >
+          Delete
+        </button>
       </div>
     </div>
   </div>
 </div>
-
