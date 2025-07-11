@@ -35,23 +35,60 @@
   z-index: 1;
 }
 
+.hero-logo {
+  height: 70px;
+  margin-bottom: 1.5rem;
+}
 .hero-title {
-  font-size: var(--font-size-4xl);
-  font-weight: 700;
-  margin-bottom: var(--spacing-lg);
-  line-height: 1.2;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--dark-gray);
+  line-height: 1.1;
 }
-
-.highlight {
-  color: var(--dusty-white);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.hero-title .highlight {
+  color: var(--bright-blue);
+  text-shadow: 0 2px 8px rgba(81, 226, 245, 0.08);
 }
-
 .hero-subtitle {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-xl);
-  line-height: 1.6;
-  opacity: 0.9;
+  font-size: 1.25rem;
+  color: var(--gray);
+  font-weight: 500;
+}
+.hero-illustration {
+  width: 320px;
+  height: 320px;
+  background: linear-gradient(
+    135deg,
+    var(--bright-blue-light) 0%,
+    var(--blue-green-light) 100%
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(81, 226, 245, 0.12);
+  margin: 0 auto;
+}
+@media (max-width: 991.98px) {
+  .hero-illustration {
+    width: 220px;
+    height: 220px;
+  }
+  .hero-title {
+    font-size: 2.1rem;
+  }
+}
+@media (max-width: 767.98px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  .hero-illustration {
+    width: 140px;
+    height: 140px;
+  }
+  .hero-logo {
+    height: 48px;
+  }
 }
 
 .hero-actions {
