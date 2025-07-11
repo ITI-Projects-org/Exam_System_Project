@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ExamServices } from '../../services/exam-services';
 import { IExamListItem } from '../../models/iexam';
 import { firstValueFrom } from 'rxjs';
+import { nextTick } from 'process';
 
 @Component({
   selector: 'app-exams',
@@ -134,12 +135,15 @@ import { firstValueFrom } from 'rxjs';
                   <i class="fas fa-eye"></i>
                   <span>View Details</span>
                 </button>
-                <ng-container *ngIf="isStudent && getExamStatus(exam) === 'Active'">
-                  <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
-                    <i class="fas fa-play"></i>
-                    Take Exam
-                  </button>
-                </ng-container>
+               @if(isStudent &&  !(isTaken(exam.id) | async)) {
+
+                 <ng-container *ngIf="isStudent && getExamStatus(exam) === 'Active'">
+                   <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
+                     <i class="fas fa-play"></i>
+                     Take Exam
+                    </button>
+                  </ng-container>
+                }
                 <ng-container *ngIf="isTeacher">
                   <div class="teacher-actions">
                     <button [routerLink]="['/exams', exam.id, 'edit']" class="btn-secondary" title="Edit Exam">
@@ -718,6 +722,17 @@ export class ExamsComponent implements OnInit {
       });
     }
   }
+ isTaken(examId: number):any{
+    // let taken = false;
+    //   const data = this.examService.isExamTaken(examId).subscribe(isTaken=>{
+    //     taken = isTaken;
+        
+    //     console.log(`Exam taken status: ${examId}, taken: ${taken}`);
+    //     return taken;
+    //   });
+       return this.examService.isExamTaken(examId);
+ }
+  
 
  
   gteToken():string|null{

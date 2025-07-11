@@ -52,6 +52,8 @@ export class Login {
     this.authService.login(dto).subscribe({
       next: () => this.router.navigateByUrl('/dashboard'),
       error: (err: HttpErrorResponse) => {
+        console.log("dtp: "+dto.Email);
+        console.log("dtp: "+dto.Password);
         // look for our `{ errors: string[] }` shape
         this.loginError = err.error?.errors ?? ['An unexpected error occurred'];
         console.log(this.loginError);

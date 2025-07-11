@@ -30,12 +30,14 @@ Id:
                 </div>
               </div>
           
-              <!-- <div class="col-md-6">
+            @if(!isEditMode){
+             <div class="col-md-6">
                 <div class="mb-3">
                   <label for="courseId" class="form-label">Course ID</label>
                   <input type="number" class="form-control" id="courseId" formControlName="courseId">
                 </div>
-              </div> -->
+              </div>
+              } 
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -147,11 +149,11 @@ export class EditExamComponent implements OnInit {
     private router: Router
   ) {
     this.examForm = this.fb.group({
-      id: ['', Validators.required],
+      id: [''],
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       duration: [0, [Validators.required, Validators.min(1)]],
-      courseId: [0, [Validators.required, Validators.min(1)]],
+      courseId: [0],
       maxDegree: [0, [Validators.required, Validators.min(1)]],
       minDegree: [0, [Validators.required, Validators.min(0)]],
       questions: this.fb.array([])

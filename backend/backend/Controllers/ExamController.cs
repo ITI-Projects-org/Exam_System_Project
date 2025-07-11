@@ -129,7 +129,7 @@ namespace backend.Controllers
             var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
             if (UserRole == "Student")
             {
-                var studentExamRecord = await _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId).FirstOrDefaultAsync();
+                var studentExamRecord =  _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId);
 
                 if (studentExamRecord == null)
                 {
@@ -182,7 +182,7 @@ namespace backend.Controllers
                 .ToList();
 
             // Get the student's degree for this exam
-            var studExam = await _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId).FirstOrDefaultAsync();
+            var studExam = _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
             int studDegree = studExam?.StudDegree ?? 0;
 
             // Map to AfterExamEndDTO
@@ -513,13 +513,11 @@ namespace backend.Controllers
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> SubmitExam(int examId, [FromBody] List<backend.DTOs.ExamSubmitAnswerDTO> answers)
         {
-            var studentId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Prevent double submission
-            var studentExam = await _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId).AnyAsync();
-            //if (alreadySubmitted)
-            //    return BadRequest("You have already submitted this exam.");
-
+            var studentExam =  _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
+            
             // Save each selected option
             var studOptions = new List<backend.Models.Stud_Option>();
             foreach (var answer in answers)
@@ -540,15 +538,15 @@ namespace backend.Controllers
 
             // Mark exam as submitted for this student
             var now = DateTime.Now;
-            var studExam = new backend.Models.Stud_Exam
-            {
-                StudentId = studentId,
-                ExamId = examId,
-                StudStartDate = now,
-                StudEndDate = now,
-                StudDegree = 0, // Will set below
-                IsAbsent = false
-            };
+            
+            
+                studentExam.StudentId = studentId;
+                studentExam.ExamId = examId;
+               //studentExam.StudStartDate = now; // when take
+                studentExam.StudEndDate = now;
+                //studentExam.StudDegree = 0; // calculated 
+                studentExam.IsAbsent = false;
+            
 
             // Calculate degree
             int degree = 0;
@@ -556,14 +554,7 @@ namespace backend.Controllers
             var results = new List<object>();
             foreach (var answer in answers)
             {
-                // Fix for CS1061: 'Exam' does not contain a definition for 'FirstOrDefault'  
-                // Explanation: The error occurs because 'Exam' is not a collection and does not have LINQ methods like 'FirstOrDefault'.  
-                // The correct approach is to use 'questions', which is a collection of questions, instead of 'Exam'.  
-
-                // Original line:  
-                // var question = questions.FirstOrDefault(q => q.Id == answer.QuestionId);  
-
-                // Fixed line:  
+                
                 var question = questions.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
                 if (question == null) continue;
                 var correctOptionIds = question.Options.Where(o => o.IsCorrect == true).Select(o => o.Id).ToList();
@@ -583,13 +574,26 @@ namespace backend.Controllers
                     degree = isCorrect ? question.Degree : 0
                 });
             }
-            studExam.StudDegree = degree;
-            await _unit.StudentExamRepository.UpdateAsync(studExam);
+            studentExam.StudDegree = degree;
+            await _unit.StudentExamRepository.UpdateAsync(studentExam);
             await _unit.SaveAsync();
 
             return Ok(new { success = true, degree, results });
         }
 
+        [HttpGet("isExamTaken/{examId}")]
+        [Authorize(Roles = "Student")]
+        public IActionResult isExamTaken(int examId) { 
+            string stdId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var  userExam=  _unit.StudentExamRepository.GetByStudentAndExamAsync(stdId, examId);
+            if(userExam == null)
+                return BadRequest(new {Message="student not assigned to exam"}); // Assuming the exam is taken, you can modify this logic as needed.
+            if (userExam.IsAbsent)
+                return Ok(new { isTaken = false }); 
+            else if(!userExam.IsAbsent)
+                return Ok(new { isTaken = true });
+            return BadRequest();
+        }
 
     }
 }
