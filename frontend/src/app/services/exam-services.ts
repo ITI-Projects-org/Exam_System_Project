@@ -39,60 +39,21 @@ export interface LoginResponse {
 })
 export class ExamServices {
   baseURL: string = 'https://localhost:7251/api/Exam';
-  private tokenSubject = new BehaviorSubject<string>('');
-  public token$ = this.tokenSubject.asObservable();
-
-  // Test credentials from database seeder
-  private readonly testEmail = 'teacher1@example.com';
-  private readonly testPassword = 'Teacher123!';
-
-  private _headers: HttpHeaders = new HttpHeaders({
-    'Content-Type': 'application/json',
-  });
-
+  
   constructor(private http: HttpClient) {
     console.log('ExamServices initialized');
-    this.initializeToken();
-  }
-
-  private async initializeToken() {
-    try {
-      await this.getFreshToken();
-    } catch (error) {
-      console.error('Failed to initialize token:', error);
-    }
-  }
-
-  private getFreshToken(): Promise<void> {
-    const loginData = {
-      email: this.testEmail,
-      password: this.testPassword,
-    };
-
-    return this.http
-      .post<LoginResponse>(
-        'https://localhost:7251/api/Account/login',
-        loginData
-      )
-      .toPromise()
-      .then((response) => {
-        if (response && response.token) {
-          this.tokenSubject.next(response.token);
-          this._headers = new HttpHeaders({
-            Authorization: 'Bearer ' + response.token,
-            'Content-Type': 'application/json',
-          });
-          console.log('Token refreshed successfully');
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to get fresh token:', error);
-        throw error;
-      });
   }
 
   private get headers(): HttpHeaders {
-    return this._headers;
+    const token = this.getToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+    });
+  }
+
+  getToken(): string  {
+    return localStorage.getItem('token')??'';
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -107,10 +68,6 @@ export class ExamServices {
       errorMessage = `Server Error: ${error.status} - ${error.message}`;
       if (error.status === 401) {
         errorMessage = 'Authentication failed. Please check your token.';
-        // Try to refresh token on 401
-        this.getFreshToken().catch((e) =>
-          console.error('Token refresh failed:', e)
-        );
       } else if (error.status === 0) {
         errorMessage =
           'Cannot connect to server. Please check if the backend is running.';
@@ -122,10 +79,6 @@ export class ExamServices {
   }
 
   getExams(): Observable<IExamListItem[]> {
-    console.log('ExamServices.getExams() called');
-    console.log('Request URL:', this.baseURL);
-    console.log('Request Headers:', this.headers);
-
     return this.http
       .get<IExamListItem[]>(this.baseURL, { headers: this.headers })
       .pipe(
@@ -143,7 +96,6 @@ export class ExamServices {
   addExam(exam: IExam): Observable<IExam> {
     console.log('ExamServices.addExam() called with:', exam);
 
-    // For new exams, don't include the ID in the URL
     const examData = { ...exam };
     delete examData.id; // Remove ID for new exams
 
@@ -188,7 +140,35 @@ export class ExamServices {
         catchError(this.handleError)
       );
   }
-
+ getRoleFromToken(): string {
+    try {
+      const token = this.getToken();
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedPayload = JSON.parse(window.atob(base64));
+      // Try common claim names for role
+      if (decodedPayload.role) {
+        return decodedPayload.role;
+      } else if (decodedPayload.roles) {
+        return Array.isArray(decodedPayload.roles) ? decodedPayload.roles[0] : decodedPayload.roles;
+      } else if (decodedPayload.Role) {
+        return decodedPayload.Role;
+      } else if (decodedPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']) {
+        return decodedPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      } else {
+        // Try to find any property with value 'Student' or 'Teacher'
+        for (const key of Object.keys(decodedPayload)) {
+          if (decodedPayload[key] === 'Student' || decodedPayload[key] === 'Teacher') {
+            return decodedPayload[key];
+          }
+        }
+        return 'Guest';
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return 'Guest';
+    }
+  }
   assignStudentsToExam(examId: number, studentIds: string[]): Observable<any> {
     const params = studentIds.map((id) => `studs_Id=${id}`).join('&');
     return this.http
@@ -198,5 +178,16 @@ export class ExamServices {
         { headers: this.headers }
       )
       .pipe(catchError(this.handleError));
+  }
+  takeExam(){
+    return this.http.get(`${this.baseURL}/TakeExam`,{headers:this.headers})
+  }
+  submitExam(examId: string, answers: any): Observable<any> {
+    // Adjust API endpoint and payload as needed
+    return this.http.post(`${this.baseURL}/${examId}/submit`, answers, { headers: this.headers })
+      .pipe(catchError(this.handleError));
+  }
+  getExamToSolve(examId: string): Observable<any> {
+    return this.http.get(`${this.baseURL}/${examId}/solve`, { headers: this.headers });
   }
 }

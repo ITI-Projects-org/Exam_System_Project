@@ -15,7 +15,6 @@ namespace backend
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            //string _policy = "";
             string _policy = "AllowAngular";
 
             // Add services to the container.  
@@ -70,12 +69,10 @@ namespace backend
             });
 
             // Add this before app.UseAuthorization();
-            
-
             builder.Services.AddAuthentication(op => op.DefaultAuthenticateScheme = "auth_schema")
            .AddJwtBearer("auth_schema", options =>
            {
-               var key = "this is my secrect key for the WebAPI/Angular project";
+               var key = builder.Configuration["JwtKey"]!;
                var secrectKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
 
                options.TokenValidationParameters = new TokenValidationParameters()
@@ -90,18 +87,18 @@ namespace backend
 
             // // Seed the database
             // // comment out after finishing
-            // using (var scope = app.Services.CreateScope())
-            // {
-            //     try
-            //     {
-            //         await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            //         logger.LogError(ex, "An error occurred while seeding the database.");
-            //     }
-            // }
+             //using (var scope = app.Services.CreateScope())
+             //{
+             //    try
+             //    {
+             //        await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+             //    }
+             //    catch (Exception ex)
+             //    {
+             //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+             //        logger.LogError(ex, "An error occurred while seeding the database.");
+             //    }
+             //}
 
             if (app.Environment.IsDevelopment())
             {

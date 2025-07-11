@@ -8,6 +8,6 @@ namespace backend.Repositories.Interfaces
         //Task<ICollection<Question>> GetQuestionsWithOptions(int ExamId);
         Task<Exam> GetExamWithQuestionsWithOptions(int ExamId);
         void RemoveRange(ICollection<Question> questions);
-
+        void Update(Question question);
     }
 }

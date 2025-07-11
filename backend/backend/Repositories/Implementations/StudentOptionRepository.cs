@@ -14,5 +14,9 @@ namespace backend.Repositories.Implementations
         {
             return _context.StudOptions.Where(so => so.StudentId == StdId).ToList();
         }
+        public async void AddRange(List<Stud_Option> stdOptions)
+        {
+            _context.StudOptions.AddRange(stdOptions);
+        }
     }
 }

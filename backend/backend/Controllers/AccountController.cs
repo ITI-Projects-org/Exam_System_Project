@@ -19,13 +19,15 @@ namespace backend.Controllers
         public IUnitOfWork _unit { get; }
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signIn;
+        private readonly IConfiguration _config;
         IMapper _map;
-        public AccountController(IUnitOfWork unit, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signIn, IMapper map)
+        public AccountController(IUnitOfWork unit, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signIn, IMapper map, IConfiguration config)
         {
             _unit = unit;
             this.userManager = userManager;
             this.signIn = signIn;
             _map = map;
+            _config = config;
         }
 
         [HttpPost("register")]
@@ -85,7 +87,7 @@ namespace backend.Controllers
                     claims.Add(new Claim(ClaimTypes.Role, role));
                 }
 
-                var key = "this is my secrect key for the WebAPI/Angular project";
+                var key = _config["JwtKey"]!;
                 var secrectKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
                 var siginingCred = new SigningCredentials(secrectKey, SecurityAlgorithms.HmacSha256);
 

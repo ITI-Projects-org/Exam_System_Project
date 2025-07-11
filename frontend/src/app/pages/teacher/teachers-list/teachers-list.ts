@@ -8,9 +8,14 @@ import { AuthService } from '../../../services/auth-service';
 @Component({
   selector: 'app-teachers-list',
   imports: [CommonModule],
+  standalone: true,
   templateUrl: './teachers-list.html',
   styleUrls: ['./teachers-list.css'],
 })
+/**
+ *
+ */
+
 // export class TeachersList implements OnInit {
 //   // teacher_lists$!: Observable<Iteacher[]>;
 //   teacher_lists: Iteacher[] = [];
@@ -45,7 +50,10 @@ import { AuthService } from '../../../services/auth-service';
 // }
 export class TeachersList implements OnInit {
   teacher_lists$!: Observable<Iteacher[]>;
-  constructor(private teacher: BackendService,public authService: AuthService) {}
+  constructor(
+    private teacher: BackendService,
+    public authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.teacher_lists$ = this.teacher.GetAllTeachers();

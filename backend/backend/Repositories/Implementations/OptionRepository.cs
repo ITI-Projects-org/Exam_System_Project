@@ -20,6 +20,11 @@ namespace backend.Repositories.Implementations
         {
             _context.Options.RemoveRange(options);
         }
+        public void Update(Option option)
+        {
+             _context.Options.Update(option);
+            
+        }
         
     }
 }

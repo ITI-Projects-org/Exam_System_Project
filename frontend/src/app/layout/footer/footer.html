@@ -1,68 +1,80 @@
-<footer class="footer">
-  <div class="footer-container">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3 class="footer-title">Exam System</h3>
-        <p class="footer-description">
-          A modern platform for creating, managing, and taking exams with ease.
+<footer class="footer mt-5 py-5 text-white">
+  <div class="container">
+    <div class="row footer-columns align-items-center">
+      <div
+        class="col-md-3 footer-column logo-column mb-4 mb-md-0 text-center text-md-start"
+      >
+        <img
+          src="/images/logo/onlinexamlogo.png"
+          class="footer-logo mb-3"
+          alt="Online Exam Inc. Logo"
+        />
+        <p class="tagline">
+          We believe in Simple, Higher Quality & Affordable Education.
         </p>
-        <div class="footer-social">
-          <a href="#" class="social-link">
-            <i class="fab fa-facebook"></i>
-          </a>
-          <a href="#" class="social-link">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="#" class="social-link">
-            <i class="fab fa-linkedin"></i>
-          </a>
-          <a href="#" class="social-link">
-            <i class="fab fa-github"></i>
-          </a>
-        </div>
       </div>
-
-      <div class="footer-section">
-        <h4 class="footer-subtitle">Quick Links</h4>
-        <ul class="footer-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/exams">Exams</a></li>
-          <li><a href="/courses">Courses</a></li>
-          <li><a href="/about">About</a></li>
+      <div
+        class="col-md-3 footer-column quick-links-column text-center text-md-start"
+      >
+        <h4 class="footer-heading">Quick Links</h4>
+        <ul class="list-unstyled quick-links-list">
+          <li>
+            <a routerLink="/exams"><i class="bi bi-mortarboard"></i> Exams</a>
+          </li>
+          <li *ngIf="!auth.isInRole('Student')">
+            <a routerLink="/courses"><i class="bi bi-book"></i> Courses</a>
+          </li>
+          <li *ngIf="!auth.isInRole('Student')">
+            <a routerLink="/students"><i class="bi bi-person"></i> Students</a>
+          </li>
+          <li>
+            <a routerLink="/teacher"><i class="bi bi-easel"></i> Teachers</a>
+          </li>
+          <li>
+            <a routerLink="/dashboard"
+              ><i class="bi bi-speedometer2"></i> Dashboard</a
+            >
+          </li>
         </ul>
       </div>
-
-      <div class="footer-section">
-        <h4 class="footer-subtitle">Support</h4>
-        <ul class="footer-links">
-          <li><a href="/help">Help Center</a></li>
-          <li><a href="/contact">Contact Us</a></li>
-          <li><a href="/faq">FAQ</a></li>
-          <li><a href="/privacy">Privacy Policy</a></li>
+      <div
+        class="col-md-3 footer-column contact-column mb-4 mb-md-0 text-center text-md-start"
+      >
+        <h4 class="footer-heading">Contact Info</h4>
+        <ul class="list-unstyled contact-list">
+          <li>
+            <i class="bi bi-geo-alt-fill contact-icon"></i> 795 Folsom Ave,
+            Suite 600 San Francisco, CA 94107
+          </li>
+          <li><i class="bi bi-telephone-fill contact-icon"></i> 01023745632</li>
+          <li>
+            <i class="bi bi-envelope-fill contact-icon"></i>
+            info&#64;onlineexam.com
+          </li>
         </ul>
       </div>
-
-      <div class="footer-section">
-        <h4 class="footer-subtitle">Contact Info</h4>
-        <div class="contact-info">
-          <p><i class="fas fa-envelope"></i> info&#64;examsystem.com</p>
-          <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
-          <p>
-            <i class="fas fa-map-marker-alt"></i> 123 Education St, Learning
-            City
-          </p>
+      <div
+        class="col-md-3 footer-column follow-us-column text-center text-md-start"
+      >
+        <h4 class="footer-heading">Follow Us</h4>
+        <div
+          class="social-icons-wrapper d-flex gap-3 justify-content-center justify-content-md-start"
+        >
+          <a href="#" class="social-icon facebook" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="#" class="social-icon linkedin" aria-label="LinkedIn">
+            <i class="bi bi-linkedin"></i>
+          </a>
+          <a href="#" class="social-icon gmail" aria-label="Email">
+            <i class="bi bi-envelope"></i>
+          </a>
         </div>
       </div>
     </div>
-
-    <div class="footer-bottom">
-      <div class="footer-bottom-content">
-        <p>&copy; 2024 Exam System. All rights reserved.</p>
-        <div class="footer-bottom-links">
-          <a href="/terms">Terms of Service</a>
-          <a href="/privacy">Privacy Policy</a>
-        </div>
-      </div>
-    </div>
+    <hr class="my-4 footer-divider" />
+    <p class="text-center mb-0 copyright-text">
+      &copy; Copyrights 2025 All Rights Reserved by Online Exam Inc.
+    </p>
   </div>
 </footer>

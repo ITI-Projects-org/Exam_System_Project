@@ -18,17 +18,24 @@ import { IExam, IQuestion, IOption } from '../../models/iexam';
           <div class="card-body">
             <div class="row">
               <div class="col-md-6">
+                    <!-- @if(isEditMode){
+Id:
+                <div class="mb-3">
+                  <input type="number" class="form-control" id="Id" formControlName="id">
+                </div>
+              } -->
                 <div class="mb-3">
                   <label for="title" class="form-label">Title</label>
                   <input type="text" class="form-control" id="title" formControlName="title">
                 </div>
               </div>
-              <div class="col-md-6">
+          
+              <!-- <div class="col-md-6">
                 <div class="mb-3">
                   <label for="courseId" class="form-label">Course ID</label>
                   <input type="number" class="form-control" id="courseId" formControlName="courseId">
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -76,8 +83,10 @@ import { IExam, IQuestion, IOption } from '../../models/iexam';
                 <div class="row">
                   <div class="col-md-8">
                     <div class="mb-3">
-                      <label class="form-label">Question Title</label>
+                      <label class="form-label">Question Title</label> 
+                      
                       <input type="text" class="form-control" formControlName="title">
+                      <!-- QuestioID: <input type="text" class="form-control" formControlName="id"> -->
                     </div>
                   </div>
                   <div class="col-md-4">
@@ -92,8 +101,11 @@ import { IExam, IQuestion, IOption } from '../../models/iexam';
                     <label class="form-label">Options</label>
                     <button type="button" class="btn btn-secondary btn-sm" (click)="addOption(i)">Add Option</button>
                   </div>
-                  <div *ngFor="let option of getOptionsArray(i).controls; let j = index" [formGroupName]="j" class="row mb-2">
-                    <div class="col-md-6">
+                  <div *ngFor="let option of getOptionsArray(i).controls; let j = index" [formGroupName]="j" class="row mb-2 align-items-center">
+                    <!-- <div class="col-md-2">
+                      <span *ngIf="option.get('id')?.value">optionId: {{ option.get('id')?.value }}</span>
+                    </div> -->
+                    <div class="col-md-4">
                       <input type="text" class="form-control" placeholder="Option text" formControlName="title">
                     </div>
                     <div class="col-md-2">
@@ -135,6 +147,7 @@ export class EditExamComponent implements OnInit {
     private router: Router
   ) {
     this.examForm = this.fb.group({
+      id: ['', Validators.required],
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       duration: [0, [Validators.required, Validators.min(1)]],
@@ -201,6 +214,7 @@ export class EditExamComponent implements OnInit {
     this.examService.getExamById(this.examId).subscribe({
       next: (exam) => {
         this.examForm.patchValue({
+          id: exam.id,
           title: exam.title,
           startDate: this.formatDateForInput(exam.startDate),
           duration: this.parseDuration(exam.duration),
@@ -216,6 +230,7 @@ export class EditExamComponent implements OnInit {
 
         exam.questions.forEach(q => {
           const question = this.fb.group({
+            id: [q.id],
             title: [q.title, Validators.required],
             degree: [q.degree, [Validators.required, Validators.min(1)]],
             options: this.fb.array([])
@@ -223,6 +238,7 @@ export class EditExamComponent implements OnInit {
 
           q.options.forEach(o => {
             const option = this.fb.group({
+              id: [o.id],
               title: [o.title, Validators.required],
               isCorrect: [o.isCorrect || false]
             });
@@ -238,87 +254,41 @@ export class EditExamComponent implements OnInit {
     });
   }
 
-  // onSubmit() {
-  //   if (this.examForm.invalid) return;
-
-  //   this.loading = true;
-  //   const formValue = this.examForm.value;
-
-  //   const examData: IExam = {
-  //     // Only include id if we're editing (not creating)
-  //     ...(this.isEditMode && this.examId ? { id: parseInt(this.examId) } : {}),
-  //     title: formValue.title,
-  //     startDate: new Date(formValue.startDate),
-  //     duration: this.formatDuration(formValue.duration),
-  //     courseId: formValue.courseId,
-  //     maxDegree: formValue.maxDegree,
-  //     minDegree: formValue.minDegree,
-  //     questions: formValue.questions.map((q: any) => ({
-  //       id: undefined,
-  //       title: q.title,
-  //       degree: q.degree,
-  //       options: q.options.map((o: any) => ({
-  //         id: undefined,
-  //         title: o.title,
-  //         isCorrect: o.isCorrect,
-  //         isChoosedByStudent: false
-  //       }))
-  //     }))
-  //   };
-
-  //   console.log('Submitting exam data:', examData);
-  //   console.log('Is edit mode:', this.isEditMode);
-
-  //   const request = this.isEditMode 
-  //     ? this.examService.updateExam(examData)
-  //     : this.examService.addExam(examData);
-
-  //   request.subscribe({
-  //     next: () => {
-  //       this.loading = false;
-  //       this.router.navigate(['/exams']);
-  //     },
-  //     error: (err) => {
-  //       this.loading = false;
-  //       console.error('Error saving exam:', err);
-  //     }
-  //   });
-  // }
   onSubmit() {
     if (this.examForm.invalid) return;
-  
+
     this.loading = true;
     const formValue = this.examForm.value;
-  
+
+    // Ensure all required fields and IDs for edit
     const examData: IExam = {
-      // Only include id if we're editing (not creating)
       ...(this.isEditMode && this.examId ? { id: parseInt(this.examId) } : {}),
       title: formValue.title,
-      startDate: new Date(formValue.startDate),
+      startDate: new Date(formValue.startDate).toISOString(),
       duration: this.formatDuration(formValue.duration),
-      courseId: formValue.courseId,
-      maxDegree: formValue.maxDegree,
-      minDegree: formValue.minDegree,
-      questions: formValue.questions.map((q: any) => ({
-        // Don't include id for new questions
+      courseId: Number(formValue.courseId),
+      maxDegree: Number(formValue.maxDegree),
+      minDegree: Number(formValue.minDegree),
+      questions: formValue.questions.map((q: any, idx: number) => ({
+        id: q.id ?? undefined,
         title: q.title,
-        degree: q.degree,
-        options: q.options.map((o: any) => ({
-          // Don't include id for new options
+        degree: Number(q.degree),
+        options: q.options.map((o: any, oidx: number) => ({
+          id: o.id ?? undefined,
           title: o.title,
-          isCorrect: o.isCorrect,
+          isCorrect: !!o.isCorrect,
           isChoosedByStudent: false
         }))
       }))
     };
-  
+
     console.log('Submitting exam data:', examData);
     console.log('Is edit mode:', this.isEditMode);
-  
-    const request = this.isEditMode 
+
+    const request = this.isEditMode
       ? this.examService.updateExam(examData)
       : this.examService.addExam(examData);
-  
+
     request.subscribe({
       next: (response) => {
         this.loading = false;
@@ -328,8 +298,6 @@ export class EditExamComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         console.error('Error saving exam:', err);
-        
-        // Better error handling
         if (err.status === 400) {
           alert('Invalid data. Please check your input.');
         } else if (err.status === 401) {

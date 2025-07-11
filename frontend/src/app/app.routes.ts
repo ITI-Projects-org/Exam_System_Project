@@ -7,6 +7,10 @@ import { ExamsComponent } from './pages/Exams/exams';
 import { ExamDetails } from './components/exam-details/exam-details';
 import { EditExamComponent } from './components/edit-exam/edit-exam';
 import { AssignStudentToExamComponent } from './components/assign-student-to-exam/assign-student-to-exam';
+import { NotFound } from './pages/not-found/not-found';
+import { studentGuard } from './guards/student.guard';
+import { TakeExamComponent } from './components/take-exam/take-exam.component';
+import { TakeExamSolveComponent } from './components/take-exam/take-exam-solve.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -22,6 +26,8 @@ export const routes: Routes = [
   { path: 'exams/:id', component: ExamDetails },
   { path: 'exams/:id/edit', component: EditExamComponent },
   { path: 'exams/:id/assign', component: AssignStudentToExamComponent },
+  { path: 'take-exam/:id', component: TakeExamComponent, canActivate: [studentGuard] },
+  { path: 'take-exam/:id/solve',component:TakeExamSolveComponent, canActivate: [studentGuard] },
   { path: '', redirectTo: '/exams', pathMatch: 'full' },
-  { path: '**', redirectTo: '/exams' },
+  { path: '**', component: NotFound },
 ];
