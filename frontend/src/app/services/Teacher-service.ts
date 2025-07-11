@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Course } from '../models/course';
 import { IupdateCourse } from '../models/iupdate-course';
 import { IassignStudCrs } from '../models/iassign-stud-crs';
-import { Istudent } from '../models/istudent';
+import { IStudent } from '../models/istudent';
 import { Iteacher } from '../models/iteacher';
 
 @Injectable({
@@ -32,11 +32,11 @@ baseUrl : string = "https://localhost:7251/api/Teacher"
   getCoursesBySearch():Observable<Course[]>{
     return this.http.get<Course[]>(`${this.baseUrl}/GetCoursesBySearch`)
   }
-  getStudentsBySearch(name : string):Observable<Istudent[]>{
-    return this.http.get<Istudent[]>(`${this.baseUrl}/GetStudentsBySearch/${name}`)
+  getStudentsBySearch(name : string):Observable<IStudent[]>{
+    return this.http.get<IStudent[]>(`${this.baseUrl}/GetStudentsBySearch/${name}`)
   }
-  getStudentsforCourse(courseId:number):Observable<Istudent[]>{
-    return this.http.get<Istudent[]>(`${this.baseUrl}/GetStudentsforCourse/${courseId}`)
+  getStudentsforCourse(courseId:number):Observable<IStudent[]>{
+    return this.http.get<IStudent[]>(`${this.baseUrl}/GetStudentsforCourse/${courseId}`)
   }
 
   getCoursesforStudent():Observable<Course[]>{

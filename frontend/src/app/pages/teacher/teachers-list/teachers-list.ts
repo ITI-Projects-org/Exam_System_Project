@@ -4,10 +4,11 @@
   import { Iteacher } from '../../../models/iteacher';
   import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth-service';
 
   @Component({
     selector: 'app-teachers-list',
-    imports: [CommonModule,RouterLink],
+    imports: [CommonModule,],
     templateUrl: './teachers-list.html',
   styleUrls: ['./teachers-list.css']
 
@@ -46,7 +47,7 @@ import { RouterLink } from '@angular/router';
   // }
   export class TeachersList implements OnInit {
     teacher_lists$!: Observable<Iteacher[]>;
-    constructor(private teacher: BackendService) {}
+    constructor(private teacher: BackendService,public authService: AuthService) {}
 
     ngOnInit(): void {
       this.teacher_lists$ = this.teacher.GetAllTeachers();
