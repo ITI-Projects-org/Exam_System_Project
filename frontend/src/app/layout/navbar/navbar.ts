@@ -1,4 +1,7 @@
+import { ExamDetails } from './../../components/exam-details/exam-details';
 import { Component } from '@angular/core';
+import { Routes } from '@angular/router';
+import { Home } from '../../pages/home/home';
 
 @Component({
   selector: 'app-navbar',
@@ -6,4 +9,9 @@ import { Component } from '@angular/core';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {}
+export class Navbar {
+
+  routes: Routes = [
+    {path:'',component:Home},
+  ];
+}
