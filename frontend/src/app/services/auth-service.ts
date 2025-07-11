@@ -4,12 +4,14 @@ import { IRegister } from '../models/iregister';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { ILogin } from '../models/ilogin';
 import { isPlatformBrowser } from '@angular/common';
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../models/jwt-payload';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   baseUrl: string = 'https://localhost:7251/api/Account';
-    currentUserRole: string | undefined;
+
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
@@ -23,14 +25,32 @@ export class AuthService {
 
   login(dto: ILogin): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.baseUrl}/login`, dto).pipe(
-      tap((res) => localStorage.setItem('token', res.token)),
+      tap((res) => {
+        localStorage.setItem('token', res.token);
+        const payload = this.decodeToken(res.token);
+        localStorage.setItem('userId', payload.sub);
+        localStorage.setItem('email', payload.email);
+        // role claim may be string or array
+        const role =
+          payload[
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+          ];
+        localStorage.setItem(
+          'role',
+          Array.isArray(role) ? role[0] : role || ''
+        );
+      }),
       catchError((err) => throwError(() => err))
     );
   }
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('role');
   }
+
   get token(): string | null {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('token');
@@ -41,31 +61,34 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.token;
   }
-  getRoleFromToken(): string {
+
+  getUserId(): string | null {
+    return isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('userId')
+      : null;
+  }
+
+  getEmail(): string | null {
+    return isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('email')
+      : null;
+  }
+
+  getUserRole(): string | null {
+    return isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('role')
+      : null;
+  }
+
+  isInRole(expectedRole: string): boolean {
+    return this.getUserRole() === expectedRole;
+  }
+
+  private decodeToken(token: string): JwtPayload {
     try {
-      const token = this.token;
-      if (!token) return 'Guest';
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const decodedPayload = JSON.parse(window.atob(base64));
-      if (decodedPayload.role) {
-        return decodedPayload.role;
-      } else if (decodedPayload.roles) {
-        return Array.isArray(decodedPayload.roles) ? decodedPayload.roles[0] : decodedPayload.roles;
-      } else if (decodedPayload.Role) {
-        return decodedPayload.Role;
-      } else if (decodedPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']) {
-        return decodedPayload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-      } else {
-        for (const key of Object.keys(decodedPayload)) {
-          if (decodedPayload[key] === 'Student' || decodedPayload[key] === 'Teacher') {
-            return decodedPayload[key];
-          }
-        }
-        return 'Guest';
-      }
-    } catch (error) {
-      return 'Guest';
+      return jwtDecode<JwtPayload>(token);
+    } catch {
+      return {} as JwtPayload;
     }
   }
 }
