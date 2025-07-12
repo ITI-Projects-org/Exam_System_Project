@@ -13,11 +13,8 @@
     canTakeExam: {{ canTakeExam }}
   </div>
   <!-- Student answer form: select one option per question and submit -->
-  <form
-    *ngIf="exam.questions && exam.questions.length > 0 && canTakeExam"
-    (ngSubmit)="submitExam(answersForm.value)"
-    #answersForm="ngForm"
-  >
+  <form *ngIf="exam.questions && exam.questions.length > 0 && canTakeExam" (ngSubmit)="submitExam()"
+    [formGroup]="examForm">
     <div *ngFor="let question of exam.questions; let i = index">
       <p>
         <b>Q{{ i + 1 }}: {{ question.title || question.text }}</b>
@@ -25,11 +22,8 @@
       <ul>
         <li *ngFor="let option of question.options">
           <label>
-            <input
-              type="checkbox"
-              [checked]="isOptionSelected(question, option, i)"
-              (change)="onCheckboxChange($event, question.id || i, option.id)"
-            />
+            <input type="checkbox" [checked]="isOptionSelected(question, option, i)"
+              (change)="onCheckboxChange($event, question.id || i, option.id)" />
             {{ option.title || option.text }}
           </label>
         </li>
@@ -41,39 +35,7 @@
       Exam submitted successfully!
     </div>
   </form>
-  <!-- Show answers button and results after completion -->
-  <div *ngIf="status === 'completed'">
-    <button (click)="toggleShowAnswers()">
-      {{ showAnswers ? "Hide" : "Show" }} My Answers
-    </button>
-    <div *ngIf="showAnswers">
-      <h3>Your Degree: {{ studentDegree }}</h3>
-      <div *ngFor="let res of results">
-        <h4>{{ res.questionText }}</h4>
-        <div>
-          <span>Correct options: {{ res.correctOptionIds.join(", ") }}</span>
-        </div>
-        <div>
-          <span
-            >Your answers:
-            <span
-              *ngFor="let id of res.selectedOptionIds"
-              [ngStyle]="{ color: res.isCorrect ? 'green' : 'red' }"
-            >
-              {{ id }}
-            </span>
-          </span>
-        </div>
-        <div>
-          <span *ngIf="res.isCorrect" style="color: green"
-            >Correct! (+{{ res.degree }})</span
-          >
-          <span *ngIf="!res.isCorrect" style="color: red">Incorrect (0)</span>
-        </div>
-        <hr />
-      </div>
-    </div>
-  </div>
+
   <!-- If student cannot take the exam, show questions/options as read-only -->
   <div *ngIf="exam.questions && exam.questions.length > 0 && !canTakeExam">
     <div *ngFor="let question of exam.questions; let i = index">
@@ -83,10 +45,7 @@
       <ul>
         <li *ngFor="let option of question.options">
           <label>
-            <input
-              type="checkbox"
-              [checked]="isOptionSelected(question, option, i)"
-            />
+            <input type="checkbox" [checked]="isOptionSelected(question, option, i)" />
             {{ option.title || option.text }}
           </label>
         </li>

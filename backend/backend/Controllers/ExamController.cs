@@ -129,7 +129,7 @@ namespace backend.Controllers
             var ExamWithQuestionsWithOptions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
             if (UserRole == "Student")
             {
-                var studentExamRecord =  _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId);
+                var studentExamRecord = _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, examId);
 
                 if (studentExamRecord == null)
                 {
@@ -210,6 +210,13 @@ namespace backend.Controllers
             try
             {
                 var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var studExam = _unit.StudentExamRepository.GetByStudentAndExamAsync(currentUserId, ExamId);
+                if (studExam == null)
+                    return BadRequest("You are not enrolled in this exam.");
+
+                if (!studExam.IsAbsent)
+                    return BadRequest("You have already taken this exam.");
+
                 if (currentUserId == null)
                     return Unauthorized("User not authenticated");
 
@@ -320,11 +327,6 @@ namespace backend.Controllers
                 if (existingExam == null)
                     return NotFound($"Exam with ID {examDTO.Id} not found");
 
-                // 2. Check ownership
-                //var currentTeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                //if (existingExam.TeacherId != currentTeacherId)
-                //    return Forbid("You can only edit your own exams");
-
                 // 3. Update the existing entity's properties (keep the same tracked entity)
                 existingExam.Title = examDTO.Title;
                 existingExam.StartDate = examDTO.StartDate;
@@ -336,30 +338,7 @@ namespace backend.Controllers
                 // Keep the same TeacherId - don't change it
 
 
-                // Add new questions
 
-                //existingExam.Questions;
-                //foreach (var questionDTO in examDTO.Questions)
-                //{
-                //    Question question = _mapper.Map<Question>(questionDTO);
-                //    question.ExamId = existingExam.Id; // Set the foreign key
-                //    _unit.QuestionRepository.Update(question);
-
-                //    if (questionDTO.Options != null && questionDTO.Options.Count > 0)
-                //    {
-                //        //question.Options = _unit.OptionRepository.GetById();
-                //        foreach (var optionDTO in questionDTO.Options)
-                //        {
-                //            var existingOption = existingQuestion.Options.FirstOrDefault(o => o.Id == optionDTO.Id);
-
-                //            //Option option = _mapper.Map<Option>(optionDTO);
-                //            _mapper.Map(optionDTO,)
-                //            // Don't set QuestionId manually - EF will handle it
-                //            _unit.OptionRepository.Update(existingOption);
-                //        }
-                //    }
-                //    //existingExam.Questions.Add(question);
-                //}
 
                 foreach (var questionDTO in examDTO.Questions)
                 {
@@ -393,23 +372,6 @@ namespace backend.Controllers
                         existingExam.Questions.Add(newQuestion);
                     }
                 }
-                //}
-                //else
-                //{
-                //    // If no questions provided, remove existing ones
-                //    if (existingExam.Questions?.Any() == true)
-                //    {
-                //        foreach (var question in existingExam.Questions)
-                //        {
-                //            if (question.Options?.Any() == true)
-                //            {
-                //                _unit.OptionRepository.RemoveRange(question.Options);
-                //            }
-                //        }
-                //        _unit.QuestionRepository.RemoveRange(existingExam.Questions);
-                //        existingExam.Questions.Clear();
-                //    }
-                //}
 
                 _unit.ExamRepository.Update(existingExam);
                 await _unit.SaveAsync();
@@ -447,12 +409,6 @@ namespace backend.Controllers
                 if (existingExam.TeacherId != User.FindFirstValue(ClaimTypes.NameIdentifier))
                     return Forbid("You can only delete your own exams");
 
-                // Check if exam has been taken by students (optional business rule)
-                //var hasStudentResults = await _unit.StudentExamRepository.AnyAsync(se => se.ExamId == id);
-                //if (hasStudentResults)
-                //{
-                //    return BadRequest("Cannot delete exam that has been taken by students");
-                //}
 
                 // Remove related entities first (if cascade delete is not configured)
                 if (existingExam.Questions?.Any() == true)
@@ -516,8 +472,8 @@ namespace backend.Controllers
             var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Prevent double submission
-            var studentExam =  _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
-            
+            var studentExam = _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
+
             // Save each selected option
             var studOptions = new List<backend.Models.Stud_Option>();
             foreach (var answer in answers)
@@ -538,15 +494,15 @@ namespace backend.Controllers
 
             // Mark exam as submitted for this student
             var now = DateTime.Now;
-            
-            
-                studentExam.StudentId = studentId;
-                studentExam.ExamId = examId;
-               //studentExam.StudStartDate = now; // when take
-                studentExam.StudEndDate = now;
-                //studentExam.StudDegree = 0; // calculated 
-                studentExam.IsAbsent = false;
-            
+
+
+            studentExam.StudentId = studentId;
+            studentExam.ExamId = examId;
+            //studentExam.StudStartDate = now; // when take
+            studentExam.StudEndDate = now;
+            //studentExam.StudDegree = 0; // calculated 
+            studentExam.IsAbsent = false;
+
 
             // Calculate degree
             int degree = 0;
@@ -554,7 +510,7 @@ namespace backend.Controllers
             var results = new List<object>();
             foreach (var answer in answers)
             {
-                
+
                 var question = questions.Questions.FirstOrDefault(q => q.Id == answer.QuestionId);
                 if (question == null) continue;
                 var correctOptionIds = question.Options.Where(o => o.IsCorrect == true).Select(o => o.Id).ToList();
@@ -583,16 +539,33 @@ namespace backend.Controllers
 
         [HttpGet("isExamTaken/{examId}")]
         [Authorize(Roles = "Student")]
-        public IActionResult isExamTaken(int examId) { 
-            string stdId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var  userExam=  _unit.StudentExamRepository.GetByStudentAndExamAsync(stdId, examId);
-            if(userExam == null)
-                return BadRequest(new {Message="student not assigned to exam"}); // Assuming the exam is taken, you can modify this logic as needed.
-            if (userExam.IsAbsent)
-                return Ok(new { isTaken = false }); 
-            else if(!userExam.IsAbsent)
-                return Ok(new { isTaken = true });
-            return BadRequest();
+        public async Task<IActionResult> isExamTakenAsync(int examId)
+        {
+            string studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            if (string.IsNullOrEmpty(studentId))
+                return BadRequest(new { Message = "Student ID not found" });
+            
+            var studExam = _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
+            
+            if (studExam == null)
+                return Ok(false); // Student not assigned to this exam
+            
+            // Check if student has submitted answers (more reliable than IsAbsent)
+            var hasSubmittedAnswers = await _unit.StudentOptionRepository.GetAllStudentOptions(studentId);
+            var examQuestions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+            
+            // Check if student has answered any questions for this exam
+            var hasAnswered = examQuestions.Questions.Any(q => 
+                q.Options.Any(o => hasSubmittedAnswers.Any(so => so.OptionId == o.Id))
+            );
+            
+            // For now, let's use the simpler IsAbsent logic but add debugging
+            bool isTaken = !studExam.IsAbsent;
+            
+            Console.WriteLine($"Exam {examId} for student {studentId}: IsAbsent={studExam.IsAbsent}, hasAnswered={hasAnswered}, isTaken={isTaken}");
+            
+            return Ok(new { isTaken = isTaken });
         }
 
     }
