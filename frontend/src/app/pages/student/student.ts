@@ -7,9 +7,9 @@ declare var bootstrap: any;
 
 @Component({
   selector: 'app-student',
-  imports:[FormsModule],
+  imports: [FormsModule],
   templateUrl: './student.html',
-  styleUrls: ['./student.css']
+  styleUrls: ['./student.css'],
 })
 export class Student implements OnInit {
   Courses: ICourses[] = [];
@@ -34,7 +34,7 @@ export class Student implements OnInit {
   }
 
   openEditModal(course: ICourses) {
-    this.selectedCourse = { ...course}; 
+    this.selectedCourse = { ...course };
   }
 
   saveEdit() {
@@ -43,14 +43,19 @@ export class Student implements OnInit {
       .subscribe({
         next: () => {
           //Update Locally
-        this.Courses=this.Courses.map((course)=>
-          course.id===this.selectedCourse.id ? {...this.selectedCourse} : course
-        );
+          this.Courses = this.Courses.map((course) =>
+            course.id === this.selectedCourse.id
+              ? { ...this.selectedCourse }
+              : course
+          );
 
-        //hide the model
-            bootstrap.Modal.getInstance(document.getElementById('editCourseModal'))?.hide();
+          //hide the model
+          bootstrap.Modal.getInstance(
+            document.getElementById('editCourseModal')
+          )?.hide();
           // Trigger change detection
           this.cdr.detectChanges();
+          console.log(this.Courses);
         },
         error: (err) => console.error(err),
       });
@@ -67,23 +72,22 @@ export class Student implements OnInit {
     }
   }
 
-  deleteCourse(courseId: string) {
-    this.studentService.deleteCourse(courseId).subscribe({
-      next: () => {
-        this.Courses = this.Courses.filter((c) => c.id!= courseId);
-        this.cdr.detectChanges();
-      },
-    });
-  }
+  // deleteCourse(courseId: string) {
+  //   this.studentService.deleteCourse(courseId).subscribe({
+  //     next: () => {
+  //       this.Courses = this.Courses.filter((c) => c.id != courseId);
+  //       this.cdr.detectChanges();
+  //     },
+  //   });
+  // }
 
-openDeleteModal(course: ICourses) {
-  this.selectedCourse = course;
-}
+  // openDeleteModal(course: ICourses) {
+  //   this.selectedCourse = course;
+  // }
 
-confirmDeleteCourse() {
-  if (this.selectedCourse) {
-    this.deleteCourse(this.selectedCourse.id);
-  }
-}
-
+  // confirmDeleteCourse() {
+  //   if (this.selectedCourse) {
+  //     this.deleteCourse(this.selectedCourse.id);
+  //   }
+  // }
 }

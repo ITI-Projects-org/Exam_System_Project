@@ -19,7 +19,15 @@ export class BackendService {
   }
 
   AddCourse(courseName: string): Observable<Course> {
-    return this.http.post<Course>(`${this.baseUrl}/AddCourse`, courseName);
+    return this.http.post<Course>(
+      `${this.baseUrl}/AddCourse`,
+      JSON.stringify(courseName),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   }
   UpdateCourse(IupdateCourse: any): Observable<IupdateCourse> {
     return this.http.put<IupdateCourse>(
