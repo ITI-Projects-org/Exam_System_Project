@@ -542,11 +542,30 @@ namespace backend.Controllers
         public async Task<IActionResult> isExamTakenAsync(int examId)
         {
             string studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            // var userExam = _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
-            var studExam = _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
+            
             if (string.IsNullOrEmpty(studentId))
-                return BadRequest(new { Message = "student not assigned to exam" }); // Assuming the exam is taken, you can modify this logic as needed.
-            return Ok(!studExam.IsAbsent);
+                return BadRequest(new { Message = "Student ID not found" });
+            
+            var studExam = _unit.StudentExamRepository.GetByStudentAndExamAsync(studentId, examId);
+            
+            if (studExam == null)
+                return Ok(false); // Student not assigned to this exam
+            
+            // Check if student has submitted answers (more reliable than IsAbsent)
+            var hasSubmittedAnswers = await _unit.StudentOptionRepository.GetAllStudentOptions(studentId);
+            var examQuestions = await _unit.QuestionRepository.GetExamWithQuestionsWithOptions(examId);
+            
+            // Check if student has answered any questions for this exam
+            var hasAnswered = examQuestions.Questions.Any(q => 
+                q.Options.Any(o => hasSubmittedAnswers.Any(so => so.OptionId == o.Id))
+            );
+            
+            // For now, let's use the simpler IsAbsent logic but add debugging
+            bool isTaken = !studExam.IsAbsent;
+            
+            Console.WriteLine($"Exam {examId} for student {studentId}: IsAbsent={studExam.IsAbsent}, hasAnswered={hasAnswered}, isTaken={isTaken}");
+            
+            return Ok(new { isTaken = isTaken });
         }
 
     }
