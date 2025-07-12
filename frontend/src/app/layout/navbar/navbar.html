@@ -25,10 +25,7 @@
             >Home</a
           >
         </li>
-        <li
-          class="nav-item"
-          *ngIf="auth.isLoggedIn() && !auth.isInRole('Student')"
-        >
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
           <a class="nav-link" routerLink="/exams" routerLinkActive="active"
             >Exams</a
           >
