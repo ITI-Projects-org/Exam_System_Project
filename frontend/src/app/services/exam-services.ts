@@ -5,7 +5,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, tap, switchMap } from 'rxjs/operators';
+import { catchError, tap, switchMap, map } from 'rxjs/operators';
 import { IExam, IExamListItem } from '../models/iexam';
 
 export interface ExamStudentDegreeDTO {
@@ -92,7 +92,20 @@ export class ExamServices {
       .get<IExam>(`${this.baseURL}/${examId}`, { headers: this.headers })
       .pipe(catchError(this.handleError));
   }
-
+  
+  
+  
+  isExamTaken(examId:number):Observable<boolean>{
+    return this.http.get<{isTaken: boolean}>(`${this.baseURL}/isExamTaken/${examId}`, { headers: this.headers })
+    .pipe(map(response => response.isTaken), 
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error checking if exam is taken:', error);
+        return throwError(() => new Error('Failed to check exam status'));
+      })
+  
+  )} 
+  
+  
   addExam(exam: IExam): Observable<IExam> {
     console.log('ExamServices.addExam() called with:', exam);
 

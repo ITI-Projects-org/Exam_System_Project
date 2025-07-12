@@ -29,13 +29,15 @@ Id:
                   <input type="text" class="form-control" id="title" formControlName="title">
                 </div>
               </div>
-          
-              <!-- <div class="col-md-6">
+
+            @if(!isEditMode){
+             <div class="col-md-6">
                 <div class="mb-3">
                   <label for="courseId" class="form-label">Course ID</label>
                   <input type="number" class="form-control" id="courseId" formControlName="courseId">
                 </div>
-              </div> -->
+              </div>
+              }
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -83,8 +85,8 @@ Id:
                 <div class="row">
                   <div class="col-md-8">
                     <div class="mb-3">
-                      <label class="form-label">Question Title</label> 
-                      
+                      <label class="form-label">Question Title</label>
+
                       <input type="text" class="form-control" formControlName="title">
                       <!-- QuestioID: <input type="text" class="form-control" formControlName="id"> -->
                     </div>
@@ -147,11 +149,11 @@ export class EditExamComponent implements OnInit {
     private router: Router
   ) {
     this.examForm = this.fb.group({
-      id: ['', Validators.required],
+      id: [''],
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       duration: [0, [Validators.required, Validators.min(1)]],
-      courseId: [0, [Validators.required, Validators.min(1)]],
+      courseId: [0],
       maxDegree: [0, [Validators.required, Validators.min(1)]],
       minDegree: [0, [Validators.required, Validators.min(0)]],
       questions: this.fb.array([])
@@ -160,13 +162,13 @@ export class EditExamComponent implements OnInit {
 
   ngOnInit(): void {
     this.examId = this.route.snapshot.paramMap.get('id');
-    
+
     // Check if we're in edit mode: id should exist and not be '0' or 'new'
     this.isEditMode = !!(this.examId && this.examId !== '0' && this.examId !== 'new');
-    
+
     console.log('Exam ID from route:', this.examId);
     console.log('Is edit mode:', this.isEditMode);
-    
+
     if (this.isEditMode && this.examId) {
       this.loadExam();
     } else {
@@ -210,7 +212,7 @@ export class EditExamComponent implements OnInit {
 
   loadExam() {
     if (!this.examId) return;
-    
+
     this.examService.getExamById(this.examId).subscribe({
       next: (exam) => {
         this.examForm.patchValue({
@@ -328,4 +330,4 @@ export class EditExamComponent implements OnInit {
     const mins = minutes % 60;
     return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:00`;
   }
-} 
+}
