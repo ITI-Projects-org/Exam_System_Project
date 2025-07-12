@@ -4,12 +4,13 @@ using backend.DTOs;
 using backend.UnitOfWorks;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles ="Teacher")]
+    [Authorize(Roles ="Teacher")]
     public class TeacherController : Controller
     {
         readonly IUnitOfWork Unit;
