@@ -286,23 +286,6 @@ namespace backend.Controllers
             {
                 Exam exam = _mapper.Map<Exam>(examDTO);
                 exam.TeacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (examDTO.Questions == null || exam.Questions.Count <= 0)
-                    return Ok(exam);
-                exam.Questions = new List<Question>();
-                foreach (var questionDTO in examDTO.Questions)
-                {
-                    Question question = _mapper.Map<Question>(questionDTO);
-                    if (questionDTO.Options == null || questionDTO.Options.Count <= 0)
-                        continue;
-                    foreach (var optionDTO in questionDTO.Options)
-                    {
-                        Option option = _mapper.Map<Option>(optionDTO);
-                        question.Options.Add(option);
-
-                    }
-                    exam.Questions.Add(question);
-                }
                 await _unit.ExamRepository.Add(exam);
                 await _unit.SaveAsync();
                 return Ok(exam);
