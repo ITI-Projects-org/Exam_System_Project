@@ -1,9 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExamServices } from '../../services/exam-services';
 import { IExam, IQuestion, IOption } from '../../models/iexam';
+import { BackendService } from '../../services/Teacher-service';
+import { ICourses } from '../../models/ICourses';
+import { Course } from '../../models/course';
 
 @Component({
   selector: 'app-edit-exam',
@@ -18,7 +27,7 @@ import { IExam, IQuestion, IOption } from '../../models/iexam';
           <div class="card-body">
             <div class="row">
               <div class="col-md-6">
-                    <!-- @if(isEditMode){
+                <!-- @if(isEditMode){
 Id:
                 <div class="mb-3">
                   <input type="number" class="form-control" id="Id" formControlName="id">
@@ -26,15 +35,32 @@ Id:
               } -->
                 <div class="mb-3">
                   <label for="title" class="form-label">Title</label>
-                  <input type="text" class="form-control" id="title" formControlName="title">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    formControlName="title"
+                  />
                 </div>
               </div>
 
-            @if(!isEditMode){
-             <div class="col-md-6">
+              @if(!isEditMode){
+              <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="courseId" class="form-label">Course ID</label>
-                  <input type="number" class="form-control" id="courseId" formControlName="courseId">
+                  <label for="courseId" class="form-label">Course</label>
+                  <select
+                    id="courseId"
+                    class="form-select"
+                    formControlName="courseId"
+                  >
+                    <option value="0">— Select a course —</option>
+                    <option
+                      *ngFor="let course of courses"
+                      [value]="course.CourseId"
+                    >
+                      {{ course.CourseName }}
+                    </option>
+                  </select>
                 </div>
               </div>
               }
@@ -43,19 +69,36 @@ Id:
               <div class="col-md-4">
                 <div class="mb-3">
                   <label for="startDate" class="form-label">Start Date</label>
-                  <input type="datetime-local" class="form-control" id="startDate" formControlName="startDate">
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    id="startDate"
+                    formControlName="startDate"
+                  />
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="mb-3">
-                  <label for="duration" class="form-label">Duration (minutes)</label>
-                  <input type="number" class="form-control" id="duration" formControlName="duration">
+                  <label for="duration" class="form-label"
+                    >Duration (minutes)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="duration"
+                    formControlName="duration"
+                  />
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="mb-3">
                   <label for="maxDegree" class="form-label">Max Degree</label>
-                  <input type="number" class="form-control" id="maxDegree" formControlName="maxDegree">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="maxDegree"
+                    formControlName="maxDegree"
+                  />
                 </div>
               </div>
             </div>
@@ -63,7 +106,12 @@ Id:
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="minDegree" class="form-label">Min Degree</label>
-                  <input type="number" class="form-control" id="minDegree" formControlName="minDegree">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="minDegree"
+                    formControlName="minDegree"
+                  />
                 </div>
               </div>
             </div>
@@ -71,53 +119,111 @@ Id:
         </div>
 
         <div class="card mb-3">
-          <div class="card-header d-flex justify-content-between align-items-center">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
             Questions
-            <button type="button" class="btn btn-primary btn-sm" (click)="addQuestion()">Add Question</button>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="addQuestion()"
+            >
+              Add Question
+            </button>
           </div>
           <div class="card-body">
             <div formArrayName="questions">
-              <div *ngFor="let question of questionsArray.controls; let i = index" [formGroupName]="i" class="border p-3 mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+              <div
+                *ngFor="let question of questionsArray.controls; let i = index"
+                [formGroupName]="i"
+                class="border p-3 mb-3"
+              >
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
                   <h6>Question {{ i + 1 }}</h6>
-                  <button type="button" class="btn btn-danger btn-sm" (click)="removeQuestion(i)">Remove</button>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="removeQuestion(i)"
+                  >
+                    Remove
+                  </button>
                 </div>
                 <div class="row">
                   <div class="col-md-8">
                     <div class="mb-3">
                       <label class="form-label">Question Title</label>
 
-                      <input type="text" class="form-control" formControlName="title">
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="title"
+                      />
                       <!-- QuestioID: <input type="text" class="form-control" formControlName="id"> -->
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="mb-3">
                       <label class="form-label">Degree</label>
-                      <input type="number" class="form-control" formControlName="degree">
+                      <input
+                        type="number"
+                        class="form-control"
+                        formControlName="degree"
+                      />
                     </div>
                   </div>
                 </div>
                 <div formArrayName="options">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-2"
+                  >
                     <label class="form-label">Options</label>
-                    <button type="button" class="btn btn-secondary btn-sm" (click)="addOption(i)">Add Option</button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary btn-sm"
+                      (click)="addOption(i)"
+                    >
+                      Add Option
+                    </button>
                   </div>
-                  <div *ngFor="let option of getOptionsArray(i).controls; let j = index" [formGroupName]="j" class="row mb-2 align-items-center">
+                  <div
+                    *ngFor="
+                      let option of getOptionsArray(i).controls;
+                      let j = index
+                    "
+                    [formGroupName]="j"
+                    class="row mb-2 align-items-center"
+                  >
                     <!-- <div class="col-md-2">
                       <span *ngIf="option.get('id')?.value">optionId: {{ option.get('id')?.value }}</span>
                     </div> -->
                     <div class="col-md-4">
-                      <input type="text" class="form-control" placeholder="Option text" formControlName="title">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Option text"
+                        formControlName="title"
+                      />
                     </div>
                     <div class="col-md-2">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" formControlName="isCorrect">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          formControlName="isCorrect"
+                        />
                         <label class="form-check-label">Correct</label>
                       </div>
                     </div>
                     <div class="col-md-2">
-                      <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeOption(i, j)">Remove</button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        (click)="removeOption(i, j)"
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -127,26 +233,36 @@ Id:
         </div>
 
         <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary" [disabled]="examForm.invalid || loading">
-            {{ loading ? 'Saving...' : (isEditMode ? 'Update Exam' : 'Create Exam') }}
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="examForm.invalid || loading"
+          >
+            {{
+              loading ? 'Saving...' : isEditMode ? 'Update Exam' : 'Create Exam'
+            }}
           </button>
-          <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
+          <button type="button" class="btn btn-secondary" (click)="goBack()">
+            Cancel
+          </button>
         </div>
       </form>
     </div>
-  `
+  `,
 })
 export class EditExamComponent implements OnInit {
   examForm: FormGroup;
   isEditMode = false;
   loading = false;
   examId: string | null = null;
-
+  courses: Course[] = [];
   constructor(
     private fb: FormBuilder,
     private examService: ExamServices,
+    private teacherService: BackendService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.examForm = this.fb.group({
       id: [''],
@@ -156,7 +272,7 @@ export class EditExamComponent implements OnInit {
       courseId: [0],
       maxDegree: [0, [Validators.required, Validators.min(1)]],
       minDegree: [0, [Validators.required, Validators.min(0)]],
-      questions: this.fb.array([])
+      questions: this.fb.array([]),
     });
   }
 
@@ -164,8 +280,25 @@ export class EditExamComponent implements OnInit {
     this.examId = this.route.snapshot.paramMap.get('id');
 
     // Check if we're in edit mode: id should exist and not be '0' or 'new'
-    this.isEditMode = !!(this.examId && this.examId !== '0' && this.examId !== 'new');
-
+    this.isEditMode = !!(
+      this.examId &&
+      this.examId !== '0' &&
+      this.examId !== 'new'
+    );
+    this.teacherService.GetCourses().subscribe({
+      next: (resp) => {
+        this.courses = resp.map((course: any) => ({
+          CourseId: course.id,
+          CourseName: course.name,
+          teacherId: course.teacherId,
+        }));
+        this.cdr.detectChanges();
+        console.log('courses:', this.courses);
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
     console.log('Exam ID from route:', this.examId);
     console.log('Is edit mode:', this.isEditMode);
 
@@ -188,7 +321,7 @@ export class EditExamComponent implements OnInit {
     const question = this.fb.group({
       title: ['', Validators.required],
       degree: [0, [Validators.required, Validators.min(1)]],
-      options: this.fb.array([])
+      options: this.fb.array([]),
     });
     this.questionsArray.push(question);
     this.addOption(this.questionsArray.length - 1); // Add one option by default
@@ -201,7 +334,7 @@ export class EditExamComponent implements OnInit {
   addOption(questionIndex: number) {
     const option = this.fb.group({
       title: ['', Validators.required],
-      isCorrect: [false]
+      isCorrect: [false],
     });
     this.getOptionsArray(questionIndex).push(option);
   }
@@ -222,7 +355,7 @@ export class EditExamComponent implements OnInit {
           duration: this.parseDuration(exam.duration),
           courseId: exam.courseId,
           maxDegree: exam.maxDegree,
-          minDegree: exam.minDegree
+          minDegree: exam.minDegree,
         });
 
         // Clear existing questions and add loaded ones
@@ -230,19 +363,19 @@ export class EditExamComponent implements OnInit {
           this.questionsArray.removeAt(0);
         }
 
-        exam.questions.forEach(q => {
+        exam.questions.forEach((q) => {
           const question = this.fb.group({
             id: [q.id],
             title: [q.title, Validators.required],
             degree: [q.degree, [Validators.required, Validators.min(1)]],
-            options: this.fb.array([])
+            options: this.fb.array([]),
           });
 
-          q.options.forEach(o => {
+          q.options.forEach((o) => {
             const option = this.fb.group({
               id: [o.id],
               title: [o.title, Validators.required],
-              isCorrect: [o.isCorrect || false]
+              isCorrect: [o.isCorrect || false],
             });
             (question.get('options') as FormArray).push(option);
           });
@@ -252,7 +385,7 @@ export class EditExamComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading exam:', err);
-      }
+      },
     });
   }
 
@@ -279,9 +412,9 @@ export class EditExamComponent implements OnInit {
           id: o.id ?? undefined,
           title: o.title,
           isCorrect: !!o.isCorrect,
-          isChoosedByStudent: false
-        }))
-      }))
+          isChoosedByStudent: false,
+        })),
+      })),
     };
 
     console.log('Submitting exam data:', examData);
@@ -307,7 +440,7 @@ export class EditExamComponent implements OnInit {
         } else {
           alert('Error saving exam. Please try again.');
         }
-      }
+      },
     });
   }
 
@@ -328,6 +461,8 @@ export class EditExamComponent implements OnInit {
   private formatDuration(minutes: number): string {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:00`;
+    return `${hours.toString().padStart(2, '0')}:${mins
+      .toString()
+      .padStart(2, '0')}:00`;
   }
 }
