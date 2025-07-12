@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../../services/Teacher-service';
-import { Navbar } from "../../layout/navbar/navbar";
+import { CoursesList } from './courses-list/courses-list';
+import { SearchCourse } from './search-course/search-course';
 
 @Component({
   selector: 'app-courses',
-  imports: [Navbar],
+  imports: [CoursesList, SearchCourse],
   templateUrl: './courses.html',
-  styleUrl: './courses.css'
+  styleUrl: './courses.css',
 })
 export class Courses implements OnInit {
-  constructor(private teacher: BackendService) { }
+  constructor(private teacher: BackendService) {}
   ngOnInit(): void {
-   this.teacher.GetCourses().subscribe({
+    this.teacher.GetCourses().subscribe({
       next: (data) => {
         console.log(data);
-      }
-  });
+      },
+    });
   }
 }
