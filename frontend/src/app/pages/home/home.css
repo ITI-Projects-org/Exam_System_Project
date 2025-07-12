@@ -15,18 +15,7 @@
   overflow: hidden;
 }
 
-.hero-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  opacity: 0.3;
-}
-
-.hero-content {
+ً .hero-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-2xl);
@@ -39,14 +28,16 @@
   height: 70px;
   margin-bottom: 1.5rem;
 }
+
 .hero-title {
   font-size: 2.8rem;
   font-weight: 800;
-  color: var(--dark-gray);
+  color: var(--dark-blue);
   line-height: 1.1;
 }
+
 .hero-title .highlight {
-  color: var(--bright-blue);
+  color: var(--dark-gray);
   text-shadow: 0 2px 8px rgba(81, 226, 245, 0.08);
 }
 .hero-subtitle {
@@ -69,6 +60,22 @@
   box-shadow: 0 8px 32px rgba(81, 226, 245, 0.12);
   margin: 0 auto;
 }
+
+.hero-section .nav-buttons .btn-outline {
+  color: var(--white);
+  border-color: var(--white);
+  background-color: transparent;
+  box-shadow: var(--shadow-md);
+}
+
+.hero-section .nav-buttons .btn-outline:hover {
+  background-color: transparent;
+  color: var(--dark-blue);
+  border-color: var(--dark-blue);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
 @media (max-width: 991.98px) {
   .hero-illustration {
     width: 220px;
@@ -378,6 +385,7 @@
 .cta-content h2 {
   font-size: var(--font-size-3xl);
   margin-bottom: var(--spacing-md);
+  color: var(--white);
 }
 
 .cta-content p {

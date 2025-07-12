@@ -4,6 +4,7 @@
 :root {
   /* Primary Colors */
   --bright-blue: #51e2f5;
+  --dark-blue: #2b6b8a;
   --blue-green: #9df9ef;
   --dusty-white: #edf756;
   --pink-sand: #ffa8b6;
@@ -242,11 +243,16 @@ a:hover {
   background: transparent;
   color: var(--bright-blue);
   border: 2px solid var(--bright-blue);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-normal);
 }
 
 .btn-outline:hover {
-  background: var(--bright-blue);
-  color: var(--white);
+  background: transparent;
+  color: var(--bright-blue-dark);
+  border-color: var(--bright-blue-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Button Sizes */
