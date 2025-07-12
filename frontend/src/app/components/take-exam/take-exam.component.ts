@@ -5,7 +5,6 @@ import { AuthService } from '../../services/auth-service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
-
 @Component({
   selector: 'app-take-exam',
   standalone: true,
@@ -16,6 +15,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 export class TakeExamComponent implements OnInit {
   examId: string | null = null;
   exam: any;
+  endDate: Date | null = null;
   canTakeExam = false;
   isLoading = true;
   error: string | null = null;
@@ -47,6 +47,7 @@ export class TakeExamComponent implements OnInit {
       examObs.subscribe({
         next: (exam) => {
           this.exam = exam;
+          console.log('exam to solve:', exam);
           if (!Array.isArray(this.exam.questions)) {
             this.exam.questions = [];
           }
@@ -66,6 +67,7 @@ export class TakeExamComponent implements OnInit {
           const endDate = new Date(
             start.getTime() + (h * 3600 + m * 60 + s) * 1000
           );
+          this.endDate = endDate;
           const role = this.examService.getRoleFromToken
             ? this.examService.getRoleFromToken()
             : (this.authService as any).currentUserRole;
@@ -145,7 +147,7 @@ export class TakeExamComponent implements OnInit {
         this.formDisabled = true;
         this.status = 'completed';
         alert('Exam submitted!');
-        this.router.navigate(['/take-exam/'+this.examId+'/solve']);
+        this.router.navigate(['/take-exam/' + this.examId + '/solve']);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -155,6 +157,4 @@ export class TakeExamComponent implements OnInit {
       },
     });
   }
-
-
 }
