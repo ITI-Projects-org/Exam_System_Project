@@ -10,6 +10,7 @@ import { Navbar } from "../../layout/navbar/navbar";
 })
 export class Courses implements OnInit {
   constructor(private teacher: BackendService) { }
+
   ngOnInit(): void {
    this.teacher.GetCourses().subscribe({
       next: (data) => {

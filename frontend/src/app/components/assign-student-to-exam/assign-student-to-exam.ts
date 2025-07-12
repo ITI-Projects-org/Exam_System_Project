@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ExamServices, Student, ExamStudentDegreeDTO } from '../../services/exam-services';
+import { firstValueFrom } from 'rxjs';
+
 
 @Component({
   selector: 'app-assign-student-to-exam',
@@ -50,23 +52,23 @@ export class AssignStudentToExamComponent implements OnInit {
   async loadData() {
     this.loading = true;
     this.error = '';
-    
+
     try {
       // Wait a bit for token initialization
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Load all students and assigned students in parallel
       const [students, assignedStudents] = await Promise.all([
-        this.examService.getAllStudents().toPromise(),
-        this.examService.getStudentsOfExam(this.examId).toPromise()
+        firstValueFrom(this.examService.getAllStudents()),
+        firstValueFrom(this.examService.getStudentsOfExam(this.examId))
       ]);
-      
+
       if (students) {
         console.log('Students loaded successfully:', students);
         this.students = students;
         this.filteredStudents = students;
       }
-      
+
       if (assignedStudents) {
         console.log('Assigned students loaded successfully:', assignedStudents);
         this.assignedStudents = assignedStudents;
@@ -76,7 +78,7 @@ export class AssignStudentToExamComponent implements OnInit {
           this.selectedStudents.add(assigned.studentId);
         });
       }
-      
+
       this.loading = false;
       this.cdr.detectChanges();
     } catch (err) {
@@ -115,7 +117,7 @@ export class AssignStudentToExamComponent implements OnInit {
   getStudentStatus(studentId: string): string {
     const isCurrentlySelected = this.selectedStudents.has(studentId);
     const wasPreviouslyAssigned = this.isStudentAssigned(studentId);
-    
+
     if (isCurrentlySelected && wasPreviouslyAssigned) {
       return 'Currently Assigned';
     } else if (isCurrentlySelected && !wasPreviouslyAssigned) {
@@ -130,7 +132,7 @@ export class AssignStudentToExamComponent implements OnInit {
   getStatusBadgeClass(studentId: string): string {
     const isCurrentlySelected = this.selectedStudents.has(studentId);
     const wasPreviouslyAssigned = this.isStudentAssigned(studentId);
-    
+
     if (isCurrentlySelected && wasPreviouslyAssigned) {
       return 'bg-success';
     } else if (isCurrentlySelected && !wasPreviouslyAssigned) {
@@ -155,7 +157,7 @@ export class AssignStudentToExamComponent implements OnInit {
   assignStudents() {
     this.loading = true;
     this.error = '';
-    
+
     const studentIds = Array.from(this.selectedStudents);
     console.log('Assigning students:', studentIds, 'to exam:', this.examId);
 
@@ -178,4 +180,4 @@ export class AssignStudentToExamComponent implements OnInit {
   cancel() {
     this.router.navigate(['/exams', this.examId]);
   }
-} 
+}
