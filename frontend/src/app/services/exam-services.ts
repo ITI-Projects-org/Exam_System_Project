@@ -102,7 +102,6 @@ export class ExamServices {
         console.error('Error checking if exam is taken:', error);
         return throwError(() => new Error('Failed to check exam status'));
       })
-  
   )} 
   
   
@@ -192,6 +191,7 @@ export class ExamServices {
       )
       .pipe(catchError(this.handleError));
   }
+  
   takeExam(){
     return this.http.get(`${this.baseURL}/TakeExam`,{headers:this.headers})
   }
@@ -201,6 +201,11 @@ export class ExamServices {
       .pipe(catchError(this.handleError));
   }
   getExamToSolve(examId: string): Observable<any> {
-    return this.http.get(`${this.baseURL}/${examId}/solve`, { headers: this.headers });
+    console.log('Calling getExamToSolve with examId:', examId);
+    return this.http.get(`${this.baseURL}/${examId}/solve`, { headers: this.headers })
+      .pipe(
+        tap((data) => console.log('getExamToSolve response:', data)),
+        catchError(this.handleError)
+      );
   }
 }

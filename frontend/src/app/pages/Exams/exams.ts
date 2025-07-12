@@ -150,7 +150,7 @@ import { nextTick } from 'process';
                   <i class="fas fa-eye"></i>
                   <span>View Details</span>
                 </button>
-               @if(isStudent &&  !(isTaken(exam.id) | async)) {
+               <!-- @if(isStudent && !(isTaken(exam.id) | async)) {
 
                  <ng-container *ngIf="isStudent && getExamStatus(exam) === 'Active'">
                    <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
@@ -159,6 +159,13 @@ import { nextTick } from 'process';
                     </button>
                   </ng-container>
                 }
+                   -->
+                <ng-container *ngIf="isStudent && getExamStatus(exam) === 'Active' && !(isTaken(exam.id) | async)">
+  <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
+    <i class="fas fa-play"></i>
+    Take Exam
+  </button>
+</ng-container>
                 <ng-container *ngIf="isTeacher">
                   <div class="teacher-actions">
                     <button

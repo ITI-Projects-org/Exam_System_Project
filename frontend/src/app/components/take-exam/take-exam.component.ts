@@ -3,12 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExamServices } from '../../services/exam-services';
 import { AuthService } from '../../services/auth-service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+
 
 @Component({
   selector: 'app-take-exam',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './take-exam.component.html',
   styleUrls: ['./take-exam.component.css'],
 })
@@ -22,19 +23,19 @@ export class TakeExamComponent implements OnInit {
   submissionSuccess = false;
   formDisabled = false;
   status: 'pending' | 'completed' = 'pending';
-  showAnswers = false;
-  results: any[] = [];
-  studentDegree: number | null = null;
+  examForm!: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
     private examService: ExamServices,
     public authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.examForm = this.fb.group({});
     this.examId = this.route.snapshot.paramMap.get('id');
     const url = this.router.url;
     if (this.examId) {
@@ -128,7 +129,7 @@ export class TakeExamComponent implements OnInit {
   }
 
   // Submits the exam answers to the backend
-  submitExam(formValue: any) {
+  submitExam() {
     if (!this.exam || !this.exam.questions) return;
     const answers = this.exam.questions.map((q: any, i: number) => {
       const qid = q.id || i;
@@ -143,9 +144,9 @@ export class TakeExamComponent implements OnInit {
         this.submissionSuccess = true;
         this.formDisabled = true;
         this.status = 'completed';
-        this.results = result.results || [];
-        this.studentDegree = result.degree ?? null;
         alert('Exam submitted!');
+        this.router.navigate(['/take-exam/'+this.examId+'/solve']);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.submissionSuccess = false;
@@ -155,7 +156,5 @@ export class TakeExamComponent implements OnInit {
     });
   }
 
-  toggleShowAnswers() {
-    this.showAnswers = !this.showAnswers;
-  }
+
 }
