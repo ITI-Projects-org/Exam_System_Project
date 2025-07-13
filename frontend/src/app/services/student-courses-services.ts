@@ -1,55 +1,59 @@
-import { HttpClient , HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { ICourses } from '../models/ICourses';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StudentCoursesServices {
-  baseUrl : string='https://localhost:7251/api';
-  constructor(private http:HttpClient) { }
+  baseUrl: string = 'https://localhost:7251/api';
+  constructor(private http: HttpClient) {}
 
-  getAllCourses():Observable<ICourses[]>{
-    const token = localStorage.getItem('access_token');
-    
+  getAllCourses(): Observable<ICourses[]> {
+    const token = localStorage.getItem('token');
+
     if (!token) {
       return throwError(() => new Error('No access token found'));
     }
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
-    return this.http.get<ICourses[]>(`${this.baseUrl}/courses`,{headers});
+    return this.http.get<ICourses[]>(`${this.baseUrl}/Teacher/GetCourses`, {
+      headers,
+    });
   }
-  editCourse(courseId:any,course:ICourses){
-        const token = localStorage.getItem('access_token');
-    
+  editCourse(courseId: any, course: ICourses) {
+    const token = localStorage.getItem('token');
+
     if (!token) {
       return throwError(() => new Error('No access token found'));
     }
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
-  const dto={
-    courseId:courseId,
-    courseName:course.name
+    const dto = {
+      courseId: courseId,
+      courseName: course.name,
+    };
+    return this.http.put(`${this.baseUrl}/Teacher/UpdateCourse`, dto, {
+      headers,
+    });
   }
-    return this.http.put(`${this.baseUrl}/Teacher/UpdateCourse`,dto,{headers});
-  }
-  deleteCourse(productId:any){
-    const token = localStorage.getItem('access_token');
+  deleteCourse(productId: any) {
+    const token = localStorage.getItem('token');
     if (!token) {
       return throwError(() => new Error('No access token found'));
     }
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
-    
-    return this.http.delete(`${this.baseUrl}/${productId}`,{headers});
+
+    return this.http.delete(`${this.baseUrl}/${productId}`, { headers });
   }
 }
 

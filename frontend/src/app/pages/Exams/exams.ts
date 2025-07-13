@@ -145,21 +145,34 @@ import { nextTick } from 'process';
             </div>
 
             <div class="card-footer-section">
+              <!-- Test Button for Debugging -->
+              <div *ngIf="isStudent" style="margin-bottom: 10px;">
+                <button (click)="testExamStatus(exam.id)" style="background: orange; color: white; padding: 5px 10px; border: none; border-radius: 5px; font-size: 12px;">
+                  Test Status
+                </button>
+              </div>
+
               <div class="action-buttons">
                 <button [routerLink]="['/exams', exam.id]" class="btn-primary">
                   <i class="fas fa-eye"></i>
                   <span>View Details</span>
                 </button>
-                <div *ngIf="isStudent">
-               @if(!(isTaken(exam.id) | async)) {
 
-                 <ng-container *ngIf="getExamStatus(exam) === 'Active'">
-                   <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
-                     <i class="fas fa-play"></i>
-                     Take Exam
-                    </button>
-                  </ng-container>
-                }
+                <!-- Take Exam Button - Show only if student, exam is active, and not taken -->
+                <ng-container *ngIf="canTakeExam(exam)">
+                  <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
+                    <i class="fas fa-play"></i>
+                    Take Exam
+                  </button>
+                </ng-container>
+
+                <!-- View Results Button - Show only if student has taken the exam -->
+                <ng-container *ngIf="canViewResults(exam)">
+                  <button [routerLink]="['/take-exam', exam.id, 'solve']" class="btn btn-info">
+                    <i class="fas fa-chart-bar"></i>
+                    View Results
+                  </button>
+                </ng-container>
                 <ng-container *ngIf="isTeacher">
                   <div class="teacher-actions">
                     <button
@@ -582,6 +595,44 @@ import { nextTick } from 'process';
         box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
       }
 
+      .btn-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+      }
+
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+      }
+
+      .btn-info {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 10px rgba(23, 162, 184, 0.3);
+      }
+
+      .btn-info:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+      }
+
       .teacher-actions {
         display: flex;
         gap: 0.5rem;
@@ -674,6 +725,7 @@ export class ExamsComponent implements OnInit {
   isTeacher = false;
   isStudent = true;
   errorMsg = '';
+  examTakenStatus: { [examId: number]: boolean } = {};
 
   constructor(
     private examService: ExamServices,
@@ -692,8 +744,14 @@ export class ExamsComponent implements OnInit {
         next: (data) => {
           console.log('Exams loaded successfully:', data);
           this.exams = data;
-          this.loading = false;
-          this.cdr.detectChanges();
+
+          // Check taken status for each exam if student
+          if (this.isStudent) {
+            this.checkExamTakenStatus();
+          } else {
+            this.loading = false;
+            this.cdr.detectChanges();
+          }
         },
         error: (err) => {
           console.error('Error loading exams:', err);
@@ -708,6 +766,21 @@ export class ExamsComponent implements OnInit {
       this.errorMsg = 'Failed to initialize: ' + error;
       this.cdr.detectChanges();
     }
+  }
+
+  // Test method to manually check exam status
+  testExamStatus(examId: number) {
+    console.log(`Testing exam status for exam ${examId}...`);
+    this.examService.isExamTaken(examId).subscribe({
+      next: (isTaken) => {
+        console.log(`Exam ${examId} isTaken result:`, isTaken);
+        console.log(`Type of result:`, typeof isTaken);
+        console.log(`Raw result:`, isTaken);
+      },
+      error: (err) => {
+        console.error(`Error testing exam ${examId}:`, err);
+      }
+    });
   }
 
   trackByExamId(index: number, exam: IExamListItem): number {
@@ -784,6 +857,55 @@ export class ExamsComponent implements OnInit {
     //   });
        return this.examService.isExamTaken(examId);
  }
+
+   async checkExamTakenStatus() {
+    try {
+      const promises = this.exams.map(exam =>
+        firstValueFrom(this.examService.isExamTaken(exam.id))
+      );
+
+      const results = await Promise.all(promises);
+
+      this.exams.forEach((exam, index) => {
+        this.examTakenStatus[exam.id] = results[index] || false;
+        console.log(`Exam ${exam.id} (${exam.title}) - Taken: ${this.examTakenStatus[exam.id]}, Raw result: ${results[index]}`);
+      });
+      console.log('Final examTakenStatus object:', this.examTakenStatus);
+
+      this.loading = false;
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error checking exam taken status:', error);
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  isExamTaken(examId: number): boolean {
+    return this.examTakenStatus[examId] || false;
+  }
+
+  canTakeExam(exam: IExamListItem): boolean {
+    if (!this.isStudent) return false;
+
+    const status = this.getExamStatus(exam);
+    const isTaken = this.isExamTaken(exam.id);
+    const canTake = status === 'Active' && !isTaken;
+
+    console.log(`canTakeExam for ${exam.id} (${exam.title}): status=${status}, isTaken=${isTaken}, canTake=${canTake}`);
+    return canTake;
+  }
+
+  canViewResults(exam: IExamListItem): boolean {
+    if (!this.isStudent) return false;
+
+    const status = this.getExamStatus(exam);
+    const isTaken = this.isExamTaken(exam.id);
+    const canView = (status === 'Completed' || status === 'Active') && isTaken;
+
+    console.log(`canViewResults for ${exam.id} (${exam.title}): status=${status}, isTaken=${isTaken}, canView=${canView}`);
+    return canView;
+  }
 
 
 

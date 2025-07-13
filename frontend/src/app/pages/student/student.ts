@@ -12,7 +12,7 @@ declare var bootstrap: any;
   standalone: true,
   imports: [FormsModule],
   templateUrl: './student.html',
-  styleUrls: ['./student.css']
+  styleUrls: ['./student.css'],
 })
 export class Student implements OnInit {
   students: IStudent[] = [];

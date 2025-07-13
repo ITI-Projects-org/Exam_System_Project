@@ -96,14 +96,28 @@ export class ExamServices {
   
   
   isExamTaken(examId:number):Observable<boolean>{
-    return this.http.get<{isTaken: boolean}>(`${this.baseURL}/isExamTaken/${examId}`, { headers: this.headers })
-    .pipe(map(response => response.isTaken), 
+    console.log(`Checking if exam ${examId} is taken...`);
+    return this.http.get<any>(`${this.baseURL}/isExamTaken/${examId}`, { headers: this.headers })
+    .pipe(
+      tap(response => console.log(`Exam ${examId} taken status response:`, response)),
+      map(response => {
+        // Handle both response formats: { isTaken: boolean } and direct boolean
+        if (typeof response === 'boolean') {
+          return response;
+        } else if (response && typeof response.isTaken === 'boolean') {
+          return response.isTaken;
+        } else {
+          console.error('Unexpected response format:', response);
+          return false;
+        }
+      }), 
+      tap(isTaken => console.log(`Exam ${examId} isTaken result:`, isTaken)),
       catchError((error: HttpErrorResponse) => {
         console.error('Error checking if exam is taken:', error);
         return throwError(() => new Error('Failed to check exam status'));
       })
-  
-  )} 
+    )
+  } 
   
   
   addExam(exam: IExam): Observable<IExam> {
@@ -192,6 +206,7 @@ export class ExamServices {
       )
       .pipe(catchError(this.handleError));
   }
+  
   takeExam(){
     return this.http.get(`${this.baseURL}/TakeExam`,{headers:this.headers})
   }
@@ -201,6 +216,11 @@ export class ExamServices {
       .pipe(catchError(this.handleError));
   }
   getExamToSolve(examId: string): Observable<any> {
-    return this.http.get(`${this.baseURL}/${examId}/solve`, { headers: this.headers });
+    console.log('Calling getExamToSolve with examId:', examId);
+    return this.http.get(`${this.baseURL}/${examId}/solve`, { headers: this.headers })
+      .pipe(
+        tap((data) => console.log('getExamToSolve response:', data)),
+        catchError(this.handleError)
+      );
   }
 }

@@ -14,6 +14,6 @@ namespace backend.Repositories.Interfaces
         void Remove(Exam exam);
         void Update(Exam exam);
         List<Student> GetAllExamStudents(int examId);
-
+        Task GetStudentExamRecord(string? studentId, int examId);
     }
 }
