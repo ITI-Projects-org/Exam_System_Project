@@ -46,14 +46,14 @@
             >Students</a
           >
         </li>
-        <li
+        <!-- <li
           class="nav-item"
           *ngIf="auth.isLoggedIn() && auth.isInRole('Teacher')"
         >
           <a class="nav-link" routerLink="/teacher" routerLinkActive="active"
             >Teachers</a
           >
-        </li>
+        </li> -->
         <li class="nav-item ms-lg-3" *ngIf="auth.isLoggedIn()">
           <button class="btn btn-logout" (click)="logout()">LOG OUT</button>
         </li>
