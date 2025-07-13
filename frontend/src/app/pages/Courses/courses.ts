@@ -13,6 +13,7 @@ declare var bootstrap: any;
   styleUrls: ['./courses.css'],
 })
 export class Courses implements OnInit {
+  allCourses: ICourses[] = [];
   Courses: ICourses[] = [];
   selectedCourse: ICourses = { id: '0', name: '' };
   searchTerm: string = '';
@@ -31,6 +32,7 @@ export class Courses implements OnInit {
   ngOnInit(): void {
     this.studentService.getAllCourses().subscribe({
       next: (response) => {
+        this.allCourses = response;
         this.Courses = response;
         this.cdr.detectChanges();
       },
@@ -102,7 +104,7 @@ export class Courses implements OnInit {
   search() {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
-      this.Courses = [...this.Courses];
+      this.Courses = [...this.allCourses];
     } else {
       this.Courses = this.Courses.filter((course) =>
         course.name.toLowerCase().includes(term)

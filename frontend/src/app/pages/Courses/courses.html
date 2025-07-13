@@ -16,7 +16,7 @@
       </div>
 
       <!-- Search Form -->
-      <form class="row g-3 align-items-end" (ngSubmit)="search()">
+      <div class="row g-3 align-items-end">
         <div class="col-12 col-md-9">
           <label for="courseTitle" class="form-label fw-semibold">Title</label>
           <input
@@ -25,157 +25,172 @@
             class="form-control"
             placeholder="Enter course title"
             [(ngModel)]="searchTerm"
+            (ngModelChange)="search()"
             name="searchTerm"
           />
         </div>
         <div class="col-12 col-md-3 text-md-end">
-          <button type="submit" class="btn btn-primary w-100">
+          <button
+            type="button"
+            class="btn btn-primary w-100"
+            (click)="search()"
+          >
             <i class="bi bi-search me-1"></i>Search
           </button>
         </div>
-      </form>
-    </div>
-  </div>
+      </div>
 
-  <!-- Results Table Section -->
-  <div class="mt-5 table-responsive">
-    <table class="table table-hover custom-table align-middle">
-      <!-- Table Header -->
-      <thead class="table-primary">
-        <tr>
-          <th scope="col">Course ID</th>
-          <th scope="col">Title</th>
-          <th scope="col" class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <!-- Table Body -->
-      <tbody>
-        @for(course of Courses;track course.id) {
-        <tr>
-          <td>{{course.id}}</td>
-          <td>{{course.name}}</td>
-          <td class="text-center">
-            <div class="d-flex justify-content-center gap-2">
-              <!-- Edit and Delete Buttons -->
+      <!-- Results Table Section -->
+      <div class="mt-5 table-responsive">
+        <table class="table table-hover custom-table align-middle">
+          <!-- Table Header -->
+          <thead class="table-primary">
+            <tr>
+              <th scope="col">Course ID</th>
+              <th scope="col">Title</th>
+              <th scope="col" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <!-- Table Body -->
+          <tbody>
+            @for(course of Courses;track course.id) {
+            <tr>
+              <td>{{course.id}}</td>
+              <td>{{course.name}}</td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  <!-- Edit and Delete Buttons -->
+                  <button
+                    class="btn btn-outline-warning p-2"
+                    title="Edit"
+                    aria-label="Edit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editCourseModal"
+                    (click)="openEditModal(course)"
+                  >
+                    <i class="bi bi-pencil fs-5"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add Course Modal: Allows adding a new course -->
+    <div
+      class="modal fade"
+      id="addCourseModal"
+      tabindex="-1"
+      aria-labelledby="addCourseModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-sm rounded-3">
+          <!-- Add Form -->
+          <form (ngSubmit)="saveNewCourse()" #addForm="ngForm">
+            <!-- Modal Header -->
+            <div class="modal-header border-bottom-0">
+              <h5 class="modal-title fw-semibold" id="addCourseModalLabel">
+                Add New Course
+              </h5>
               <button
-                class="btn btn-outline-warning p-2"
-                title="Edit"
-                aria-label="Edit"
-                data-bs-toggle="modal"
-                data-bs-target="#editCourseModal"
-                (click)="openEditModal(course)"
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label fw-medium">Course Title</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  [(ngModel)]="newCourseName"
+                  name="newCourseName"
+                  placeholder="Enter course title"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-top-0">
+              <button
+                type="button"
+                class="btn btn-light"
+                data-bs-dismiss="modal"
               >
-                <i class="bi bi-pencil fs-5"></i>
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-success px-4">
+                Add Course
               </button>
             </div>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Add Course Modal: Allows adding a new course -->
-<div
-  class="modal fade"
-  id="addCourseModal"
-  tabindex="-1"
-  aria-labelledby="addCourseModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-sm rounded-3">
-      <!-- Add Form -->
-      <form (ngSubmit)="saveNewCourse()" #addForm="ngForm">
-        <!-- Modal Header -->
-        <div class="modal-header border-bottom-0">
-          <h5 class="modal-title fw-semibold" id="addCourseModalLabel">
-            Add New Course
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          </form>
         </div>
-
-        <!-- Modal Body -->
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label fw-medium">Course Title</label>
-            <input
-              type="text"
-              class="form-control form-control-lg"
-              [(ngModel)]="newCourseName"
-              name="newCourseName"
-              placeholder="Enter course title"
-              required
-            />
-          </div>
-        </div>
-
-        <!-- Modal Footer -->
-        <div class="modal-footer border-top-0">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-success px-4">Add Course</button>
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- Edit Course Modal: Allows editing the selected course -->
-<div
-  class="modal fade"
-  id="editCourseModal"
-  tabindex="-1"
-  aria-labelledby="editCourseModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-sm rounded-3">
-      <!-- Edit Form -->
-      <form (ngSubmit)="saveEdit()" #editForm="ngForm">
-        <!-- Modal Header -->
-        <div class="modal-header border-bottom-0">
-          <h5 class="modal-title fw-semibold" id="editCourseModalLabel">
-            Edit Course
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
+    <!-- Edit Course Modal: Allows editing the selected course -->
+    <div
+      class="modal fade"
+      id="editCourseModal"
+      tabindex="-1"
+      aria-labelledby="editCourseModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-sm rounded-3">
+          <!-- Edit Form -->
+          <form (ngSubmit)="saveEdit()" #editForm="ngForm">
+            <!-- Modal Header -->
+            <div class="modal-header border-bottom-0">
+              <h5 class="modal-title fw-semibold" id="editCourseModalLabel">
+                Edit Course
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
 
-        <!-- Modal Body -->
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label fw-medium">Course Title</label>
-            <input
-              type="text"
-              class="form-control form-control-lg"
-              [(ngModel)]="selectedCourse.name"
-              name="title"
-              placeholder="Enter course title"
-              required
-            />
-          </div>
-        </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label fw-medium">Course Title</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  [(ngModel)]="selectedCourse.name"
+                  name="title"
+                  placeholder="Enter course title"
+                  required
+                />
+              </div>
+            </div>
 
-        <!-- Modal Footer -->
-        <div class="modal-footer border-top-0">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-primary px-4">Save</button>
+            <!-- Modal Footer -->
+            <div class="modal-footer border-top-0">
+              <button
+                type="button"
+                class="btn btn-light"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary px-4">Save</button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
