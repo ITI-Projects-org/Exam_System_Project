@@ -34,8 +34,21 @@ namespace backend.Repositories.Implementations
                                         .ThenInclude(se => se.Exam)
                                     .Include(s => s.StudOptions)
                                         .ThenInclude(so => so.Option)
-                                            //.ThenInclude(o => o.Question)
+                                    //.ThenInclude(o => o.Question)
                                     .ToListAsync();
+        }
+        public async Task DeleteStudent(string id)
+        {
+            var studCourses = await _context.StudCourses.Where(sc => sc.StudentId == id).ToListAsync();
+            _context.StudCourses.RemoveRange(studCourses);
+
+            var studExams = await _context.StudExams.Where(se => se.StudentId == id).ToListAsync();
+            _context.StudExams.RemoveRange(studExams);
+
+            var studOptions = await _context.StudOptions.Where(so => so.StudentId == id).ToListAsync();
+            _context.StudOptions.RemoveRange(studOptions);
+
+           
         }
     }
 }

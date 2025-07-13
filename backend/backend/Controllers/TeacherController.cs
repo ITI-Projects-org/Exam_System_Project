@@ -161,5 +161,14 @@ namespace backend.Controllers
 
             return NoContent();
         }
+        [HttpDelete("deleteStudent/{id}")]
+        public async Task<IActionResult> DeleteStudent(string id)
+        {
+            Console.WriteLine("the deleted id"+id);
+            await Unit.StudentRepository.DeleteStudent(id);
+            await Unit.StudentRepository.Delete(id);
+            await Unit.SaveAsync();
+            return NoContent();
+        }
     }
 }

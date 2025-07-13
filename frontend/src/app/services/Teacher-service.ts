@@ -64,4 +64,7 @@ export class BackendService {
       iteacher
     );
   }
+  deleteStudent(studentId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/deleteStudent/${studentId}`);
+  }
 }

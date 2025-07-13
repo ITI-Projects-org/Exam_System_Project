@@ -150,9 +150,10 @@ import { nextTick } from 'process';
                   <i class="fas fa-eye"></i>
                   <span>View Details</span>
                 </button>
-               @if(isStudent &&  !(isTaken(exam.id) | async)) {
+                <div *ngIf="isStudent">
+               @if(!(isTaken(exam.id) | async)) {
 
-                 <ng-container *ngIf="isStudent && getExamStatus(exam) === 'Active'">
+                 <ng-container *ngIf="getExamStatus(exam) === 'Active'">
                    <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
                      <i class="fas fa-play"></i>
                      Take Exam
@@ -671,7 +672,7 @@ export class ExamsComponent implements OnInit {
   exams: IExamListItem[] = [];
   loading = true;
   isTeacher = false;
-  isStudent = false;
+  isStudent = true;
   errorMsg = '';
 
   constructor(
@@ -777,17 +778,17 @@ export class ExamsComponent implements OnInit {
     // let taken = false;
     //   const data = this.examService.isExamTaken(examId).subscribe(isTaken=>{
     //     taken = isTaken;
-        
+
     //     console.log(`Exam taken status: ${examId}, taken: ${taken}`);
     //     return taken;
     //   });
        return this.examService.isExamTaken(examId);
  }
-  
 
- 
+
+
   gteToken():string|null{
     return localStorage.getItem('token')
   }
-  
+
 }

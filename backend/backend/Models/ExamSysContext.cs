@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models
@@ -19,6 +20,8 @@ namespace backend.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+           
 
             // Configure user discriminator
             builder.Entity<ApplicationUser>()
@@ -81,14 +84,14 @@ namespace backend.Models
                 .HasOne(sc => sc.Student)
                 .WithMany(s => s.StudCourses)
                 .HasForeignKey(sc => sc.StudentId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // StudCourse -> Course (NO ACTION to prevent cascade conflicts)
             builder.Entity<Stud_Course>()
                 .HasOne(sc => sc.Course)
                 .WithMany()
                 .HasForeignKey(sc => sc.CourseId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // StudExam -> Student (NO ACTION to prevent cascade conflicts)
             builder.Entity<Stud_Exam>()

@@ -1,89 +1,79 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { StudentCoursesServices } from '../../services/student-courses-services';
-import { ICourses } from '../../models/ICourses';
 import { FormsModule } from '@angular/forms';
+import { ExamServices } from '../../services/exam-services';
+import { IStudent } from '../../models/istudent';
+import { BackendService } from '../../services/Teacher-service';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-student',
-  imports:[FormsModule],
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './student.html',
   styleUrls: ['./student.css']
 })
 export class Student implements OnInit {
-  Courses: ICourses[] = [];
-  selectedCourse: ICourses = { id: '0', name: '' };
+  students: IStudent[] = [];
+  filteredStudents: IStudent[] = [];
+  selectedStudent!: IStudent;
   searchTerm: string = '';
 
   constructor(
     private studentService: StudentCoursesServices,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private examserv: ExamServices,
+    private teacher: BackendService
   ) {}
 
   ngOnInit(): void {
-    this.studentService.getAllCourses().subscribe({
+    this.examserv.getAllStudents().subscribe({
       next: (response) => {
-        this.Courses = response;
+        this.students = response;
+        this.filteredStudents = [...response];
         this.cdr.detectChanges();
+        console.log('Students:', this.students);
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
       },
     });
-  }
 
-  openEditModal(course: ICourses) {
-    this.selectedCourse = { ...course}; 
-  }
-
-  saveEdit() {
-    this.studentService
-      .editCourse(this.selectedCourse.id, this.selectedCourse)
-      .subscribe({
-        next: () => {
-          //Update Locally
-        this.Courses=this.Courses.map((course)=>
-          course.id===this.selectedCourse.id ? {...this.selectedCourse} : course
-        );
-
-        //hide the model
-            bootstrap.Modal.getInstance(document.getElementById('editCourseModal'))?.hide();
-          // Trigger change detection
-          this.cdr.detectChanges();
-        },
-        error: (err) => console.error(err),
-      });
+    this.search();
   }
 
   search() {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
-      this.Courses = [...this.Courses];
+      this.filteredStudents = [...this.students];
+      console.log('Students from search ss:', this.students)
+
     } else {
-      this.Courses = this.Courses.filter((course) =>
-        course.name.toLowerCase().includes(term)
+      this.filteredStudents = this.students.filter(student =>
+        student.firstName.toLowerCase().includes(term),
+        console.log('Students from search:', this.filteredStudents)
       );
+      this.cdr.detectChanges()
+
     }
   }
 
-  deleteCourse(courseId: string) {
-    this.studentService.deleteCourse(courseId).subscribe({
-      next: () => {
-        this.Courses = this.Courses.filter((c) => c.id!= courseId);
-        this.cdr.detectChanges();
-      },
-    });
+  openDeleteModal(student: IStudent) {
+    this.selectedStudent = this.students.find(s => s.id === student.id) || student;
   }
 
-openDeleteModal(course: ICourses) {
-  this.selectedCourse = course;
-}
-
-confirmDeleteCourse() {
-  if (this.selectedCourse) {
-    this.deleteCourse(this.selectedCourse.id);
+  confirmDeleteStudent() {
+    if (this.selectedStudent) {
+      this.teacher.deleteStudent(this.selectedStudent.id).subscribe({
+        next: () => {
+          this.students = this.students.filter(s => s.id !== this.selectedStudent.id);
+          this.search();
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error(err)
+      });
+    }
   }
 }
-
-}
+1

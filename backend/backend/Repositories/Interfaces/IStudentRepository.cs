@@ -6,5 +6,6 @@ namespace backend.Repositories.Interfaces
     {
         Task<Student> GetStudentWithDetails(string id);
         Task<IEnumerable<Student>> GetAllStudentsWithDetails();
+        Task DeleteStudent(string id);
     }
 }

@@ -24,7 +24,9 @@ namespace backend.Repositories.Implementations
 
         public async Task<T> GetById(string Id)
         {
-            return await _context.Set<T>().FindAsync(Id);
+            var exists = await _context.Set<T>().FindAsync(Id);
+            Console.WriteLine(exists != null ? "ID exists ✅" : "ID not found ❌");
+            return exists;
         }
 
         // For int primary keys
@@ -51,13 +53,14 @@ namespace backend.Repositories.Implementations
             return Entity;
         }
 
-        public async void Delete(string Id)
+        public async Task Delete(string id)
         {
-            var entity = await GetById(Id);
+            var entity = await GetById(id);
             if (entity != null)
             {
                 _context.Set<T>().Remove(entity);
             }
         }
+
     }
 }
