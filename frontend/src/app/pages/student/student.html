@@ -6,7 +6,7 @@
       <h5 class="card-title text-center mb-4">Search Student</h5>
 
       <!-- Search Form -->
-      <form class="row g-3 align-items-end" (ngSubmit)="search()">
+      <div class="row g-3 align-items-end">
         <div class="col-12 col-md-9">
           <label for="studentName" class="form-label fw-semibold">Name</label>
           <input
@@ -15,15 +15,20 @@
             class="form-control"
             placeholder="Enter student name"
             [(ngModel)]="searchTerm"
+            (ngModelChange)="search()"
             name="searchTerm"
           />
         </div>
         <div class="col-12 col-md-3 text-md-end">
-          <button type="submit" class="btn btn-primary w-100">
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            (click)="search()"
+          >
             <i class="bi bi-search me-1"></i>Search
           </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 
@@ -40,8 +45,7 @@
       </thead>
       <!-- Table Body -->
       <tbody>
-        @for(student of filteredStudents; track student.id) {
-        <tr>
+        <tr *ngFor="let student of filteredStudents">
           <td>{{ student.id }}</td>
           <td>{{ student.firstName }} {{ student.lastName }}</td>
           <td class="text-center">
@@ -58,11 +62,9 @@
               >
                 <i class="bi bi-trash3-fill fs-5"></i>
               </button>
-              -->
             </div>
           </td>
         </tr>
-        }
       </tbody>
     </table>
   </div>
@@ -95,7 +97,7 @@
       <div class="modal-body text-center">
         <p class="mb-0">
           Are you sure you want to delete
-          <strong class="text-danger">{{ selectedStudent.firstName }}</strong>?
+          <strong class="text-danger">{{ selectedStudent?.firstName }}</strong>?
         </p>
       </div>
 
@@ -112,7 +114,6 @@
           Delete
         </button>
       </div>
-      -->
     </div>
   </div>
 </div>

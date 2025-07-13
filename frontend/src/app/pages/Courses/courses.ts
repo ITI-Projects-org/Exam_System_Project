@@ -106,7 +106,7 @@ export class Courses implements OnInit {
     if (!term) {
       this.Courses = [...this.allCourses];
     } else {
-      this.Courses = this.Courses.filter((course) =>
+      this.Courses = this.allCourses.filter((course) =>
         course.name.toLowerCase().includes(term)
       );
     }
