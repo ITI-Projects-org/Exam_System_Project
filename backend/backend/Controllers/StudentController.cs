@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using backend.DTOs;
 using backend.UnitOfWorks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
     [Route("api/Students")]
     [ApiController]
+    [Authorize(Roles = "Teacher")]
     public class StudentController : ControllerBase
     {
         readonly IUnitOfWork _unitOfWork;

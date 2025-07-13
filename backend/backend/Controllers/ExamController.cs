@@ -205,6 +205,7 @@ namespace backend.Controllers
 
 
         [HttpGet("TakeExam")]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> TakeExam(int ExamId)
         {
             try
