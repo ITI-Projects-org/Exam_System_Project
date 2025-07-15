@@ -13,6 +13,7 @@ import { IExam, IQuestion, IOption } from '../../models/iexam';
 import { BackendService } from '../../services/Teacher-service';
 import { ICourses } from '../../models/ICourses';
 import { Course } from '../../models/course';
+import { formatISO } from 'date-fns';
 
 @Component({
   selector: 'app-edit-exam',
@@ -394,12 +395,16 @@ export class EditExamComponent implements OnInit {
 
     this.loading = true;
     const formValue = this.examForm.value;
-
+    console.log('start data:', formValue.startDate);
+    console.log(
+      'start data:',
+      formatISO(new Date(formValue.startDate).toISOString())
+    );
     // Ensure all required fields and IDs for edit
     const examData: IExam = {
       ...(this.isEditMode && this.examId ? { id: parseInt(this.examId) } : {}),
       title: formValue.title,
-      startDate: new Date(formValue.startDate).toISOString(),
+      startDate: formatISO(new Date(formValue.startDate).toISOString()),
       duration: this.formatDuration(formValue.duration),
       courseId: Number(formValue.courseId),
       maxDegree: Number(formValue.maxDegree),

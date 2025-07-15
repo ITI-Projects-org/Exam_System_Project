@@ -278,7 +278,7 @@ namespace backend.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("backend.Models.Exam", b =>
@@ -321,7 +321,7 @@ namespace backend.Migrations
 
                     b.HasIndex("Title");
 
-                    b.ToTable("Exams", (string)null);
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("backend.Models.Option", b =>
@@ -347,7 +347,7 @@ namespace backend.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options", (string)null);
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("backend.Models.Question", b =>
@@ -373,7 +373,7 @@ namespace backend.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("backend.Models.Stud_Course", b =>
@@ -391,7 +391,7 @@ namespace backend.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("StudCourses", (string)null);
+                    b.ToTable("StudCourses");
                 });
 
             modelBuilder.Entity("backend.Models.Stud_Exam", b =>
@@ -418,7 +418,7 @@ namespace backend.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("StudExams", (string)null);
+                    b.ToTable("StudExams");
                 });
 
             modelBuilder.Entity("backend.Models.Stud_Option", b =>
@@ -433,7 +433,7 @@ namespace backend.Migrations
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("StudOptions", (string)null);
+                    b.ToTable("StudOptions");
                 });
 
             modelBuilder.Entity("backend.Models.Student", b =>
@@ -577,7 +577,7 @@ namespace backend.Migrations
                     b.HasOne("backend.Models.Exam", "Exam")
                         .WithMany()
                         .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("backend.Models.Student", "Student")
@@ -596,7 +596,7 @@ namespace backend.Migrations
                     b.HasOne("backend.Models.Option", "Option")
                         .WithMany()
                         .HasForeignKey("OptionId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("backend.Models.Student", "Student")

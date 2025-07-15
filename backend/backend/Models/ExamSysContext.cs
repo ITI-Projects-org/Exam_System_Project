@@ -84,14 +84,14 @@ namespace backend.Models
                 .HasOne(sc => sc.Student)
                 .WithMany(s => s.StudCourses)
                 .HasForeignKey(sc => sc.StudentId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
 
             // StudCourse -> Course (NO ACTION to prevent cascade conflicts)
             builder.Entity<Stud_Course>()
                 .HasOne(sc => sc.Course)
                 .WithMany()
                 .HasForeignKey(sc => sc.CourseId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
 
             // StudExam -> Student (NO ACTION to prevent cascade conflicts)
             builder.Entity<Stud_Exam>()
@@ -105,7 +105,7 @@ namespace backend.Models
                 .HasOne(se => se.Exam)
                 .WithMany()
                 .HasForeignKey(se => se.ExamId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // StudOption -> Student (NO ACTION to prevent cascade conflicts)
             builder.Entity<Stud_Option>()
@@ -119,7 +119,7 @@ namespace backend.Models
                 .HasOne(so => so.Option)
                 .WithMany()
                 .HasForeignKey(so => so.OptionId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

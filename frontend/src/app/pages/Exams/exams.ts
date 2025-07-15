@@ -64,10 +64,8 @@ import { nextTick } from 'process';
       </div>
 
       <div class="exams-grid" *ngIf="!loading && !errorMsg && exams.length > 0">
-        <div
-          class="exam-card-wrapper"
-          *ngFor="let exam of exams; trackBy: trackByExamId"
-        >
+        @for(exam of exams; track exam.id) {
+        <div class="exam-card-wrapper">
           <div
             class="exam-card"
             [class]="getExamStatusClass(exam).toLowerCase()"
@@ -147,7 +145,10 @@ import { nextTick } from 'process';
             <div class="card-footer-section">
               <!-- Test Button for Debugging -->
               <div *ngIf="isStudent" style="margin-bottom: 10px;">
-                <button (click)="testExamStatus(exam.id)" style="background: orange; color: white; padding: 5px 10px; border: none; border-radius: 5px; font-size: 12px;">
+                <button
+                  (click)="testExamStatus(exam.id)"
+                  style="background: orange; color: white; padding: 5px 10px; border: none; border-radius: 5px; font-size: 12px;"
+                >
                   Test Status
                 </button>
               </div>
@@ -160,7 +161,10 @@ import { nextTick } from 'process';
 
                 <!-- Take Exam Button - Show only if student, exam is active, and not taken -->
                 <ng-container *ngIf="canTakeExam(exam)">
-                  <button [routerLink]="['/take-exam', exam.id]" class="btn btn-success">
+                  <button
+                    [routerLink]="['/take-exam', exam.id]"
+                    class="btn btn-success"
+                  >
                     <i class="fas fa-play"></i>
                     Take Exam
                   </button>
@@ -168,7 +172,10 @@ import { nextTick } from 'process';
 
                 <!-- View Results Button - Show only if student has taken the exam -->
                 <ng-container *ngIf="canViewResults(exam)">
-                  <button [routerLink]="['/take-exam', exam.id, 'solve']" class="btn btn-info">
+                  <button
+                    [routerLink]="['/take-exam', exam.id, 'solve']"
+                    class="btn btn-info"
+                  >
                     <i class="fas fa-chart-bar"></i>
                     View Results
                   </button>
@@ -202,6 +209,7 @@ import { nextTick } from 'process';
             </div>
           </div>
         </div>
+        }
       </div>
     </div>
   `,
@@ -779,7 +787,7 @@ export class ExamsComponent implements OnInit {
       },
       error: (err) => {
         console.error(`Error testing exam ${examId}:`, err);
-      }
+      },
     });
   }
 
@@ -838,7 +846,10 @@ export class ExamsComponent implements OnInit {
       this.examService.deleteExam(examId).subscribe({
         next: () => {
           // Remove the exam from the local array
+          console.log('before length:', this.exams.length);
           this.exams = this.exams.filter((exam) => exam.id !== examId);
+          console.log('after length:', this.exams.length);
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error deleting exam:', err);
@@ -847,7 +858,7 @@ export class ExamsComponent implements OnInit {
       });
     }
   }
- isTaken(examId: number):any{
+  isTaken(examId: number): any {
     // let taken = false;
     //   const data = this.examService.isExamTaken(examId).subscribe(isTaken=>{
     //     taken = isTaken;
@@ -855,12 +866,12 @@ export class ExamsComponent implements OnInit {
     //     console.log(`Exam taken status: ${examId}, taken: ${taken}`);
     //     return taken;
     //   });
-       return this.examService.isExamTaken(examId);
- }
+    return this.examService.isExamTaken(examId);
+  }
 
-   async checkExamTakenStatus() {
+  async checkExamTakenStatus() {
     try {
-      const promises = this.exams.map(exam =>
+      const promises = this.exams.map((exam) =>
         firstValueFrom(this.examService.isExamTaken(exam.id))
       );
 
@@ -868,7 +879,11 @@ export class ExamsComponent implements OnInit {
 
       this.exams.forEach((exam, index) => {
         this.examTakenStatus[exam.id] = results[index] || false;
-        console.log(`Exam ${exam.id} (${exam.title}) - Taken: ${this.examTakenStatus[exam.id]}, Raw result: ${results[index]}`);
+        console.log(
+          `Exam ${exam.id} (${exam.title}) - Taken: ${
+            this.examTakenStatus[exam.id]
+          }, Raw result: ${results[index]}`
+        );
       });
       console.log('Final examTakenStatus object:', this.examTakenStatus);
 
@@ -892,7 +907,9 @@ export class ExamsComponent implements OnInit {
     const isTaken = this.isExamTaken(exam.id);
     const canTake = status === 'Active' && !isTaken;
 
-    console.log(`canTakeExam for ${exam.id} (${exam.title}): status=${status}, isTaken=${isTaken}, canTake=${canTake}`);
+    console.log(
+      `canTakeExam for ${exam.id} (${exam.title}): status=${status}, isTaken=${isTaken}, canTake=${canTake}`
+    );
     return canTake;
   }
 
@@ -903,14 +920,13 @@ export class ExamsComponent implements OnInit {
     const isTaken = this.isExamTaken(exam.id);
     const canView = (status === 'Completed' || status === 'Active') && isTaken;
 
-    console.log(`canViewResults for ${exam.id} (${exam.title}): status=${status}, isTaken=${isTaken}, canView=${canView}`);
+    console.log(
+      `canViewResults for ${exam.id} (${exam.title}): status=${status}, isTaken=${isTaken}, canView=${canView}`
+    );
     return canView;
   }
 
-
-
-  gteToken():string|null{
-    return localStorage.getItem('token')
+  gteToken(): string | null {
+    return localStorage.getItem('token');
   }
-
 }
