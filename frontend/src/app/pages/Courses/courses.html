@@ -53,7 +53,7 @@
           </thead>
           <!-- Table Body -->
           <tbody>
-            @for(course of Courses;track course.id) {
+            @for (course of Courses; track course.id) {
             <tr>
               <td>{{course.id}}</td>
               <td>{{course.name}}</td>
@@ -78,119 +78,109 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- Add Course Modal: Allows adding a new course -->
-    <div
-      class="modal fade"
-      id="addCourseModal"
-      tabindex="-1"
-      aria-labelledby="addCourseModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-sm rounded-3">
-          <!-- Add Form -->
-          <form (ngSubmit)="saveNewCourse()" #addForm="ngForm">
-            <!-- Modal Header -->
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title fw-semibold" id="addCourseModalLabel">
-                Add New Course
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body">
-              <div class="mb-3">
-                <label class="form-label fw-medium">Course Title</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  [(ngModel)]="newCourseName"
-                  name="newCourseName"
-                  placeholder="Enter course title"
-                  required
-                />
-              </div>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer border-top-0">
-              <button
-                type="button"
-                class="btn btn-light"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button type="submit" class="btn btn-success px-4">
-                Add Course
-              </button>
-            </div>
-          </form>
+<!-- Add Course Modal: Allows adding a new course -->
+<div
+  class="modal fade"
+  id="addCourseModal"
+  tabindex="-1"
+  aria-labelledby="addCourseModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-sm rounded-3">
+      <!-- Add Form -->
+      <form (ngSubmit)="saveNewCourse()" #addForm="ngForm">
+        <!-- Modal Header -->
+        <div class="modal-header border-bottom-0">
+          <h5 class="modal-title fw-semibold" id="addCourseModalLabel">
+            Add New Course
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-      </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-medium">Course Title</label>
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              [(ngModel)]="newCourseName"
+              name="newCourseName"
+              placeholder="Enter course title"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer border-top-0">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-success px-4">Add Course</button>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
 
-    <!-- Edit Course Modal: Allows editing the selected course -->
-    <div
-      class="modal fade"
-      id="editCourseModal"
-      tabindex="-1"
-      aria-labelledby="editCourseModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-sm rounded-3">
-          <!-- Edit Form -->
-          <form (ngSubmit)="saveEdit()" #editForm="ngForm">
-            <!-- Modal Header -->
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title fw-semibold" id="editCourseModalLabel">
-                Edit Course
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body">
-              <div class="mb-3">
-                <label class="form-label fw-medium">Course Title</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  [(ngModel)]="selectedCourse.name"
-                  name="title"
-                  placeholder="Enter course title"
-                  required
-                />
-              </div>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer border-top-0">
-              <button
-                type="button"
-                class="btn btn-light"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button type="submit" class="btn btn-primary px-4">Save</button>
-            </div>
-          </form>
+<!-- Edit Course Modal: Allows editing the selected course -->
+<div
+  class="modal fade"
+  id="editCourseModal"
+  tabindex="-1"
+  aria-labelledby="editCourseModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-sm rounded-3">
+      <!-- Edit Form -->
+      <form (ngSubmit)="saveEdit()" #editForm="ngForm">
+        <!-- Modal Header -->
+        <div class="modal-header border-bottom-0">
+          <h5 class="modal-title fw-semibold" id="editCourseModalLabel">
+            Edit Course
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-      </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-medium">Course Title</label>
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              [(ngModel)]="selectedCourse.name"
+              name="title"
+              placeholder="Enter course title"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer border-top-0">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary px-4">Save</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

@@ -3,12 +3,13 @@ import { StudentCoursesServices } from '../../services/student-courses-services'
 import { ICourses } from '../../models/ICourses';
 import { FormsModule } from '@angular/forms';
 import { BackendService } from '../../services/Teacher-service';
+import { CommonModule } from '@angular/common';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-courses',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './courses.html',
   styleUrls: ['./courses.css'],
 })
@@ -43,7 +44,8 @@ export class Courses implements OnInit {
   }
 
   openEditModal(course: ICourses) {
-    this.selectedCourse = { ...course };
+    this.selectedCourse =
+      this.allCourses.find((c) => c.id === course.id) || course;
   }
 
   saveEdit() {
