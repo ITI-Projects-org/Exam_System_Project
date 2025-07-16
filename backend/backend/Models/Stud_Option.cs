@@ -10,11 +10,14 @@ namespace backend.Models
     {
         [Required]
         public string StudentId { get; set; }
+
         [ForeignKey(nameof(StudentId))]
-        public virtual Student Student { get; set; }
+        public virtual Student? Student { get; set; }
+
         [Required]
         public int OptionId { get; set; }
+
         [ForeignKey(nameof(OptionId))]
-        public virtual Option Option { get; set; }
+        public virtual Option? Option { get; set; }
     }
 }

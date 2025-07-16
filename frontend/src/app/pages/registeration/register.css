@@ -1,0 +1,52 @@
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  margin-top: var(--spacing-2xl);
+}
+
+h1 {
+  color: var(--bright-blue-dark);
+  font-weight: 700;
+  margin-bottom: var(--spacing-xl);
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--dark-gray);
+}
+
+.form-control {
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--light-gray);
+  font-size: var(--font-size-base);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.btn-dark {
+  width: 100%;
+  margin-top: var(--spacing-md);
+  background: var(--bright-blue);
+  color: var(--white);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+.btn-dark:hover {
+  background: var(--bright-blue-dark);
+  color: var(--white);
+}
+
+.alert {
+  margin-bottom: var(--spacing-md);
+}
+
+.text-center.mt-3 {
+  margin-top: var(--spacing-lg) !important;
+}

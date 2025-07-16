@@ -1,0 +1,30 @@
+@if (authService.isInRole("Teacher")) {
+
+<table
+  class="table table-bordered table-striped"
+  *ngIf="teacher_lists$ | async as teachers"
+>
+  <thead class="table-dark">
+    <tr>
+      <th>#</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let teacher of teachers; index as i">
+      <td>{{ i + 1 }}</td>
+      <td>{{ teacher.firstName }}</td>
+      <td>{{ teacher.lastName }}</td>
+      <td>{{ teacher.email }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="(teacher_lists$ | async)?.length === 0" class="alert alert-info">
+  No teachers found.
+</div>
+}
+<div *ngIf="authService.isInRole('Student')">مرحبًا بك أيها المستخدم!</div>
+<p>الدور الحالي: {{ authService.getUserRole() }}</p>

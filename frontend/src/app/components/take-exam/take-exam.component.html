@@ -1,0 +1,146 @@
+<div class="container mt-4">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary mb-3" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <p class="text-muted">Loading exam...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ error }}
+  </div>
+
+  <!-- Main Exam Content -->
+  <div *ngIf="!isLoading && !error && exam">
+    <!-- Exam Header -->
+    <div class="card mb-4">
+      <div class="card-header bg-light text-white">
+        <h1 class="card-title h3 mb-0">{{ exam.title }}</h1>
+      </div>
+      <div class="card-body">
+        <p *ngIf="exam.description" class="card-text">{{ exam.description }}</p>
+
+        <div class="row">
+          <div class="col-md-3 col-6 mb-2">
+            <small class="text-muted d-block">Duration</small>
+            <strong>{{ exam.duration }} minutes</strong>
+          </div>
+          <div class="col-md-3 col-6 mb-2">
+            <small class="text-muted d-block">Start Time</small>
+            <strong>{{ exam.startDate | date : "short" }}</strong>
+          </div>
+          <div *ngIf="endDate" class="col-md-3 col-6 mb-2">
+            <small class="text-muted d-block">End Time</small>
+            <strong>{{ endDate | date : "short" }}</strong>
+          </div>
+          <div *ngIf="exam.isActive" class="col-md-3 col-6 mb-2">
+            <small class="text-muted d-block">Status</small>
+            <span class="badge badge-success">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Exam Form -->
+    <form
+      *ngIf="exam.questions && exam.questions.length > 0 && canTakeExam"
+      (ngSubmit)="submitExam()"
+      [formGroup]="examForm"
+    >
+      <div
+        *ngFor="let question of exam.questions; let i = index"
+        class="card mb-4"
+      >
+        <div class="card-header">
+          <h5 class="mb-0">
+            <span class="badge badge-primary mr-2">{{ i + 1 }}</span>
+            {{ question.title || question.text }}
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <div
+              *ngFor="let option of question.options"
+              class="form-check mb-2"
+            >
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [id]="'option-' + i + '-' + option.id"
+                [checked]="isOptionSelected(question, option, i)"
+                (change)="onCheckboxChange($event, question.id || i, option.id)"
+              />
+              <label
+                class="form-check-label"
+                [for]="'option-' + i + '-' + option.id"
+              >
+                {{ option.title || option.text }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Section -->
+      <div class="text-center mb-4">
+        <button type="submit" class="btn btn-success btn-lg px-5">
+          Submit Exam
+        </button>
+      </div>
+
+      <div *ngIf="submissionSuccess" class="alert alert-success text-center">
+        <strong>Success!</strong> Exam submitted successfully!
+      </div>
+    </form>
+
+    <!-- Read-only View -->
+    <div *ngIf="exam.questions && exam.questions.length > 0 && !canTakeExam">
+      <div
+        *ngFor="let question of exam.questions; let i = index"
+        class="card mb-4"
+      >
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <span class="badge badge-secondary mr-2">{{ i + 1 }}</span>
+            {{ question.title || question.text }}
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <div
+              *ngFor="let option of question.options"
+              class="form-check mb-2"
+            >
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [id]="'readonly-option-' + i + '-' + option.id"
+                [checked]="isOptionSelected(question, option, i)"
+                disabled
+              />
+              <label
+                class="form-check-label text-muted"
+                [for]="'readonly-option-' + i + '-' + option.id"
+              >
+                {{ option.title || option.text }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inactive Exam Message -->
+    <div
+      *ngIf="!canTakeExam && authService.getUserRole() === 'Student'"
+      class="alert alert-warning text-center"
+    >
+      <span *ngIf="!exam.isActive">
+        <strong>Exam is not active yet.</strong><br />
+        Please wait for the exam to become available.
+      </span>
+    </div>
+  </div>
+</div>

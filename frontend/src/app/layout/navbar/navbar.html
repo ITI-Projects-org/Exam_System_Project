@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+      <img
+        src="/images/logo/onlinexamlogo.png"
+        alt="Exam System Logo"
+        class="navbar-logo"
+      />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavText"
+      aria-controls="navbarNavText"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavText">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-2">
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
+          <a class="nav-link" routerLink="/exams" routerLinkActive="active"
+            >Exams</a
+          >
+        </li>
+        <li
+          class="nav-item"
+          *ngIf="auth.isLoggedIn() && !auth.isInRole('Student')"
+        >
+          <a class="nav-link" routerLink="/courses" routerLinkActive="active"
+            >Courses</a
+          >
+        </li>
+        <li
+          class="nav-item"
+          *ngIf="auth.isLoggedIn() && !auth.isInRole('Student')"
+        >
+          <a class="nav-link" routerLink="/students" routerLinkActive="active"
+            >Students</a
+          >
+        </li>
+        <!-- <li
+          class="nav-item"
+          *ngIf="auth.isLoggedIn() && auth.isInRole('Teacher')"
+        >
+          <a class="nav-link" routerLink="/teacher" routerLinkActive="active"
+            >Teachers</a
+          >
+        </li> -->
+        <li class="nav-item ms-lg-3" *ngIf="auth.isLoggedIn()">
+          <button class="btn btn-logout" (click)="logout()">LOG OUT</button>
+        </li>
+        <li class="nav-item ms-lg-3" *ngIf="!auth.isLoggedIn()">
+          <a class="btn btn-primary px-4" routerLink="/login">Login</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,79 @@
+.search-card {
+  max-width: 650px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 1rem;
+}
+
+.custom-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #dee2e6;
+
+  th {
+    background-color: #0d6efd !important;
+    color: #fff;
+    font-weight: 600;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  td {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  tr {
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #f1f3f5;
+    }
+  }
+
+  .btn {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #fff;
+  }
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  .btn i {
+    transition: transform 0.2s ease;
+  }
+  .btn:hover i {
+    transform: scale(1.1);
+  }
+}
+.modal-content {
+  transition: all 0.3s ease;
+  border-radius: 16px;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 1rem 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+}
+
+.btn-light {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+}
+
+.btn-light:hover {
+  background-color: #e2e6ea;
+}

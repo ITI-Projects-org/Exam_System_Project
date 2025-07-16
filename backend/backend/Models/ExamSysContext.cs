@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models
@@ -20,6 +21,8 @@ namespace backend.Models
         {
             base.OnModelCreating(builder);
 
+           
+
             // Configure user discriminator
             builder.Entity<ApplicationUser>()
                 .HasDiscriminator<string>("UserType")
@@ -34,14 +37,17 @@ namespace backend.Models
             builder.Entity<Exam>()
                 .HasIndex(e => e.Title);
 
+            builder.Entity<ApplicationUser>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
             // Configure foreign key relationships with proper delete behavior
 
-            // Course -> Teacher (NO ACTION to prevent cascade conflicts)
-            builder.Entity<Course>()
-                .HasOne(c => c.Teacher)
-                .WithMany(t => t.Courses)
-                .HasForeignKey(c => c.TeacherId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //Course->Teacher(NO ACTION to prevent cascade conflicts)
+            //builder.Entity<Course>()
+            //    .HasOne(c => c.Teacher)
+            //    .WithMany(t => t.Courses)
+            //    .HasForeignKey(c => c.TeacherId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
             // Exam -> Course (RESTRICT)
             builder.Entity<Exam>()
@@ -99,7 +105,7 @@ namespace backend.Models
                 .HasOne(se => se.Exam)
                 .WithMany()
                 .HasForeignKey(se => se.ExamId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // StudOption -> Student (NO ACTION to prevent cascade conflicts)
             builder.Entity<Stud_Option>()
@@ -113,7 +119,7 @@ namespace backend.Models
                 .HasOne(so => so.Option)
                 .WithMany()
                 .HasForeignKey(so => so.OptionId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

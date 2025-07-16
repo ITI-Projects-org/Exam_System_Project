@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
@@ -7,14 +8,19 @@ namespace backend.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [MaxLength(200)]
         public string Title { get; set; }
+
         [Required]
         public bool IsCorrect { get; set; }
+
         [Required]
-        public int QuestionId { get; set; }
         [ForeignKey(nameof(QuestionId))]
-        public virtual Question Question { get; set; }
+        public int QuestionId { get; set; }
+        [JsonIgnore]
+
+        public virtual Question? Question { get; set; }
     }
 }

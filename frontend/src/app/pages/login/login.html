@@ -1,0 +1,87 @@
+<div
+  class="login-page d-flex align-items-center justify-content-center min-vh-100 bg-light"
+>
+  <div
+    class="card shadow-lg p-4"
+    style="max-width: 400px; width: 100%; border-radius: 1rem"
+  >
+    <div class="text-center mb-4">
+      <img
+        src="/images/logo/onlinexamlogo.png"
+        alt="Online Exam Logo"
+        style="height: 60px; margin-bottom: 1rem"
+      />
+      <h2 class="fw-bold mb-2" style="color: var(--bright-blue-dark)">
+        Sign In
+      </h2>
+      <p class="text-muted mb-0">Welcome back! Please login to your account.</p>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+      <div *ngIf="loginError?.length" class="alert alert-danger">
+        <ul class="mb-0">
+          <li *ngFor="let e of loginError">{{ e }}</li>
+        </ul>
+      </div>
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="Email" class="form-label">Email</label>
+        <input
+          id="Email"
+          type="email"
+          class="form-control"
+          placeholder="Enter your email"
+          formControlName="Email"
+          [ngClass]="{'is-invalid': getEmail.invalid && getEmail.touched}"
+        />
+        <div
+          *ngIf="getEmail.invalid && getEmail.touched"
+          class="invalid-feedback"
+        >
+          <div *ngIf="getEmail.hasError('required')">Email is required.</div>
+          <div *ngIf="getEmail.hasError('email')">
+            Email must be in valid format
+          </div>
+        </div>
+      </div>
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="Password" class="form-label">Password</label>
+        <input
+          id="Password"
+          type="password"
+          class="form-control"
+          placeholder="Enter your password"
+          formControlName="Password"
+          [ngClass]="{'is-invalid': getPassword.invalid && getPassword.touched}"
+        />
+        <div
+          *ngIf="getPassword.invalid && getPassword.touched"
+          class="invalid-feedback"
+        >
+          <div *ngIf="getPassword.hasError('required')">
+            Password is required.
+          </div>
+          <div *ngIf="getPassword.hasError('minlength')">
+            Password should be at least 7 characters.
+          </div>
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary w-100 mt-2"
+        [disabled]="loginForm.invalid"
+      >
+        Login
+      </button>
+    </form>
+    <div class="text-center mt-3">
+      <span class="text-muted">Don't have an account?</span>
+      <a
+        [routerLink]="['/register']"
+        class="fw-semibold text-primary text-decoration-none ms-1"
+      >
+        Register Now!
+      </a>
+    </div>
+  </div>
+</div>
